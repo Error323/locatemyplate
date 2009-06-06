@@ -1,9 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% vBoost(data, features, T)
+%% vBoost(data, features, integrals, T)
 %%
 %% INPUTS:
 %%  - data, data.x{i} the image, data.y(i) in {0, 1} pos or neg sample
 %%  - features, the list of generated features
+%%  - integrals, the image integrals from several types
 %%  - T, number of best features
 %%
 %% OUPUTS:
@@ -11,7 +12,7 @@
 %%  - alpha, their corresponding weights
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [I, alpha] = vBoost(data, features, T)
+function [I, alpha] = vBoost(data, features, integrals, T)
 	% Discriminate positive and negative samples
 	pos = find(data.y == 1);
 	neg = find(data.y == 0);
@@ -38,7 +39,7 @@ function [I, alpha] = vBoost(data, features, T)
 		for h = 1:H
 			s = 0;
 			for i = 1:l+m
-				E(i) = classify( features(h), data.x{i} );
+				E(i) = weakClassify( features{h}, data.x{i}, integrals );
 				s    = s + W(i) * abs( E(i) - data.y(i) );
 			end
 			if (s < Et)
