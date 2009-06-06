@@ -1,12 +1,15 @@
 clear;
 close all;
 
+% loop through images
 path = '../data/stills/images/';
 file=dir([path,'*.jpg']);
 for q=1:size(file,1)
 	filename = [path,file(q).name]
 	img = imread(filename);
-	imgGray = rgb2gray(img);
+	%imgGray = double(rgb2gray(img));
+	imgGray = double(rgb2gray(img))/256;
+	% imgGray = imgGray / (max(max(imgGray))-min(min(imgGray)));
 	[h,w] = size(imgGray);
 
 	x = 239;
@@ -24,19 +27,21 @@ for q=1:size(file,1)
 
 	A = A / 256;
 
-	% define x and y derivative filters
+	% define x and y derivative Filters
 	Fxd = [-1 0 1;-1 0 1;-1 0 1];
 	Fyd = Fxd';
 
-	%figure(1);imshow(imgGray);
+	% apply x-derivative, to make use of the negative derivatives also apply abs operation
+	disp('min')
+	min(min(imfilter(imgGray,Fxd)))
+	Axd = abs(imfilter(imgGray,Fxd));
 
-	Axd = imfilter(imgGray,Fxd);
 	%figure(10);imshow(Axd);
-	imshow(img)
+	imshow(Axd)
 
 	integralImg = cumsum(cumsum(double(Axd),2));
 
-	% define custum feature
+	% define custom feature
 	f.negY = [0,1/5,  4/5,1];
 	f.negX = [0,1,    0,1];
 	f.posY = [1/5,4/5];
@@ -55,21 +60,14 @@ for q=1:size(file,1)
 	f.posX = round(f.posX)+1;
 
 
-	xOffset = 0;
-	yOffset = 0;
-	%xOffset = x;
-	%yOffset = y;
-
 	maxR = -inf;
-	stepSize = 2;
+	stepSize = 1;
 
-	yStart = 203; 
-	xStart = 219;
+	yStart = 1; 
+	xStart = 1;
 
-	% y = 203;
-	% x = 239;
-	for yOffset=yStart:stepSize:(h-yD)
-		for xOffset=xStart:stepSize:(w-xD)
+	for yOffset=yStart:stepSize:(h-yD)-1
+		for xOffset=xStart:stepSize:(w-xD)-1
 			
 			sumAreaNeg = 0;
 			for j = 1:2:size(f.negY,2)-1
@@ -112,6 +110,6 @@ for q=1:size(file,1)
 
 	coords
 
-	rectangle('Position',[coords(2), coords(1), xD, yD], 'FaceColor','r');
-	pause(2)
+	rectangle('Position',[coords(2), coords(1), xD, yD], 'EdgeColor','r');
+	pause(0.5)
 end
