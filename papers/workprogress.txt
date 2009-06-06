@@ -1,0 +1,27 @@
+2009
+
+
+vr-ma 1 jun
+free project uitgezet in samenwerking met triple-it
+
+di 2 jun
+project kickoff presentatie gevoelgd
+free project goed gekeurd
+literatuuronderzoek gedaan
+begeleiding gezocht
+
+wo 3 jun
+papers gelezen
+pad gekozen: nummerplaat op basis van feature selection
+
+geannoteerde dataset geregeld uit San Diego
+dataset omgezet naar opencv formaat
+cascading classifier getrained 
+
+do 4 jun 
+cascading classifier getrained met nieuwe en betere params
+achter gekomen dat haarlike features customised gegeneraliseerd moeten worden anders niet goed genoeg resultaat
+advies gevraagd aan begeleiding
+
+
+
