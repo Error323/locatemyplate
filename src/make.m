@@ -5,6 +5,7 @@ close all;
 path = '../data/stills/images/';
 file=dir([path,'*.jpg']);
 for q=1:size(file,1)
+	tic
 	filename = [path,file(q).name]
 	img = imread(filename);
 	%imgGray = double(rgb2gray(img));
@@ -32,8 +33,6 @@ for q=1:size(file,1)
 	Fyd = Fxd';
 
 	% apply x-derivative, to make use of the negative derivatives also apply abs operation
-	disp('min')
-	min(min(imfilter(imgGray,Fxd)))
 	Axd = abs(imfilter(imgGray,Fxd));
 
 	%figure(10);imshow(Axd);
@@ -108,8 +107,9 @@ for q=1:size(file,1)
 	end
 		
 
-	coords
-
+	% draw rectangle on license plate
 	rectangle('Position',[coords(2), coords(1), xD, yD], 'EdgeColor','r');
-	pause(0.5)
+	toc
+	pause(2)
+
 end
