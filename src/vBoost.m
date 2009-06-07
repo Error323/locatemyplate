@@ -22,6 +22,7 @@ function [I, alpha] = vBoost(data, features, integrals, T)
 	alpha = zeros(1, T);
 	W     = ones(1, size(data,2));
 	E     = ones(1, size(data,2));
+	Ep    = ones(1, size(data,2));
 	H     = size(features, 2);
 
     % Initialize the sample weights distribution
@@ -39,12 +40,13 @@ function [I, alpha] = vBoost(data, features, integrals, T)
 		for h = 1:H
 			s = 0;
 			for i = 1:l+m
-				E(i) = weakClassify( features{h}, data.x{i}, integrals );
-				s    = s + W(i) * abs( E(i) - data.y(i) );
+				Ep(i) = weakClassify( features{h}, data.x{i}, integrals );
+				s    = s + W(i) * abs( Ep(i) - data.y(i) );
 			end
 			if (s < Et)
 				Et = s;
 				Ht = h;
+				E  = Ep;
 			end
 		end
 

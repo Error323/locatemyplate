@@ -28,8 +28,6 @@ function c = weakClassify(feature, x, integrals)
 		y1 = max(floor(y1*h), 1);
 		x1 = max(floor(x1*w), 1);
 
-		[x0,y0,x1,y1]
-
 		s  = img(y0,x0) + img(y1,x1) - (img(y1,x0) + img(y0,x1));
 
 		if feature.blocks{i}.sig == 1
