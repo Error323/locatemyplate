@@ -1,17 +1,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% weakClassify(feature, x)
+%% weakClassify(feature, x, integrals)
 %%
 %% INPUTS:
 %%  - feature, the box feature
 %%  - x, the datapoint (image)
+%%  - integrals, the integrals belonging to datapoint x
 %%
 %% OUPUTS:
 %%  - c in {0,1}, true or false
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function c = weakClassify(feature, x)
+function c = weakClassify(feature, x, integrals)
 	[h, w] = size(x.image);
-	intImg = x.integrals{feature.int};
+	intImg = integrals{feature.int};
 
 	pos = 0; neg = 0;
 	for i = 1:size(feature.blocks,2)
