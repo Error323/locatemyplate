@@ -1,10 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% vBoost(data, features, integrals, T)
+%% vBoost(data, features, T)
 %%
 %% INPUTS:
 %%  - data, data.x{i} the image, data.y(i) in {0, 1} pos or neg sample
 %%  - features, the list of generated features
-%%  - integrals, the image integrals from several types
 %%  - T, number of best features
 %%
 %% OUPUTS:
@@ -12,10 +11,10 @@
 %%  - alpha, their corresponding weights
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [I, alpha] = vBoost(data, features, integrals, T)
+function [I, alpha] = vBoost(data, features, T)
 	% Discriminate positive and negative samples
-	pos = find(data.y == 1);
-	neg = find(data.y == 0);
+	pos = data.y(data.y == 1);
+	neg = data.y(data.y == 0);
 
 	% Initialize some vars
 	I     = zeros(1, T);
