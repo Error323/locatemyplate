@@ -40,7 +40,7 @@ function [I, alpha] = vBoost(data, features, integrals, T)
 		for h = 1:H
 			s = 0;
 			for i = 1:l+m
-				Ep(i) = weakClassify( features{h}, data.x{i}, integrals );
+				Ep(i) = weakClassify( features{h}, data.x{i} );
 				s    = s + W(i) * abs( Ep(i) - data.y(i) );
 			end
 			if (s < Et)
