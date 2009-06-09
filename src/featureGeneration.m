@@ -4,22 +4,21 @@ function f = featureGeneration(nrSegments)
 	% counting the decimal value of 1111... (of length nrSegments)
 	maxDecimal = 0;
 	for i = 0:nrSegments-1
-		maxDecimal = maxDecimal + 2^i;
+		maxDecimal = maxDecimal + 2^i
 	end
 
 	% initialise array
 	binFeature = [];
 	% generating maxDecimal+1 features
-	% for i = 0:maxDecimal
 	% nr Segments = 7
-	for i = 61:maxDecimal
+	for i = 0:(maxDecimal-1/2)
 		s = dec2bin(i);
 		% todo convert string to array
 		% TODO should be in cleaner way without for loop
 		for j=length(s):-1:1
 			% offset is needed to make a 1 a 00000..01
-			offset = nrSegments-length(s);
-			index = j+offset;
+			offset = nrSegments-length(s)
+			index = j+offset
 			binFeature(index) = str2num(s(j));
 		end
 		binFeature
