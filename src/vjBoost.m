@@ -13,8 +13,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [I, alpha] = vBoost(data, features, T)
 	% Discriminate positive and negative samples
-	pos = data.y(data.y == 1);
-	neg = data.y(data.y == 0);
+	pos = (data.y == 1);
+	neg = (data.y == 0);
 
 	% Initialize some vars
 	I     = zeros(1, T);
@@ -25,8 +25,8 @@ function [I, alpha] = vBoost(data, features, T)
 	H     = size(features, 2);
 
     % Initialize the sample weights distribution
-    m      = size(neg, 2);
-    l      = size(pos, 2);
+    m      = size(neg(neg == 1), 2);
+    l      = size(pos(pos == 1), 2);
 	W(neg) = W(neg) ./ (2*m);
 	W(pos) = W(pos) ./ (2*l);
 
