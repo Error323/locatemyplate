@@ -7,10 +7,11 @@
 %%  - integrals, the integrals belonging to datapoint x
 %%
 %% OUPUTS:
-%%  - c in {0,1}, true or false
+%%  - c, in {0,1}, true or false
+%%  - v, the value of this datapoint
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function c = weakClassify(feature, x, integrals)
+function [c, v] = weakClassify(feature, x, integrals)
 	[h, w] = size(x.image);
 	intImg = integrals{feature.int};
 
@@ -28,7 +29,7 @@ function c = weakClassify(feature, x, integrals)
 		y1 = max(floor(y1*h), 1);
 		x1 = max(floor(x1*w), 1);
 
-		s  = intImg(y0,x0) + intImg(y1,x1) - (intImg(y1,x0) + intImg(y0,x1));
+		s  = (intImg(y0,x0) + intImg(y1,x1)) - (intImg(y1,x0) + intImg(y0,x1));
 
 		if feature.blocks{i}.sig == 1
 			pos = pos + s;
@@ -37,7 +38,8 @@ function c = weakClassify(feature, x, integrals)
 		end
 	end
 
-	if ((pos - neg) >= feature.threshold)
+	v = pos - neg;
+	if (v >= feature.threshold)
 		c = 1;
 	else
 		c = 0;

@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% vBoost(data, features, T)
+%% vjBoost(data, features, T)
 %%
 %% INPUTS:
 %%  - data, data.x{i} the image, data.y(i) in {0, 1} pos or neg sample
@@ -38,9 +38,10 @@ function [I, alpha] = vBoost(data, features, T)
 		Et = inf; Ht = 1;
 		for h = 1:H
 			s = 0;
+			trainWeakClassifier(features{h}, data, m, l);
 			for i = 1:l+m
-				Ep(i) = weakClassify( features{h}, data.x{i}, data.imgInt{i} );
-				s    = s + W(i) * abs( Ep(i) - data.y(i) );
+				Ep(i) = weakClassify(features{h}, data.x{i}, data.imgInt{i});
+				s     = s + W(i) * abs( Ep(i) - data.y(i) );
 			end
 			if (s < Et)
 				Et = s;
