@@ -23,8 +23,37 @@ function trainWeakClassifier(feature, data, m, l)
 
 	% Sort the data on the thresholds
 	[T_, I] = sort(T);
-	xsorted = data.x{I};
-	ysorted = data.y{I};
+	ysorted = data.y(I);
 
-	
+	iStar    = 1;
+	best     = 0;
+	positive = 0;
+	for i = 2:N-1
+		posLeft = size(find( ysorted(1:i)   == 1 ), 2);
+		posRight= l - posLeft;
+		negLeft = size(find( ysorted(1:i)   == 0 ), 2);
+		negRight= m - negLeft;
+
+		% thresholding <
+		if (posLeft/l >= negLeft/m)
+			v = posLeft/l + negRight/m;
+			if (v > best)
+				best     = v;
+				iStar    = i;
+				positive = false;
+			end
+		% thresholding >
+		else
+			v = posRight/l + negLeft/m;
+			if (v > best)
+				best     = v;
+				iStar    = i;
+				positive = true;
+			end
+		end
+	end
+
+	% Set the threshold
+	feature.threshold = T(iStar);
+	feature.positive  = positive;
 end

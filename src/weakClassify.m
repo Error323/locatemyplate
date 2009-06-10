@@ -39,9 +39,17 @@ function [c, v] = weakClassify(feature, x, integrals)
 	end
 
 	v = pos - neg;
-	if (v >= feature.threshold)
-		c = 1;
+	if (feature.positive)
+		if (v >= feature.threshold)
+			c = 1;
+		else
+			c = 0;
+		end
 	else
-		c = 0;
+		if (v <= feature.threshold)
+			c = 1;
+		else
+			c = 0;
+		end
 	end
 end
