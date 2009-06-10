@@ -7,22 +7,23 @@
 %%  - T, number of best features
 %%
 %% OUPUTS:
-%%  - I, the T best weak features indexes
-%%  - alpha, their corresponding weights
+%%  - strongClassifier, the T best features
+%%  - alphas, their corresponding weights
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [I, alpha] = vBoost(data, features, T)
+function [strongClassifier, alphas] = vjBoost(data, features, T)
 	% Discriminate positive and negative samples
 	pos = (data.y == 1);
 	neg = (data.y == 0);
+	N   = size(data.y, 2);
 
 	% Initialize some vars
-	I     = zeros(1, T);
-	alpha = zeros(1, T);
-	W     = ones(1, size(data,2));
-	E     = ones(1, size(data,2));
-	Ep    = ones(1, size(data,2));
-	H     = size(features, 2);
+	I      = zeros(1, T);
+	alphas = zeros(1, T);
+	W      = ones(1, N);
+	E      = ones(1, N);
+	Ep     = ones(1, N);
+	H      = size(features, 2);
 
     % Initialize the sample weights distribution
     m      = size(find(neg == 1), 2);
@@ -37,6 +38,9 @@ function [I, alpha] = vBoost(data, features, T)
 		% Select the best feature
 		Et = inf; Ht = 1;
 		for h = 1:H
+			if (size(I(I == h), 2) == 1)
+				continue;
+			end
 			s = 0;
 			features{h} = trainWeakClassifier(features{h}, data, m, l);
 			for i = 1:l+m
@@ -50,7 +54,7 @@ function [I, alpha] = vBoost(data, features, T)
 			end
 		end
 
-		% Store the best feature at place t
+		% Store the index to the best feature at place t
 		I(t) = Ht;
 
 		% Update the weights
@@ -58,6 +62,9 @@ function [I, alpha] = vBoost(data, features, T)
 		W = W .* ( beta .^ E );
 
 		% Calculate alpha weight
-		alpha(t) = log(1./beta);
+		alphas(t) = log(1./beta);
 	end
+
+	% Output the T best features
+	strongClassifier = features(I);
 end
