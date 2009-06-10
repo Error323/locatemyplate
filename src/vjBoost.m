@@ -25,8 +25,8 @@ function [I, alpha] = vBoost(data, features, T)
 	H     = size(features, 2);
 
     % Initialize the sample weights distribution
-    m      = size(neg(neg == 1), 2);
-    l      = size(pos(pos == 1), 2);
+    m      = size(find(neg == 1), 2);
+    l      = size(find(pos == 1), 2);
 	W(neg) = W(neg) ./ (2*m);
 	W(pos) = W(pos) ./ (2*l);
 
@@ -38,7 +38,7 @@ function [I, alpha] = vBoost(data, features, T)
 		Et = inf; Ht = 1;
 		for h = 1:H
 			s = 0;
-			trainWeakClassifier(features{h}, data, m, l);
+			features{h} = trainWeakClassifier(features{h}, data, m, l);
 			for i = 1:l+m
 				Ep(i) = weakClassify(features{h}, data.x{i}, data.intImg{i});
 				s     = s + W(i) * abs( Ep(i) - data.y(i) );

@@ -8,10 +8,10 @@
 %%  - l, number of positive samples
 %%
 %% OUPUTS:
-%%  - sets the threshold on a feature
+%%  - feature, sets the threshold and wether its a positive
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function trainWeakClassifier(feature, data, m, l)
+function feature = trainWeakClassifier(feature, data, m, l)
 	N = m + l;
 
 	% Calculate the threshold for all datapoints using this feature
@@ -29,9 +29,9 @@ function trainWeakClassifier(feature, data, m, l)
 	best     = 0;
 	positive = true;
 	for i = 2:N-1
-		posLeft = size(find( ysorted(1:i)   == 1 ), 2);
+		posLeft = size(find( ysorted(1:i) == 1 ), 2);
 		posRight= l - posLeft;
-		negLeft = size(find( ysorted(1:i)   == 0 ), 2);
+		negLeft = size(find( ysorted(1:i) == 0 ), 2);
 		negRight= m - negLeft;
 
 		% thresholding <
