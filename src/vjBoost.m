@@ -40,7 +40,7 @@ function [I, alpha] = vBoost(data, features, T)
 			s = 0;
 			trainWeakClassifier(features{h}, data, m, l);
 			for i = 1:l+m
-				Ep(i) = weakClassify(features{h}, data.x{i}, data.imgInt{i});
+				Ep(i) = weakClassify(features{h}, data.x{i}, data.intImg{i});
 				s     = s + W(i) * abs( Ep(i) - data.y(i) );
 			end
 			if (s < Et)

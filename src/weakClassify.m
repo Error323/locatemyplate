@@ -12,7 +12,7 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [c, v] = weakClassify(feature, x, integrals)
-	[h, w] = size(x.image);
+	[h, w] = size(x);
 	intImg = integrals{feature.int};
 
 	pos = 0; neg = 0;
@@ -40,13 +40,13 @@ function [c, v] = weakClassify(feature, x, integrals)
 
 	v = pos - neg;
 	if (feature.positive)
-		if (v >= feature.threshold)
+		if (v > feature.threshold)
 			c = 1;
 		else
 			c = 0;
 		end
 	else
-		if (v <= feature.threshold)
+		if (v < feature.threshold)
 			c = 1;
 		else
 			c = 0;

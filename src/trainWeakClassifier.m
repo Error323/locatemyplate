@@ -17,7 +17,7 @@ function trainWeakClassifier(feature, data, m, l)
 	% Calculate the threshold for all datapoints using this feature
 	T = zeros(1, N);
 	for i = 1:N
-		[c_, v] = weakClassify(feature, data.x{i}, data.imgInt{i});
+		[c_, v] = weakClassify(feature, data.x{i}, data.intImg{i});
 		T(i)    = v;
 	end
 
@@ -27,7 +27,7 @@ function trainWeakClassifier(feature, data, m, l)
 
 	iStar    = 1;
 	best     = 0;
-	positive = 0;
+	positive = true;
 	for i = 2:N-1
 		posLeft = size(find( ysorted(1:i)   == 1 ), 2);
 		posRight= l - posLeft;
