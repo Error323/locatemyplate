@@ -31,6 +31,11 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	W(neg) = W(neg) ./ (2*m);
 	W(pos) = W(pos) ./ (2*l);
 
+	% Train all the weak classifiers
+	for h = 1:H
+		features{h} = trainWeakClassifier(features{h}, data, m, l);
+	end
+
 	for t = 1:T
 		% Normalize the weights
 		W = W ./ sum(W);
@@ -38,11 +43,12 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 		% Select the best feature
 		Et = inf; Ht = 1;
 		for h = 1:H
+			% Ignore features already selected
 			if (size(I(I == h), 2) == 1)
 				continue;
 			end
+
 			s = 0;
-			features{h} = trainWeakClassifier(features{h}, data, m, l);
 			for i = 1:l+m
 				Ep(i) = weakClassify(features{h}, data.x{i}, data.intImg{i});
 				s     = s + W(i) * abs( Ep(i) - data.y(i) );
