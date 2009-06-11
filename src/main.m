@@ -1,10 +1,12 @@
-FEATURES    = 10;
+FEATURES    = 2;
 FEATURE_GEN = 5;
 
 close all;
 
-test  = getData('../data/stills/plates-test.idx');
-train = getData('../data/stills/plates-train.idx');
+%test  = getData('../data/stills/plates-test.idx');
+%train = getData('../data/stills/plates-train.idx');
+load('matfiles/test.mat')
+load('matfiles/train.mat')
 
 features = featureGeneration(FEATURE_GEN);
 
@@ -35,8 +37,9 @@ for i = 1:N
 			fp = fp + 1;
 		end
 	end
-	disp(sprintf('testing: %0.2f%% complete', i/N*100));
 end
 
 confusionmatrix = [tp fp; fn tn]
-accuracy = (tp + tn) / N
+accuracy        = (tp + tn) / N
+positive        = tp / (tp + fn)
+negative        = tn / (tn + fp)

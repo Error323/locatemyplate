@@ -11,7 +11,7 @@
 function data = getData(file)
 	text        = textread(file, '%s', 'whitespace', '\n\t ');
 	N           = size(text, 1);
-	M           = 3;
+	M           = 10;
 
 	data.x      = {}; % The sample window
 	data.intImg = {}; % The integral images
