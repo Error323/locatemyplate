@@ -1,4 +1,4 @@
-FEATURES    = 2;
+FEATURES    = 5;
 FEATURE_GEN = 5;
 
 close all;

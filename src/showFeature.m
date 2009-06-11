@@ -1,3 +1,13 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% showFeature(feature, fig)
+%%
+%% INPUTS:
+%%  - feature, the feature to show
+%%  - fig, the figure on which to plot it
+%%
+%% OUPUTS:
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function showFeature(feature, fig)
 	figure(fig);
 	w = 200; h = 60;

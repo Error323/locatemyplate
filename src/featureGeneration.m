@@ -1,97 +1,68 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% featureGeneration(nrSegments)
+%% featureGeneration(segments)
 %%
 %% INPUTS:
-%%  - nrSegments, number of segments of the (e.g. feature for 0110 this is 4)
+%%  - segments, number of segments of the (e.g. feature for 0110 this is 4)
 %%
 %% OUPUTS:
 %%  - a list of generated features
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function features = featureGeneration(nrSegments) 
-	% initialize features
-	features = {};
+function features = featureGeneration(segments)
+	debug = false;
+	unsignedFeatures = {};
+	powerset = 2^segments;
 
-	F = {};
+	for i = 1:(powerset-2)/2
+		bin = dec2bin(i, segments);
 
-	% counting the decimal value of 1111... (of length nrSegments)
-	maxDecimal = 0;
-	for i = 0:nrSegments-1
-		maxDecimal = maxDecimal + 2^i;
-	end
-
-	% loop trough integral images
-	% generating (maxDecimal-1)/2) features
-	% because we only need to generate half of them 
-	for i = 1:((maxDecimal-1)/2)
-		binFeature = [];
-
-		% convert to decimal
-		s = dec2bin(i);
-
-		% loop backwards through feature
-		for j=length(s):-1:1
-			% offset is needed to make a 1 a 00000..01
-			% storing the value with the offset everthing before offset becomes 0
-			offset = nrSegments-length(s);
-			index = j+offset;
-			binFeature(index) = str2num(s(j));
-		end
-
-		binFeatureBlocks = [];
-		binFeatureSign = [];
-		% loop through binFeature
-		for k=2:length(binFeature)
-			% flip detection
-			if(binFeature(k-1) ~= binFeature(k))
-				binFeatureBlocks = [binFeatureBlocks k-1];
-				binFeatureSign = [binFeatureSign binFeature(k-1)];
+		binblocks = [0];
+		binsigns  = [bin(1)];
+		for j=2:length(bin)
+			if (bin(j) ~= bin(j-1))
+				binblocks = [binblocks j-1];
+				binsigns  = [binsigns bin(j)];
 			end
 		end
-		% add last block and sign
-		binFeatureBlocks = [binFeatureBlocks length(binFeature)];
-		binFeatureSign = [binFeatureSign binFeature(length(binFeature))];
+		binblocks = [binblocks segments];
+		binblocks = binblocks*(1/segments);
 
-		% add first block
-		binFeatureBlocks = [0 binFeatureBlocks];
-		
-		% normalise to nrSegments 
-		fraction = 1/nrSegments;
-		binFeatureBlocks = binFeatureBlocks * fraction;
+		vBlocks = {}; hBlocks = {};
+		for j=2:length(binblocks)
+			vBlock.coords = [0 binblocks(j-1) 1 binblocks(j)];
+			vBlock.sig    = str2num(binsigns(j-1));
+			vBlocks{j-1}  = vBlock;
 
-		blocks = {};
-		% loop trough coordinate pairs and build feature blocks
-		for m=2:length(binFeatureBlocks)
-			blockVer.coords = [0 binFeatureBlocks(m-1) 1 binFeatureBlocks(m)];
-			blockVer.sig = binFeatureSign(m-1);
-			featureVer.blocks{m-1} = blockVer;
+			hBlock.coords = [binblocks(j-1) 0 binblocks(j) 1];
+			hBlock.sig    = str2num(binsigns(j-1));
+			hBlocks{j-1}  = hBlock;
+		end
 
-			blockHor.coords = [binFeatureBlocks(m-1) 0 binFeatureBlocks(m) 1];
-			blockHor.sig = binFeatureSign(m-1);
-			featureHor.blocks{m-1} = blockHor;
-			% todo horizontal
-		end	
+		vFeature.blocks    = vBlocks;
+		vFeature.bin       = bin;
+		vFeature.signs     = binsigns;
 
-		featureVer.positive = 0;
-		featureVer.threshold = 0;
-		featureVer.binFeature = binFeature;
+		hFeature.blocks    = hBlocks;
+		hFeature.bin       = bin;
+		hFeature.signs     = binsigns;
 
-		featureHor.positive = 0;
-		featureHor.threshold = 0;
-		featureHor.binFeature = binFeature;
-
-		% store feature in list
-		F{i*2-1} = featureVer;
-		F{i*2}   = featureHor;
+		unsignedFeatures{i*2}   = vFeature;
+		unsignedFeatures{i*2-1} = hFeature;
 	end
 
 	for i = 0:1
-		for j = 1:length(F)
-			feature = F{j};
-			feature.int = i+1;
-			features{i*length(F)+j} = feature;
-			showFeature(feature, 1);
-			pause;
+		for j = 1:length(unsignedFeatures)
+			feature           = unsignedFeatures{j};
+			feature.int       = i+1;
+			feature.positive  = 0;
+			feature.threshold = 0;
+
+			features{i*length(unsignedFeatures)+j} = feature;
+			if (debug && i == 1)
+				showFeature(feature, 1);
+				pause;
+			end
 		end
 	end
+	if (debug) close; end
 end
