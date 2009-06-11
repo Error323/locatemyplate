@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% trainingData(file)
+%% data(file)
 %%
 %% INPUTS:
 %%  - file, the index file
@@ -8,7 +8,7 @@
 %%  - data, the trainings data
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function data = trainingData(file)
+function data = getData(file)
 	text        = textread(file, '%s', 'whitespace', '\n\t ');
 	N           = size(text, 1);
 	M           = 3;
