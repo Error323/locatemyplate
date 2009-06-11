@@ -23,7 +23,7 @@ function features = featureGeneration(nrSegments)
 	% loop trough integral images
 	% generating (maxDecimal-1)/2) features
 	% because we only need to generate half of them 
-	for i = 0:((maxDecimal-1)/2)
+	for i = 1:((maxDecimal-1)/2)
 		binFeature = [];
 
 		% convert to decimal
@@ -81,8 +81,8 @@ function features = featureGeneration(nrSegments)
 		featureHor.binFeature = binFeature;
 
 		% store feature in list
-		F{(i+1)*2-1} = featureVer;
-		F{(i+1)*2}   = featureHor;
+		F{i*2-1} = featureVer;
+		F{i*2}   = featureHor;
 	end
 
 	for i = 0:1
@@ -90,6 +90,8 @@ function features = featureGeneration(nrSegments)
 			feature = F{j};
 			feature.int = i+1;
 			features{i*length(F)+j} = feature;
+			showFeature(feature, 1);
+			pause;
 		end
 	end
 end
