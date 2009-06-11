@@ -34,6 +34,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	% Train all the weak classifiers
 	for h = 1:H
 		features{h} = trainWeakClassifier(features{h}, data, m, l);
+		disp(sprintf('training: %0.2f%% complete', h/H*100));
 	end
 
 	for t = 1:T
@@ -69,6 +70,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 
 		% Calculate alpha weight
 		alphas(t) = log(1./beta);
+		disp(sprintf('learning: %0.2f%% complete', t/T*100));
 	end
 
 	% Output the T best features

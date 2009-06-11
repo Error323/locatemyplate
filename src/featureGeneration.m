@@ -76,29 +76,29 @@ function features = featureGeneration(nrSegments)
 			featureVer.threshold = 0;
 			featureVer.binFeature = binFeature;
 
-			features{(i+1)} = featureHor;
+			%features{(i+1)} = featureVer;
 	
-			% featureHor.int = int;
-			% featureHor.positive = 0;
-			% featureHor.threshold = 0;
-			% featureVer.binFeature = binFeature;
+			featureHor.int = int;
+			featureHor.positive = 0;
+			featureHor.threshold = 0;
+			featureHor.binFeature = binFeature;
 
-			% % store feature in list
-			% features{(i+1)*2-1} = featureVer;
-			% features{(i+1)*2} = featureHor;
+			% store feature in list
+			features{(i+1)*2-1} = featureVer;
+			features{(i+1)*2}   = featureHor;
 		end
 	end
 
 	% print features
-	disp('Printing generated features')
-	for e = 1:length(features)
-		disp('e')
-		e
-		for f = 1:length(features{e}.blocks)
-			disp('f')
-			f
-			features{e}.blocks{f}
-			pause
-		end
-	end
+	% disp('Printing generated features')
+	% for e = 1:length(features)
+	% 	disp('e')
+	% 	e
+	% 	for f = 1:length(features{e}.blocks)
+	% 		disp('f')
+	% 		f
+	% 		features{e}.blocks{f}
+	% 		pause
+	% 	end
+	% end
 end

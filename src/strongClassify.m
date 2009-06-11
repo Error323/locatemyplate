@@ -13,8 +13,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [c, v] = strongClassify(C, alphas, x)
 	integrals = getIntegrals(x);
-	T = size(C, 2);
-	v = 0;
+	T         = size(C, 2);
+	v         = 0;
 
 	for t = 1:T
 		[c, v_] = weakClassify(C{t}, x, integrals);
