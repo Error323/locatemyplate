@@ -18,9 +18,10 @@ function features = featureGeneration(nrSegments)
 		maxDecimal = maxDecimal + 2^i;
 	end
 
-	% generating (maxDecimal-1)/2) features
-	% because we only need to generate half of them 
+	% loop trough integral images
 	for int = 1:2
+		% generating (maxDecimal-1)/2) features
+		% because we only need to generate half of them 
 		for i = 0:((maxDecimal-1)/2)
 			binFeature = [];
 
@@ -60,31 +61,44 @@ function features = featureGeneration(nrSegments)
 			blocks = {};
 			% loop trough coordinate pairs and build feature blocks
 			for m=2:length(binFeatureBlocks)
-				block.coords = [0 binFeatureBlocks(m-1) 1 binFeatureBlocks(m)];
-				block.sig = binFeatureSign(m-1);
-				feature.blocks{m-1} = block;
+				blockVer.coords = [0 binFeatureBlocks(m-1) 1 binFeatureBlocks(m)];
+				blockVer.sig = binFeatureSign(m-1);
+				featureVer.blocks{m-1} = blockVer;
+
+				blockHor.coords = [binFeatureBlocks(m-1) 0 binFeatureBlocks(m) 1];
+				blockHor.sig = binFeatureSign(m-1);
+				featureHor.blocks{m-1} = blockHor;
 				% todo horizontal
 			end	
 
-			feature.int = int;
-			feature.positive = 0;
-			feature.threshold = 0;
+			featureVer.int = int;
+			featureVer.positive = 0;
+			featureVer.threshold = 0;
+			featureVer.binFeature = binFeature;
 
-			% store feature in list
-			features{i+1} = feature;
+			features{(i+1)} = featureHor;
+	
+			% featureHor.int = int;
+			% featureHor.positive = 0;
+			% featureHor.threshold = 0;
+			% featureVer.binFeature = binFeature;
+
+			% % store feature in list
+			% features{(i+1)*2-1} = featureVer;
+			% features{(i+1)*2} = featureHor;
 		end
 	end
 
-	% % print features
-	% disp('Printing generated features')
-	% for e = 1:length(features)
-	% 	disp('e')
-	% 	e
-	% 	for f = 1:length(features{e}.blocks)
-	% 		disp('f')
-	% 		f
-	% 		features{e}.blocks{f}
-	% 		pause
-	% 	end
-	% end
+	% print features
+	disp('Printing generated features')
+	for e = 1:length(features)
+		disp('e')
+		e
+		for f = 1:length(features{e}.blocks)
+			disp('f')
+			f
+			features{e}.blocks{f}
+			pause
+		end
+	end
 end
