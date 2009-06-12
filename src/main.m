@@ -4,7 +4,7 @@ FEATURE_GEN = 8;
 close all;
 
 % Obtain test data
-if (exist('matfiles/test.mat'))
+if (exist('matfiles/test.mat', 'file'))
 	load('matfiles/test.mat');
 else
 	test  = getData('../data/stills/plates-test.idx', 4);
@@ -12,7 +12,7 @@ else
 end
 
 % Obtain train data
-if (exist('matfiles/train.mat'))
+if (exist('matfiles/train.mat', 'file'))
 	load('matfiles/train.mat');
 else
 	train = getData('../data/stills/plates-train.idx', 1);
@@ -21,7 +21,7 @@ end
 
 
 
-if (exist('matfiles/features.mat'))
+if (exist('matfiles/features.mat', 'file'))
 	load('matfiles/features.mat');
 else
 	% Obtain the features
@@ -32,7 +32,7 @@ else
 	neg = length(find(train.y == 0));
 	for h = 1:length(features)
 		features{h} = trainWeakClassifier(features{h}, train, neg, pos);
-		disp(sprintf('training: %0.2f%% complete', h/length(features)*100));
+		fprintf('training: %0.2f%% complete', h/length(features)*100);
 	end
 	save('matfiles/features.mat', 'features');
 end

@@ -53,8 +53,6 @@ function data = getData(file, M)
 		dataidx = dataidx + 1;
 		j = 0;
 		while (j < M)
-			h2     = round(h/2);
-			w2     = round(w/2);
 			yloc   = randi(ySize-h);
 			xloc   = randi(xSize-w);
 			ybound = (yloc+h < y || yloc-h > y);

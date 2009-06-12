@@ -20,9 +20,4 @@ function integrals = getIntegrals(sample)
 	Fdy = Fdx';
 	dyAbs = abs(imfilter(sample, Fdy));
 	integrals{2} = cumsum(cumsum(dyAbs,2));
-
-	% Get the gradient
-	grad = sqrt(dxAbs.^2 + dyAbs.^2);
-	grad = grad ./ tan(dyAbs./dxAbs);
-	integrals{3} = cumsum(cumsum(grad,2));
 end

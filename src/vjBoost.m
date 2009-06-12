@@ -26,8 +26,8 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	H      = size(features, 2);
 
     % Initialize the sample weights distribution
-    m      = size(find(neg == 1), 2);
-    l      = size(find(pos == 1), 2);
+    m      = length(find(neg == 1));
+    l      = length(find(pos == 1));
 	W(neg) = W(neg) ./ (2*m);
 	W(pos) = W(pos) ./ (l);
 
@@ -39,7 +39,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 		Et = inf; Ht = 1;
 		for h = 1:H
 			% Ignore features already selected
-			if (size(I(I == h), 2) == 1)
+			if (length(I(I == h)) == 1)
 				continue;
 			end
 
@@ -64,7 +64,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 
 		% Calculate alpha weight
 		alphas(t) = log(1./beta);
-		disp(sprintf('learning: %0.2f%% complete', t/T*100));
+		fprintf('learning: %0.2f%% complete', t/T*100);
 	end
 
 	% Output the T best features
