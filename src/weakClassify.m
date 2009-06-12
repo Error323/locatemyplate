@@ -16,7 +16,7 @@ function [c, v] = weakClassify(feature, x, integrals)
 	intImg = integrals{feature.int};
 
 	pos = 0; neg = 0;
-	for i = 1:size(feature.blocks,2)
+	for i = 1:length(feature.blocks)
 		% Get the block coordinates
 		y0 = feature.blocks{i}.coords(1);
 		x0 = feature.blocks{i}.coords(2);

@@ -15,7 +15,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	% Discriminate positive and negative samples
 	pos = (data.y == 1);
 	neg = (data.y == 0);
-	N   = size(data.y, 2);
+	N   = length(data.y);
 
 	% Initialize some vars
 	I      = zeros(1, T);
@@ -23,7 +23,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	W      = ones(1, N);
 	E      = ones(1, N);
 	Ep     = ones(1, N);
-	H      = size(features, 2);
+	H      = length(features);
 
     % Initialize the sample weights distribution
     m      = length(find(neg == 1));

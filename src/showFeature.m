@@ -14,7 +14,6 @@ function showFeature(feature, fig)
 
 	colors = ['r', 'g', 'b', 'w'];
 	c = colors(feature.int);
-	disp(sprintf('feature int = %d, color = %s', feature.int, c));
 
 	for i = 1:length(feature.blocks)
 		y0 = feature.blocks{i}.coords(1);

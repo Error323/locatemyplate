@@ -13,7 +13,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [c, v] = strongClassify(C, alphas, x)
 	integrals = getIntegrals(x);
-	T         = size(C, 2);
+	T         = length(C);
 	v         = 0;
 
 	for t = 1:T

@@ -46,7 +46,7 @@ for i = 1:length(C)
 end
 
 
-N = size(test.y, 2)
+N = length(test.y);
 tp = 0; tn = 0; fp = 0; fn = 0;
 for i = 1:N
 	[c, v_] = strongClassify(C, alphas, test.x{i});

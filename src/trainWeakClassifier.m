@@ -29,9 +29,9 @@ function feature = trainWeakClassifier(feature, data, m, l)
 	best     = 0;
 	positive = true;
 	for i = 2:N-1
-		posLeft = size(find( ysorted(1:i) == 1 ), 2);
+		posLeft = length(find( ysorted(1:i) == 1 ));
 		posRight= l - posLeft;
-		negLeft = size(find( ysorted(1:i) == 0 ), 2);
+		negLeft = length(find( ysorted(1:i) == 0 ));
 		negRight= m - negLeft;
 
 		% thresholding <
