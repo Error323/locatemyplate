@@ -10,16 +10,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function showFeature(feature, fig)
 	figure(fig);
-	w = 3; h = 1;
+	w = 100; h = 33;
 
-	switch(feature.int)
-		case 1
-			c = 'g';
-		case 2
-			c = 'r';
-		otherwise
-			c = 'w';
-	end
+	colors = ['r', 'g', 'b', 'w'];
+	c = colors(feature.int);
+	disp(sprintf('feature int = %d, color = %s', feature.int, c));
 
 	for i = 1:length(feature.blocks)
 		y0 = feature.blocks{i}.coords(1);

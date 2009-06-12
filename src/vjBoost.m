@@ -29,13 +29,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
     m      = size(find(neg == 1), 2);
     l      = size(find(pos == 1), 2);
 	W(neg) = W(neg) ./ (2*m);
-	W(pos) = W(pos) ./ (2*l);
-
-	% Train all the weak classifiers
-	for h = 1:H
-		features{h} = trainWeakClassifier(features{h}, data, m, l);
-		disp(sprintf('training: %0.2f%% complete', h/H*100));
-	end
+	W(pos) = W(pos) ./ (l);
 
 	for t = 1:T
 		% Normalize the weights

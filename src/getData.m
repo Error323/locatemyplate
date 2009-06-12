@@ -3,15 +3,15 @@
 %%
 %% INPUTS:
 %%  - file, the index file
+%%  - M, number of negative samples * positive samples
 %%
 %% OUPUTS:
 %%  - data, the trainings data
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function data = getData(file)
+function data = getData(file, M)
 	text        = textread(file, '%s', 'whitespace', '\n\t ');
 	N           = size(text, 1);
-	M           = 10;
 
 	data.x      = {}; % The sample window
 	data.intImg = {}; % The integral images
