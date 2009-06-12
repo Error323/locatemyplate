@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function showFeature(feature, fig)
 	figure(fig);
-	w = 200; h = 60;
+	w = 3; h = 1;
 
 	switch(feature.int)
 		case 1
