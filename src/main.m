@@ -7,7 +7,7 @@ close all;
 if (exist('matfiles/test.mat', 'file'))
 	load('matfiles/test.mat');
 else
-	test  = getData('../data/stills/plates-test.idx', 4);
+	test  = getData('../data/stills/plates-test.idx', 1);
 	save('matfiles/test.mat', 'test');
 end
 
@@ -32,7 +32,7 @@ else
 	neg = length(find(train.y == 0));
 	for h = 1:length(features)
 		features{h} = trainWeakClassifier(features{h}, train, neg, pos);
-		fprintf('training: %0.2f%% complete', h/length(features)*100);
+		fprintf('training: %0.2f%% complete\n', h/length(features)*100);
 	end
 	save('matfiles/features.mat', 'features');
 end
@@ -56,19 +56,19 @@ for i = 1:N
 		if (c == test.y(i))
 			tp = tp + 1;
 		else
-			fn = fn + 1;
+			fp = fp + 1; % rejection while true
 		end
 	% negative zone
 	else
 		if (c == test.y(i))
 			tn = tn + 1;
 		else
-			fp = fp + 1;
+			fn = fn + 1; % fails to reject while false
 		end
 	end
 end
 
 confusionmatrix = [tp fp; fn tn]
 accuracy        = (tp + tn) / N
-positive        = tp / (tp + fn)
-negative        = tn / (tn + fp)
+recall          = tp / (tp + fp)
+precision       = tp / (tp + fn)

@@ -64,7 +64,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 
 		% Calculate alpha weight
 		alphas(t) = log(1./beta);
-		fprintf('learning: %0.2f%% complete', t/T*100);
+		fprintf('learning: %0.2f%% complete\n', t/T*100);
 	end
 
 	% Output the T best features
