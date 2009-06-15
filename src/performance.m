@@ -1,30 +1,30 @@
-FEATURES    = 3;
+FEATURES    = 10;
 FEATURE_GEN = 8;
 
 close all;
 
 % Obtain test data
-if (exist('matfiles/test.mat', 'file'))
-	load('matfiles/test.mat');
+if (exist('../cache/test.mat', 'file'))
+	load('../cache/test.mat');
 else
 	test  = getData('../data/stills/plates-test.idx', 1);
-	save('matfiles/test.mat', 'test');
+	save('../cache/test.mat', 'test');
 end
 
 % Obtain train data
-if (exist('matfiles/train.mat', 'file'))
-	load('matfiles/train.mat');
+if (exist('../cache/train.mat', 'file'))
+	load('../cache/train.mat');
 else
-	train = getData('../data/stills/plates-train.idx', 1);
-	save('matfiles/train.mat', 'train');
+	train = getData('../data/stills/plates-train.idx', 100);
+	save('../cache/train.mat', 'train');
 end
 
 
 
-if (exist('matfiles/features.mat', 'file'))
-	load('matfiles/features.mat');
+% Obtain the features
+if (exist('../cache/features.mat', 'file'))
+	load('../cache/features.mat');
 else
-	% Obtain the features
 	features   = featureGeneration(FEATURE_GEN);
 
 	% Train all the weak classifiers
@@ -34,7 +34,7 @@ else
 		features{h} = trainWeakClassifier(features{h}, train, neg, pos);
 		fprintf('training: %0.2f%% complete\n', h/length(features)*100);
 	end
-	save('matfiles/features.mat', 'features');
+	save('../cache/features.mat', 'features');
 end
 
 nrfeatures = length(features)
