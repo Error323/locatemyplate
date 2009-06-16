@@ -1,4 +1,4 @@
-FEATURES    = 10;
+FEATURES    = 2;
 FEATURE_GEN = 8;
 
 close all;
@@ -15,7 +15,7 @@ end
 if (exist('../cache/train.mat', 'file'))
 	load('../cache/train.mat');
 else
-	train = getData('../data/stills/plates-train.idx', 100);
+	train = getData('../data/stills/plates-train.idx', 1);
 	save('../cache/train.mat', 'train');
 end
 
@@ -49,7 +49,7 @@ end
 N = length(test.y);
 tp = 0; tn = 0; fp = 0; fn = 0;
 for i = 1:N
-	[c, v_] = strongClassify(C, alphas, test.x{i});
+	[c, v_] = strongClassify(C, alphas, test.x{i}, 0.5);
 
 	% positive zone
 	if (test.y(i) == 1)
