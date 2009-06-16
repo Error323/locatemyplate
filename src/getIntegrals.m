@@ -11,13 +11,39 @@
 function integrals = getIntegrals(sample)
 	integrals = {};
 
-	% Get the abs x-derivative
+	% creating the image filters
 	Fdx = [-1 0 1;-1 0 1;-1 0 1];
-	dxAbs = abs(imfilter(sample, Fdx));
-	integrals{1} = cumsum(cumsum(dxAbs,2));
-
-	% Get the abs y-derivative
 	Fdy = Fdx';
-	dyAbs = abs(imfilter(sample, Fdy));
-	integrals{2} = cumsum(cumsum(dyAbs,2));
+
+	% Get the abs x-derivative (1st order)
+	dx = imfilter(sample, Fdx);
+	dxAbs = abs(dx);
+	integrals{1} = getIntegral(dxAbs);
+
+	% Get the abs y-derivative (1st order)
+	dy = imfilter(sample, Fdy);
+	dyAbs = abs(dy);
+	integrals{2} = getIntegral(dyAbs);
+
+	% Get the abs x-derivative (2nd order)
+	dx2Abs = abs(imfilter(imfilter(sample, Fdx), Fdx));
+	integrals{3} = getIntegral(dx2Abs);
+
+	% Get the abs y-derivative (2nd order)
+	dy2Abs = abs(imfilter(imfilter(sample, Fdy), Fdy));
+	integrals{4} = getIntegral(dy2Abs);
+
+	% precalculate means
+	Fmean = ones(6)/36;
+	dxMean = imfilter(dx, Fmean);
+	dyMean = imfilter(dy, Fmean);
+
+	% Calculate abs variance of dx
+	integrals{5} = abs(dx - dxMean);
+	integrals{6} = abs(dy - dyMean);
+
+	% Calculate abs variance of abs dx
+	integrals{7} = abs(dx - abs(dxMean));
+	% Calculate abs variance of abs dy
+	integrals{8} = abs(dy - abs(dyMean));
 end

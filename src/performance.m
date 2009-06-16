@@ -1,5 +1,5 @@
-FEATURES    = 10;
-FEATURE_GEN = 8;
+FEATURES = 8;
+SEGMENTS = 4;
 
 close all;
 
@@ -15,7 +15,7 @@ end
 if (exist('../cache/train.mat', 'file'))
 	load('../cache/train.mat');
 else
-	train = getData('../data/stills/plates-train.idx', 100);
+	train = getData('../data/stills/plates-train.idx', 1);
 	save('../cache/train.mat', 'train');
 end
 
@@ -25,7 +25,7 @@ end
 if (exist('../cache/features.mat', 'file'))
 	load('../cache/features.mat');
 else
-	features   = featureGeneration(FEATURE_GEN);
+	features   = featureGeneration(SEGMENTS);
 
 	% Train all the weak classifiers
 	pos = length(find(train.y == 1));
