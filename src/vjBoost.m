@@ -29,7 +29,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
     m      = length(find(neg == 1));
     l      = length(find(pos == 1));
 	W(neg) = W(neg) ./ (2*m);
-	W(pos) = W(pos) ./ (l);
+	W(pos) = W(pos) ./ (2*l);
 
 	for t = 1:T
 		% Normalize the weights

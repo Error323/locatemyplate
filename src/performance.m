@@ -49,7 +49,7 @@ end
 N = length(test.y);
 tp = 0; tn = 0; fp = 0; fn = 0;
 for i = 1:N
-	[c, v_] = strongClassify(C, alphas, test.x{i});
+	[c, v_] = strongClassify(C, alphas, test.x{i}, 0.5);
 
 	% positive zone
 	if (test.y(i) == 1)

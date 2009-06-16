@@ -1,17 +1,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% strongClassify(C, alphas, x, integrals)
+%% strongClassify(C, alphas, x, threshold)
 %%
 %% INPUTS:
 %%  - C, the set of weak classifiers selected by vjBoost
 %%  - alphas, their corresponding alphas
 %%  - x, the datapoint (image)
+%%  - threshold, play with the confusion matrix
 %%
 %% OUPUTS:
 %%  - c, in {0,1}, true or false
 %%  - v, the value of this datapoint
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [c, v] = strongClassify(C, alphas, x)
+function [c, v] = strongClassify(C, alphas, x, threshold)
 	integrals = getIntegrals(x);
 	T         = length(C);
 	v         = 0;
@@ -21,7 +22,7 @@ function [c, v] = strongClassify(C, alphas, x)
 		v = v + alphas(t) * c;
 	end
 
-	if (v >= 0.5 * sum(alphas))
+	if (v >= threshold * sum(alphas))
 		c = 1;
 	else
 		c = 0;
