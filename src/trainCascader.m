@@ -44,7 +44,7 @@ function cascader = trainCascader(f, d, Ftarget)
 			end
 		end
 
-		if (Fi > Ftarget)
+		if (Fcur > Ftarget)
 			[Fcur, Dcur, N] = evaluate(cascader, V);
 		end
 
