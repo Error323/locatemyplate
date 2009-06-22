@@ -38,19 +38,23 @@ function features = featureGeneration(segments)
 			hBlocks{j-1}  = hBlock;
 		end
 
-		vFeature.blocks    = vBlocks;
-		vFeature.bin       = bin;
-		vFeature.signs     = binsigns;
+		vFeature.blocks    		= vBlocks;
+		vFeature.bin       		= bin;
+		vFeature.signs     		= binsigns;
+		vFeature.orientation 	= 1;
 
-		hFeature.blocks    = hBlocks;
-		hFeature.bin       = bin;
-		hFeature.signs     = binsigns;
+		hFeature.blocks    		= hBlocks;
+		hFeature.bin       		= bin;
+		hFeature.signs     		= binsigns;
+		hFeature.orientation 	= 0;
 
 		unsignedFeatures{i*2}   = vFeature;
 		unsignedFeatures{i*2-1} = hFeature;
 	end
 
-	for i = 0:7
+	% for every integral image, (dx, dy, var dx, etc)
+	%for i = 0:7
+	for i = 0:0
 		for j = 1:length(unsignedFeatures)
 			feature           = unsignedFeatures{j};
 			feature.int       = i+1;
