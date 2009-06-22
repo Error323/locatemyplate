@@ -13,9 +13,9 @@
 function cascader = trainCascader(f, d, Ftarget)
 	cascader = {};
 
-	P = getData(); % Positive samples
-	N = getData(); % Negative samples
-	V = getData(); % Validation set
+	P = getData('pos');  % Positive samples
+	N = getData('neg');  % Negative samples
+	V = getData('both'); % Validation set
 
 	Fprev = 1; Dprev = 1; i = 0;
 
@@ -45,6 +45,7 @@ function cascader = trainCascader(f, d, Ftarget)
 		end
 
 		if (Fcur > Ftarget)
+			% Implicit empty and replace N
 			[Fcur, Dcur, N] = evaluate(cascader, V);
 		end
 
@@ -68,7 +69,37 @@ end
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [f, d, n] = evaluate(cascader, validation)
-	f = 0;
-	d = 0;
-	n = {};
+	fp = 0; tp = 0; tn = 0; fn = 0;
+	totalP = 0; totalN = 0;
+
+	for i = 1:length(validation)
+		V = validation{i};
+		C = classify(cascader, V);
+		for j = 1:length(V.tags)
+			x   = V.x(j);
+			y   = V.y(j);
+			tag = V.tags(j);
+
+			% Positive zone
+			if (tag == 1)
+				if (C(y,x) == tag)
+					tp = tp + 1;
+				else
+					fp = fp + 1;
+				end
+				totalP = totalP + 1;
+
+			% Negative zone
+			else
+				if (C(y,x) == tag)
+					tn = tn + 1;
+				else
+					fn = fn + 1;
+				end
+				totalN = totalN + 1;
+			end
+		end
+	end
+	f = fp / totalN;
+	d = tp / totalP;
 end
