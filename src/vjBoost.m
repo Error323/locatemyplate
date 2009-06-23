@@ -2,7 +2,7 @@
 %% vjBoost(data, features, T)
 %%
 %% INPUTS:
-%%  - data, data.x{i} the image, data.y(i) in {0, 1} pos or neg sample
+%%  - data, [I,P,N,D]
 %%  - features, the list of generated features
 %%  - T, number of best features
 %%
@@ -11,42 +11,54 @@
 %%  - alphas, their corresponding weights
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [strongClassifier, alphas] = vjBoost(data, features, T)
-	% Discriminate positive and negative samples
-	pos = (data.y == 1);
-	neg = (data.y == 0);
-	N   = length(data.y);
+function [strongClassifier, alphas] = vjBoost([I,P,N,D], features, T)
+	% Initialize matrices
+	pos = 0; neg = 0;
+	W   = {1:length(I)};
+	E   = {1:length(I)};
+	Ep  = {1:length(I)};
+	for i = 1:length(I)
+		pos  = pos + sum(sum(P{i}));
+		neg  = neg + sum(sum(N{i}));
+		W{i} = zeros(size(P{i}));
+	end
+
+	% Initialize weight matrices
+	for i = 1:length(I)
+		W{i}(find(P{i} == 1)) ./ (2*pos);
+		W{i}(find(N{i} == 1)) ./ (2*neg);
+	end
 
 	% Initialize some vars
-	I      = zeros(1, T);
+	IDX    = zeros(1, T);
 	alphas = zeros(1, T);
-	W      = ones(1, N);
-	E      = ones(1, N);
-	Ep     = ones(1, N);
 	H      = length(features);
 
-    % Initialize the sample weights distribution
-    m      = length(find(neg == 1));
-    l      = length(find(pos == 1));
-	W(neg) = W(neg) ./ (2*m);
-	W(pos) = W(pos) ./ (2*l);
-
 	for t = 1:T
+		% total sum of the weights
+		wSum = 0;
+		for i = 1:length(I)
+			wSum = wSum + sum(sum(W{i}));
+		end
+
 		% Normalize the weights
-		W = W ./ sum(W);
+		for i = 1:length(I)
+			W{i} = W{i} ./ wSum;
+		end
 
 		% Select the best feature
 		Et = inf; Ht = 1;
 		for h = 1:H
 			% Ignore features already selected
-			if (length(I(I == h)) == 1)
+			if (length(IDX(IDX == h)) == 1)
 				continue;
 			end
 
 			s = 0;
-			for i = 1:l+m
-				Ep(i) = weakClassify(features{h}, data.x{i}, data.intImg{i});
-				s     = s + W(i) * abs( Ep(i) - data.y(i) );
+			for i = 1:length(I)
+				[C, R] = weakClassify(features{h}, D{i}, I, i, feature{h}.int, R);
+				Ep{i}  = xor(C,P{i});
+				s      = s + sum(sum(W{i} .* Ep{i}));
 			end
 			if (s < Et)
 				Et = s;
@@ -56,11 +68,13 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 		end
 
 		% Store the index to the best feature at place t
-		I(t) = Ht;
+		IDX(t) = Ht;
 
 		% Update the weights
 		beta = Et / ( 1 - Et );
-		W = W .* ( beta .^ E );
+		for i = 1:length(I)
+			W{i} = W{i} .* ( beta .^ (1-E{i}) );
+		end
 
 		% Calculate alpha weight
 		alphas(t) = log(1./beta);
@@ -68,5 +82,5 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	end
 
 	% Output the T best features
-	strongClassifier = features(I);
+	strongClassifier = features(IDX);
 end

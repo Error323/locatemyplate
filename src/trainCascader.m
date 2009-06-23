@@ -13,8 +13,8 @@
 function cascader = trainCascader(f, d, Ftarget)
 	cascader = {};
 
-	[I, P, N, D] = getData('train');
-	V            = getData('validate');
+	[I, P, N, D] = getData('../data/stills/plates-train.idx');
+	V            = getData('../data/stills/plates-test.idx');
 	features     = featureGeneration(5);
 
 	Fprev = 1; Dprev = 1; i = 0;
