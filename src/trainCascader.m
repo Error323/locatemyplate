@@ -13,9 +13,9 @@
 function cascader = trainCascader(f, d, Ftarget)
 	cascader = {};
 
-	P = getData(); % Positive samples
-	N = getData(); % Negative samples
-	V = getData(); % Validation set
+	[I, P, N, D] = getData('train');
+	V            = getData('validate');
+	features     = featureGeneration(5);
 
 	Fprev = 1; Dprev = 1; i = 0;
 
@@ -28,7 +28,7 @@ function cascader = trainCascader(f, d, Ftarget)
 		% Create the current layer
 		while (Fcur > f*Fprev)
 			ni = ni + 1;
-			[strong, alphas] = vjBoost(P, N, features, ni);
+			[strong, alphas] = vjBoost([I,P,N,D], features, ni);
 
 			layer.classifier = strong;
 			layer.alphas     = alphas;
@@ -45,6 +45,7 @@ function cascader = trainCascader(f, d, Ftarget)
 		end
 
 		if (Fcur > Ftarget)
+			% Implicit empty and replace N
 			[Fcur, Dcur, N] = evaluate(cascader, V);
 		end
 
@@ -64,11 +65,34 @@ end
 %% OUPUTS:
 %%  - f, the false positive rate
 %%  - d, the detection rate
-%%  - n, the false positives
+%%  - N, the false positives
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [f, d, n] = evaluate(cascader, validation)
-	f = 0;
-	d = 0;
-	n = {};
+function [f, d, N] = evaluate(cascader, validation)
+	I = validation(1); % True images
+	P = validation(2); % Binary images for positive samples
+	N = validation(3); % Binary images for negative samples
+	D = validation(4); % Dimension of license plate per image
+
+	fP = 0; tP = 0; fN = 0; tN = 0;
+	for i = 1:length(I)
+		Ci = classify(cascader, I{i}, D{i});
+		Pi = P{i};
+		Ni = N{i};
+
+		TP =  Ci & Pi; % tp =  C and P
+		FP =  Ci & Ni; % fp =  C and N
+		TN = ~Ci & Ni; % tn = !C and N
+		FN = ~Ci & Pi; % fn = !C and P
+
+		fP = fP + sum(sum(FP));
+		tP = tP + sum(sum(TP));
+		fN = fN + sum(sum(FN));
+		tN = tN + sum(sum(TN));
+
+		% Set the new negative set to the false positives
+		N{i} = FP;
+	end
+	f = fP / (fP + tP);
+	d = tP / (fP + tP);
 end

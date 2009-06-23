@@ -1,30 +1,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% strongClassify(C, alphas, x, threshold)
+%% strongClassify(classifier, alphas, threshold, sample, dimensions)
 %%
 %% INPUTS:
-%%  - C, the set of weak classifiers selected by vjBoost
+%%  - classifier, the set of weak classifiers selected by vjBoost
 %%  - alphas, their corresponding alphas
-%%  - x, the datapoint (image)
+%%  - sample, the datapoint (image)
 %%  - threshold, play with the confusion matrix
+%%  - dimensions, the dimensions of the scanning window
 %%
 %% OUPUTS:
-%%  - c, in {0,1}, true or false
-%%  - v, the value of this datapoint
-%%
+%%  - C, a matrix of the sample in {0,1}, true or false
+%%  - V, the values of the weak classifiers summed
+%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [c, v] = strongClassify(C, alphas, x, threshold)
-	integrals = getIntegrals(x);
-	T         = length(C);
-	v         = 0;
+function [C, V] = strongClassify(classifier, alphas, threshold, sample, dimensions)
+	T         = length(classifier);
+	V         = zeros(size(sample) - dimensions);
 
+	% Create the summed value matrix
 	for t = 1:T
-		[c, v_] = weakClassify(C{t}, x, integrals);
-		v = v + alphas(t) * c;
+		[C, V_] = weakClassify(classifier{t}, sample, dimensions);
+		V = V + alphas(t) * C;
 	end
 
-	if (v >= threshold * sum(alphas))
-		c = 1;
-	else
-		c = 0;
-	end
+	% Create the binary matrix C
+	C = ( V >= ( threshold * sum(alphas) ) );
 end
