@@ -13,9 +13,9 @@
 function cascader = trainCascader(f, d, Ftarget)
 	cascader = {};
 
-	P = getData('pos');  % Positive samples
-	N = getData('neg');  % Negative samples
-	V = getData('both'); % Validation set
+	[I, P, N, D] = getData('train');
+	V            = getData('validate');
+	features     = featureGeneration(5);
 
 	Fprev = 1; Dprev = 1; i = 0;
 
@@ -28,7 +28,7 @@ function cascader = trainCascader(f, d, Ftarget)
 		% Create the current layer
 		while (Fcur > f*Fprev)
 			ni = ni + 1;
-			[strong, alphas] = vjBoost(P, N, features, ni);
+			[strong, alphas] = vjBoost([I,P,N,D], features, ni);
 
 			layer.classifier = strong;
 			layer.alphas     = alphas;
@@ -65,41 +65,34 @@ end
 %% OUPUTS:
 %%  - f, the false positive rate
 %%  - d, the detection rate
-%%  - n, the false positives
+%%  - N, the false positives
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [f, d, n] = evaluate(cascader, validation)
-	fp = 0; tp = 0; tn = 0; fn = 0;
-	totalP = 0; totalN = 0;
+function [f, d, N] = evaluate(cascader, validation)
+	I = validation(1); % True images
+	P = validation(2); % Binary images for positive samples
+	N = validation(3); % Binary images for negative samples
+	D = validation(4); % Dimension of license plate per image
 
-	for i = 1:length(validation)
-		V = validation{i};
-		C = classify(cascader, V);
-		for j = 1:length(V.tags)
-			x   = V.x(j);
-			y   = V.y(j);
-			tag = V.tags(j);
+	fP = 0; tP = 0; fN = 0; tN = 0;
+	for i = 1:length(I)
+		Ci = classify(cascader, I{i}, D{i});
+		Pi = P{i};
+		Ni = N{i};
 
-			% Positive zone
-			if (tag == 1)
-				if (C(y,x) == tag)
-					tp = tp + 1;
-				else
-					fp = fp + 1;
-				end
-				totalP = totalP + 1;
+		TP =  Ci & Pi; % tp =  C and P
+		FP =  Ci & Ni; % fp =  C and N
+		TN = ~Ci & Ni; % tn = !C and N
+		FN = ~Ci & Pi; % fn = !C and P
 
-			% Negative zone
-			else
-				if (C(y,x) == tag)
-					tn = tn + 1;
-				else
-					fn = fn + 1;
-				end
-				totalN = totalN + 1;
-			end
-		end
+		fP = fP + sum(sum(FP));
+		tP = tP + sum(sum(TP));
+		fN = fN + sum(sum(FN));
+		tN = tN + sum(sum(TN));
+
+		% Set the new negative set to the false positives
+		N{i} = FP;
 	end
-	f = fp / totalN;
-	d = tp / totalP;
+	f = fP / (fP + tP);
+	d = tP / (fP + tP);
 end
