@@ -50,7 +50,7 @@ function features = featureGeneration(segments)
 		unsignedFeatures{i*2-1} = hFeature;
 	end
 
-	for i = 0:7
+	for i = 2:9 % i = 1 is original gray image
 		for j = 1:length(unsignedFeatures)
 			feature           = unsignedFeatures{j};
 			feature.int       = i+1;
