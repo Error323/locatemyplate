@@ -49,8 +49,7 @@ function features = featureGeneration(segments)
 	end
 
 	% for every integral image, (dx, dy, var dx, etc)
-	%for i = 0:7
-	for i = 0:0
+	for i = 2:9 % i = 1 is original gray image
 		for j = 1:length(unsignedFeatures)
 			feature           = unsignedFeatures{j};
 			feature.int       = i+1;

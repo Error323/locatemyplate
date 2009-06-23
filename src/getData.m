@@ -3,22 +3,23 @@
 %%
 %% INPUTS:
 %%  - file, the index file
-%%  - M, number of negative samples * positive samples
 %%
 %% OUPUTS:
-%%  - data, the trainings data
+%%  - [I, P, N, D]
+%%    * I, the complete images I{i}{j} with j as integral image type
+%%    * P, the binary image showing positive samples
+%%    * N, the binary image showing negative samples (P = ~N, N = ~P)
+%%    * D, the dimensdataidxon [h, w] of a licensplate
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function data = getData(file, M)
-	text        = textread(file, '%s', 'whitespace', '\n\t ');
-	N           = size(text, 1);
+function [I, P, N, D] = getData(file)
+	text = textread(file, '%s', 'whitespace', '\n\t ');
+	M    = size(text, 1);
 
-	data.x      = {}; % The sample window
-	data.intImg = {}; % The integral images
-	data.y      = []; % The sample being positive or negative
+	I = {}; P = {}; N = {}; D = {};
 
 	dataidx = 1;
-	for i = 1:6:N % Assuming 1 license plate per sample
+	for i = 1:6:M % Assuming 1 license plate per sample
 
 		img     = imread(text{i});
 		imgGray = double(rgb2gray(img))/256;
@@ -26,59 +27,20 @@ function data = getData(file, M)
 		[ySize, xSize] = size(imgGray);
 
 		% Get sample coords
-		c   = str2num(text{i+1});
-		x   = str2num(text{i+2});
-		y   = str2num(text{i+3});
-		w   = str2num(text{i+4});
-		h   = str2num(text{i+5});
+		c = str2num(text{i+1}); % number of license plates
+		x = str2num(text{i+2}); % upper left corner x of license plate
+		y = str2num(text{i+3}); % upper left corner y of license plate
+		w = str2num(text{i+4}); % license plate width
+		h = str2num(text{i+5}); % license plate height
 
-		% Get our sample
-		possample = zeros(h, w);
-		for j = 1:h
-			for k = 1:w
-				possample(j,k) = imgGray(j+y-1, k+x-1);
-			end
-		end
+		% Fill our fields
+		I{dataidx}      = getIntegrals(imgGray);
+		P{dataidx}      = zeros(ySize-h, xSize-w);
+		P{dataidx}(y,x) = 1;
+		N{dataidx}      = ~P{dataidx};
+		D{dataidx}      = [h, w];
 
-		% Get the integral images
-		data.intImg{dataidx} = getIntegrals(possample);
-
-		% Set the sample
-		data.x{dataidx} = possample;
-
-		% Set to positive example
-		data.y(dataidx) = 1;
-
-		% Get some negative samples from this image
+		% Increase counter
 		dataidx = dataidx + 1;
-		j = 0;
-		while (j < M)
-			yloc   = randi(ySize-h);
-			xloc   = randi(xSize-w);
-			ybound = (yloc+h < y || yloc-h > y);
-			xbound = (xloc+w < x || xloc-w > x);
-
-			if (ybound && xbound)
-
-				negsample = zeros(h, w);
-				for k = 1:h
-					for l = 1:w
-						negsample(k,l) = imgGray(k+yloc-1, l+xloc-1);
-					end
-				end
-
-				% Get the integral images
-				data.intImg{dataidx} = getIntegrals(negsample);
-
-				% Set the sample
-				data.x{dataidx}      = negsample;
-
-				% Set to negative sample
-				data.y(dataidx)      = 0;
-
-				dataidx              = dataidx + 1;
-				j                    = j + 1;
-			end
-		end
 	end
 end
