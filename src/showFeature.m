@@ -28,9 +28,20 @@ function showFeature(feature, fig)
 		x1 = max(floor(x1*w), 0);
 
 		if (feature.blocks{i}.sig == 1)
-			rectangle('Position', [x0, y0, x1-x0, y1-y0], 'FaceColor', 'b');
+			c = 'b';
 		else
-			rectangle('Position', [x0, y0, x1-x0, y1-y0], 'FaceColor', 'w');
+			c = 'w';
+		end
+
+		% IMPORTANT, the feature is drawn (graph like) with its origin
+		% in the left bottom. But in the other code the origin of
+		% matrices are used, which are left top.
+
+		% vertical
+		if (feature.orientation == 1)
+			rectangle('Position', [x0, y0, x1-x0, y1-y0], 'FaceColor', c);
+		else % horizontal
+			rectangle('Position', [y0, x0, y1-y0,x1-x0], 'FaceColor', c);
 		end
 	end
 end

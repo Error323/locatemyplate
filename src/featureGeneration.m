@@ -27,23 +27,19 @@ function features = featureGeneration(segments)
 		binblocks = [binblocks segments];
 		binblocks = binblocks*(1/segments);
 
-		vBlocks = {}; hBlocks = {};
+		blocks = {}; 
 		for j=2:length(binblocks)
-			vBlock.coords = [0 binblocks(j-1) 1 binblocks(j)];
-			vBlock.sig    = str2num(binsigns(j-1));
-			vBlocks{j-1}  = vBlock;
-
-			hBlock.coords = [binblocks(j-1) 0 binblocks(j) 1];
-			hBlock.sig    = str2num(binsigns(j-1));
-			hBlocks{j-1}  = hBlock;
+			block.coords = [0 binblocks(j-1) 1 binblocks(j)];
+			block.sig    = str2num(binsigns(j-1));
+			blocks{j-1}  = block;
 		end
 
-		vFeature.blocks    		= vBlocks;
+		vFeature.blocks    		= blocks;
 		vFeature.bin       		= bin;
 		vFeature.signs     		= binsigns;
 		vFeature.orientation 	= 1;
 
-		hFeature.blocks    		= hBlocks;
+		hFeature.blocks    		= blocks;
 		hFeature.bin       		= bin;
 		hFeature.signs     		= binsigns;
 		hFeature.orientation 	= 0;
