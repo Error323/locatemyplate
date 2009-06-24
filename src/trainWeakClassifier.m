@@ -9,35 +9,43 @@
 %%  - feature, sets the threshold and wether its a positive
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function feature = trainWeakClassifier(feature, [I, P, N, D])
+function feature = trainWeakClassifier(feature, data)
 	global INTEGRALS DEBUG
+	I = data.I;
+	P = data.P;
+	N = data.N;
+	D = data.D;
+
 	for i=1:length(I)
 		for j=2:INTEGRALS
 			R{i}{j} = {};
 		end
 	end
 
-	N = m + l;
-
-	% Calculate the threshold for all datapoints using this feature
-	T = zeros(1, N);
-	fprintf('weakClassifying %d datapoints',N);
-	for i = 1:N
-		[c_, v] = weakClassify(feature, data.x{i}, data.intImg{i});
-		T(i)    = v;
+	values = []; signs = [];
+	for i=1:length(I)
+		[C_, R, V] = weakClassify(feature, D{i}, I, i, feature.int, R);
+		fprintf('V = %d, %d\tP = %d, %d\n', size(V,1), size(V,2), size(P{i}, 1), size(P{i},2));
+		values = [values V(1:(size(V,1)*size(V,2)))];
+		signs  = [signs P{i}(1:(size(P{i},1)*size(P{i},2)))];
 	end
 
+	size(values)
+	size(signs)
+
 	% Sort the data on the thresholds
-	[T_, I] = sort(T);
-	ysorted = data.y(I);
+	[values_, IDX] = sort(values);
+	signs          = signs(IDX);
+	l              = length(find(signs == 1));
+	m              = length(signs) - l;
 
 	iStar    = 1;
 	best     = 0;
 	positive = true;
-	for i = 2:N-1
-		posLeft = length(find( ysorted(1:i) == 1 ));
+	for i = 2:length(values)-1
+		posLeft = length(find( signs(1:i) == 1 ));
 		posRight= l - posLeft;
-		negLeft = length(find( ysorted(1:i) == 0 ));
+		negLeft = length(find( signs(1:i) == 0 ));
 		negRight= m - negLeft;
 
 		% thresholding <
@@ -60,6 +68,6 @@ function feature = trainWeakClassifier(feature, [I, P, N, D])
 	end
 
 	% Set the threshold
-	feature.threshold = T(iStar);
+	feature.threshold = values(iStar);
 	feature.positive  = positive;
 end

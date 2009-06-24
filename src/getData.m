@@ -12,17 +12,15 @@
 %%    * D, the dimensdataidxon [h, w] of a licensplate
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [I, P, N, D] = getData(file)
+function data = getData(file)
 	text = textread(file, '%s', 'whitespace', '\n\t ');
 	M    = size(text, 1);
-	% TODO remove line bellow after beta testing!
-	M		 = 12;
 
 	I = {}; P = {}; N = {}; D = {};
 
 	dataidx = 1;
 	for i = 1:6:M % Assuming 1 license plate per sample
-		fprintf('processing data %d of %d %0.2f%%\n',i,M, (i/M)*100);
+		fprintf('processing data: %0.2f%% complete\n', i/M*100);
 
 		img     = imread(text{i});
 		imgGray = double(rgb2gray(img))/256;
@@ -38,7 +36,7 @@ function [I, P, N, D] = getData(file)
 
 		% Fill our fields
 		I{dataidx}      = getIntegrals(imgGray);
-		P{dataidx}      = zeros(ySize-h, xSize-w);
+		P{dataidx}      = zeros(ySize-h+1, xSize-w+1);
 		P{dataidx}(y,x) = 1;
 		N{dataidx}      = ~P{dataidx};
 		D{dataidx}      = [h, w];
@@ -46,4 +44,8 @@ function [I, P, N, D] = getData(file)
 		% Increase counter
 		dataidx = dataidx + 1;
 	end
+	data.I = I;
+	data.P = P;
+	data.N = N;
+	data.D = D;
 end

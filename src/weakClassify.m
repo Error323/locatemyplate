@@ -14,9 +14,10 @@
 %% OUPUTS:
 %%  - C, matrix with {0,1}, true or false
 %%  - R, updated rapid hash matrix
+%%  - V, the image values after applying the feature
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId, R)
+function [C, R, V] = weakClassify(feature, dimensions, images, imageId, integralId, R)
 	global DEBUG 
 	% obtain dimensions
 	h = dimensions(1);
@@ -28,11 +29,6 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 	scale = 1;
 	h = h * scale;
 	w = w * scale;
-
-	% if not odd, make odd
-	% (must be odd numbers to make the feature block split go well)
-	if mod(h,2)==0 h = h + 1;end;
-	if mod(w,2)==0 w = w + 1;end;
 
 	% horizontal feature
 	if feature.orientation == 0
@@ -113,39 +109,39 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 	end	
 
 	% calculate sum off feature blocks
-	Rtot = 0;
+	V = 0;
 	for b=1:length(R2)
-		Rtot = Rtot + R2{b};
+		V = V + R2{b};
 	end
 
 	if DEBUG
-		Rtot 
+		V 
 	end
 
 	% horizontal feature
 	if feature.orientation == 0
 		% transpose
-		Rtot = Rtot';
+		V = V';
 	end
 
 	if DEBUG
-		Rtot 
+		V 
 		pause;
 	end
 
 	% return thresholded image
-	C = (Rtot >= feature.threshold);
+	C = (V >= feature.threshold);
 
 	if DEBUG
 		imshow(C);
 	end
 	% imshow(C);
 
-	% RtotMin = min(min(Rtot));
-	% RtotMax = max(max(Rtot));
-	% RtotRange = RtotMax-RtotMin;
-	% RtotNormalised = (Rtot - RtotMin)/RtotRange;
+	% VMin = min(min(V));
+	% VMax = max(max(V));
+	% VRange = VMax-VMin;
+	% VNormalised = (V - VMin)/VRange;
 	% figure(1);
-	% imshow(RtotNormalised);
+	% imshow(VNormalised);
 
 end
