@@ -1,0 +1,42 @@
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+
+
+
+%layout
+\pdfpagewidth 8.5in
+\pdfpageheight 11in
+\topmargin 0in
+\headheight 0in
+\headsep 0in
+\textheight 9in
+\textwidth 6.5in
+\oddsidemargin 0in
+\evensidemargin 0in
+
+%Your info
+\author{F. Huizinga [0418862], T. Kostelijk [0418889] \\ \{folkerthuizinga,mailtjerk\}@gmail.com}
+
+%Special Units
+
+\renewenvironment{abstract}{\vskip.075in\centerline{\large\bf
+Abstract}\vspace{0.5ex}\begin{quote}}{\par\end{quote}\vskip 1ex}
+
+% sections with less space
+\def\section{\@startsection {section}{1}{\z@}{-2.0ex plus
+    -0.5ex minus -.2ex}{1.5ex plus 0.3ex
+minus0.2ex}{\large\bf\raggedright}}
+
+\def\subsection{\@startsection{subsection}{2}{\z@}{-1.8ex plus    
+-0.5ex minus -.2ex}{0.8ex plus .2ex}{\normalsize\bf\raggedright}}
+\def\subsubsection{\@startsection{subsubsection}{3}{\z@}{-1.5ex
+plus      -0.5ex minus -.2ex}{0.5ex plus
+.2ex}{\normalsize\bf\raggedright}}
+\def\paragraph{\@startsection{paragraph}{4}{\z@}{1.5ex plus   
+0.5ex minus .2ex}{-1em}{\normalsize\bf}}
+\def\subparagraph{\@startsection{subparagraph}{5}{\z@}{1.5ex plus 
+  0.5ex minus .2ex}{-1em}{\normalsize\bf}}
+\def\subsubsubsection{\vskip
+5pt{\noindent\normalsize\rm\raggedright}}
