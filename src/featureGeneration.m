@@ -49,15 +49,15 @@ function features = featureGeneration(segments)
 		unsignedFeatures{i*2-1} = hFeature;
 	end
 
-	% for every integral image, (dx, dy, var dx, etc)
+	% for every integral image, (dx, dy, var dx, etc) (skip ori image)
 	for i = 2:INTEGRALS % i = 1 is original gray image
 		for j = 1:length(unsignedFeatures)
 			feature           = unsignedFeatures{j};
-			feature.int       = i+1;
+			feature.int       = i;
 			feature.positive  = 0;
 			feature.threshold = 0;
 
-			features{i*length(unsignedFeatures)+j} = feature;
+			features{(i-2)*length(unsignedFeatures)+j} = feature;
 			if (DEBUG && i == 1)
 				showFeature(feature, 1);
 				pause;
