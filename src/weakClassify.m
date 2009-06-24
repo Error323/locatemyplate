@@ -17,9 +17,6 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId, R)
-	DEBUGGING = true;
-	DEBUGGING = false;
-
 	% obtain dimensions
 	h = dimensions(1);
 	w = dimensions(2);
@@ -39,7 +36,7 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 	% horizontal feature
 	if feature.orientation == 0
 		% transpose
-		if DEBUGGING == true
+		if DEBUG == true
 			disp('horizontal feature transposing image..');
 		end
 		img = img';
@@ -76,7 +73,7 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 		
 		% if featureblock is not calculated previously
 		if( ~isfield(R{imageId}{integralId},hashString) )
-			if DEBUGGING
+			if DEBUG
 				disp(sprintf('Feature block of h=%d w=%d is now computed',blockH,blockW));
 			end
 			% TODO: could be more optimal to do img(1:2,:) = [] (delete first 2 rows)
@@ -85,17 +82,17 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 			V = img(blockH:imgH, 1:imgW-blockW+1);
 			W = img(1:imgH-blockH+1, blockW:imgW);
 
-			if DEBUGGING
+			if DEBUG
 				X,Y,V,W
 			end
 
 			% calculate total of integral and store the hash on de dimensions of the feature block
-			if DEBUGGING
+			if DEBUG
 				disp(sprintf('Storing R{%d}{%d}(h%dw%d):',imageId,integralId,blockH,blockW));
 			end
 			R{imageId}{integralId}.(hashString) = X+Y-V-W;
 		else
-			if DEBUGGING
+			if DEBUG
 				disp(sprintf('feature block of h=%d w=%d already computed',blockH,blockW));
 			end
 		end
@@ -107,7 +104,7 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 			R2{b} = -R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0)));
 		end
 
-		if DEBUGGING
+		if DEBUG
 			b
 			R2{b}
 			pause
@@ -120,7 +117,7 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 		Rtot = Rtot + R2{b};
 	end
 
-	if DEBUGGING
+	if DEBUG
 		Rtot 
 	end
 
@@ -130,7 +127,7 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 		Rtot = Rtot';
 	end
 
-	if DEBUGGING
+	if DEBUG
 		Rtot 
 		pause;
 	end
@@ -138,7 +135,7 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 	% return thresholded image
 	C = (Rtot >= feature.threshold);
 
-	if DEBUGGING
+	if DEBUG
 		imshow(C);
 	end
 end
