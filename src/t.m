@@ -2,7 +2,7 @@ clear
 close all
 
 [I, P, N, D] = getData('../data/stills/plates-test.idx');
-SEGMENTS = 2;
+SEGMENTS = 5;
 NR_INTEGRAL_IMG = 9;
 
 %TODO BUG first 4 features are empty
@@ -22,7 +22,7 @@ for i=1:length(I)
 end
 
 
-imageId = 1;
+imageId = 2;
 
 imshow(I{imageId}{1});
 figure;
