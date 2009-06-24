@@ -12,7 +12,7 @@
 %%    * D, the dimensdataidxon [h, w] of a licensplate
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function data = getData(file)
+function data = getData(file, factor)
 	text = textread(file, '%s', 'whitespace', '\n\t ');
 	M    = size(text, 1);
 
@@ -24,15 +24,16 @@ function data = getData(file)
 
 		img     = imread(text{i});
 		imgGray = double(rgb2gray(img))/256;
+		imgGray = resizem(imgGray, factor);
 
 		[ySize, xSize] = size(imgGray);
 
 		% Get sample coords
-		c = str2num(text{i+1}); % number of license plates
-		x = str2num(text{i+2}); % upper left corner x of license plate
-		y = str2num(text{i+3}); % upper left corner y of license plate
-		w = str2num(text{i+4}); % license plate width
-		h = str2num(text{i+5}); % license plate height
+		c = str2num(text{i+1});                 % number of license plates
+		x = floor(str2num(text{i+2}) * factor); % upper left corner x of license plate
+		y = floor(str2num(text{i+3}) * factor); % upper left corner y of license plate
+		w = floor(str2num(text{i+4}) * factor); % license plate width
+		h = floor(str2num(text{i+5}) * factor); % license plate height
 
 		% Fill our fields
 		I{dataidx}      = getIntegrals(imgGray);
