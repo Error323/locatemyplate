@@ -22,6 +22,7 @@ function [I, P, N, D] = getData(file)
 
 	dataidx = 1;
 	for i = 1:6:M % Assuming 1 license plate per sample
+		fprintf('processing data %d of %d %0.2f%%\n',i,M, (i/M)*100);
 
 		img     = imread(text{i});
 		imgGray = double(rgb2gray(img))/256;

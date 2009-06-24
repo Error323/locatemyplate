@@ -13,7 +13,7 @@ function showFeature(feature, fig)
 	w = 100; h = 33;
 
 	% set title of figure window
-	intLabels = {'abs dx', 'abs dy', 'abs ddx', 'abs ddy', 'abs var dx', 'abs var dy', 'abs var abs dx', 'abs var abs dy'};
+	intLabels = {'image itself', 'abs dx', 'abs dy', 'abs ddx', 'abs ddy', 'abs var dx', 'abs var dy', 'abs var abs dx', 'abs var abs dy'};
 	title(intLabels{feature.int});
 
 	for i = 1:length(feature.blocks)

@@ -154,11 +154,13 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 	if DEBUGGING
 		imshow(C);
 	end
-	%imshow(C);
+	% imshow(C);
+
 	% RtotMin = min(min(Rtot));
 	% RtotMax = max(max(Rtot));
 	% RtotRange = RtotMax-RtotMin;
 	% RtotNormalised = (Rtot - RtotMin)/RtotRange;
+	% figure(1);
 	% imshow(RtotNormalised);
 
 end
