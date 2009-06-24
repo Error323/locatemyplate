@@ -9,6 +9,7 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function features = featureGeneration(segments)
+	NR_INTEGRAL_IMG = 9;
 	debug = false;
 	unsignedFeatures = {};
 	powerset = 2^segments;
@@ -49,7 +50,7 @@ function features = featureGeneration(segments)
 	end
 
 	% for every integral image, (dx, dy, var dx, etc)
-	for i = 2:9 % i = 1 is original gray image
+	for i = 2:NR_INTEGRAL_IMG % i = 1 is original gray image
 		for j = 1:length(unsignedFeatures)
 			feature           = unsignedFeatures{j};
 			feature.int       = i+1;
