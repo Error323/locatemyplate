@@ -13,5 +13,3 @@ realclean: clean
 
 public: all
 	install $(REPORT).pdf /var/www/
-
-
