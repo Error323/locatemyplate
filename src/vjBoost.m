@@ -57,7 +57,7 @@ function [strongClassifier, alphas] = vjBoost([I,P,N,D], features, T)
 			s = 0;
 			for i = 1:length(I)
 				[C, R] = weakClassify(features{h}, D{i}, I, i, feature{h}.int, R);
-				Ep{i}  = xor(C,P{i});
+				Ep{i}  = xor(C,P{i}); % C xor P gives all errors
 				s      = s + sum(sum(W{i} .* Ep{i}));
 			end
 			if (s < Et)
@@ -73,7 +73,7 @@ function [strongClassifier, alphas] = vjBoost([I,P,N,D], features, T)
 		% Update the weights
 		beta = Et / ( 1 - Et );
 		for i = 1:length(I)
-			W{i} = W{i} .* ( beta .^ (1-E{i}) );
+			W{i} = W{i} .* ( beta .^ ( 1 - E{i} ) );
 		end
 
 		% Calculate alpha weight
