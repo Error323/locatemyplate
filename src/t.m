@@ -1,5 +1,6 @@
 clear
 close all
+globals
 
 % Obtain test data
 if (exist('../cache/testI.mat', 'file'))
@@ -17,15 +18,22 @@ else
 	save('../cache/testD.mat', 'D');
 end
 
+% disp('resizing images');
+% tic;
+% for i=1:length(I)
+% 	for j=1:length(I{i})
+% 		I{i}{j} = imresize(I{i}{j},0.42);
+% 	end
+% end
+% toc;
 
-SEGMENTS = 4;
-NR_INTEGRAL_IMG = 9;
+SEGMENTS = 2;
 
 %TODO BUG first 4 features are empty
 features = featureGeneration(SEGMENTS);
 
 for i=1:length(I)
-	for j=2:NR_INTEGRAL_IMG
+	for j=2:INTEGRALS
 		R{i}{j} = {};
 
 
@@ -38,20 +46,22 @@ for i=1:length(I)
 end
 
 
-imageId = 2;
+imageId = 1;
 
-figure;
+% figure(3);
 imshow(I{imageId}{1});
+% 
+% figure(1);
+% figure(2);
+% 
+% for featureId=510:1700000
+% 	integralId = 2;
+% 	clf(2);
+% 	showFeature(features{featureId}, 2);
+% 	tic;
+% 	weakClassify(features{featureId}, D{imageId}, I, imageId, integralId, R);
+% 	pause(2);
+% end
 
-figure(1);
-figure(2);
-
-pause;
-for featureId=30:70
-	integralId = 2;
-	showFeature(features{featureId}, 2);
-	tic;
-	weakClassify(features{featureId}, D{imageId}, I, imageId, integralId, R);
-	toc;
-	pause(1);
-end
+alphas = ones(1,length(features));
+strongClassify({features{1},features{2}}, D{imageId}, I, alphas,1);

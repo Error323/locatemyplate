@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% weakClassify(feature, dimensions, images, imageId, integralId, R)
+%% weakClassify(feature, dimensions, Images, imageId, integralId, R)
 %%
 %% INPUTS:
 %%  - feature, 
 %%  -	dimensions, 1x2 matrix of height and width of license plate
-%%  - images, all the (integral) images
+%%  - Images, all the (integral) Images
 %%  - imageId, image selector
 %%  - integralId, integral image selector
 %%  - R, the rapid hash matrix which stores for every image for every 
@@ -16,14 +16,15 @@
 %%  - R, updated rapid hash matrix
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId, R)
+function [C, R] = weakClassify(feature, dimensions, Images, imageId, integralId, R)
 	global DEBUG 
 	% obtain dimensions
 	h = dimensions(1);
 	w = dimensions(2);
+	
 
 	% select proper integral image
-	img = images{imageId}{integralId};
+	img = Images{imageId}{integralId};
 
 	scale = 1;
 	h = h * scale;
@@ -98,6 +99,8 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 			end
 		end
 
+		disp(' size(R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0))));');
+		size(R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0))));
 		% if featureblock is positively signed
 		if feature.blocks{b}.sig == 1
 			R2{b} = R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0)));
@@ -133,6 +136,8 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 		pause;
 	end
 
+	disp('size Rtot');
+	size(Rtot);
 	% return thresholded image
 	C = (Rtot >= feature.threshold);
 
@@ -141,11 +146,11 @@ function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId,
 	end
 	% imshow(C);
 
-	% RtotMin = min(min(Rtot));
-	% RtotMax = max(max(Rtot));
-	% RtotRange = RtotMax-RtotMin;
-	% RtotNormalised = (Rtot - RtotMin)/RtotRange;
-	% figure(1);
-	% imshow(RtotNormalised);
+	RtotMin = min(min(Rtot));
+	RtotMax = max(max(Rtot));
+	RtotRange = RtotMax-RtotMin;
+	RtotNormalised = (Rtot - RtotMin)/RtotRange;
+	figure(1);
+	imshow(RtotNormalised);
 
 end
