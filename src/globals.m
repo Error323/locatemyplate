@@ -1,4 +1,5 @@
 %%%%% GLOBAL CONSTANTS %%%%%
+global INTEGRALS SEGMENTS DEBUG
 
 % Number of integral images
 INTEGRALS = 9;
@@ -8,5 +9,3 @@ SEGMENTS  = 5;
 
 % Show debug information
 DEBUG     = false;
-
-global INTEGRALS SEGMENTS DEBUG

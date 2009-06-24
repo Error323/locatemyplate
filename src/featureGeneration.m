@@ -9,6 +9,8 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function features = featureGeneration(segments)
+	global INTEGRALS DEBUG
+
 	unsignedFeatures = {};
 	powerset = 2^segments;
 

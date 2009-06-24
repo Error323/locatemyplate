@@ -17,6 +17,7 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [C, R] = weakClassify(feature, dimensions, images, imageId, integralId, R)
+	global DEBUG 
 	% obtain dimensions
 	h = dimensions(1);
 	w = dimensions(2);

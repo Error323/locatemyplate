@@ -10,6 +10,7 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function feature = trainWeakClassifier(feature, [I, P, N, D])
+	global INTEGRALS DEBUG
 	for i=1:length(I)
 		for j=2:INTEGRALS
 			R{i}{j} = {};
