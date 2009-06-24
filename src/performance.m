@@ -1,5 +1,5 @@
-FEATURES = 8;
-SEGMENTS = 4;
+FEATURES = 2;
+SEGMENTS = 2;
 
 close all;
 

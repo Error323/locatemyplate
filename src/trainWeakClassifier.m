@@ -16,10 +16,13 @@ function feature = trainWeakClassifier(feature, data, m, l)
 
 	% Calculate the threshold for all datapoints using this feature
 	T = zeros(1, N);
+	fprintf('weakClassifying %d datapoints',N);
+	tic;
 	for i = 1:N
 		[c_, v] = weakClassify(feature, data.x{i}, data.intImg{i});
 		T(i)    = v;
 	end
+	toc;
 
 	% Sort the data on the thresholds
 	[T_, I] = sort(T);

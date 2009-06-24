@@ -14,15 +14,16 @@
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [C, V] = strongClassify(classifier, alphas, threshold, sample, dimensions)
-	T         = length(classifier);
-	V         = zeros(size(sample) - dimensions);
+	% T         = length(classifier);
+	% V         = zeros(size(sample) - dimensions);
 
-	% Create the summed value matrix
-	for t = 1:T
-		[C, V_] = weakClassify(classifier{t}, sample, dimensions);
-		V = V + alphas(t) * C;
-	end
+	% % Create the summed value matrix
+	% for t = 1:T
+	% 	[C, V_] = weakClassify(classifier{t}, sample, dimensions);
+	% 	V = V + alphas(t) * C;
+	% end
 
-	% Create the binary matrix C
-	C = ( V >= ( threshold * sum(alphas) ) );
+
+	% % Create the binary matrix C
+	% C = ( V >= ( threshold * sum(alphas) ) );
 end

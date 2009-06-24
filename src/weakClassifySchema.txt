@@ -1,0 +1,22 @@
+weakClassify
+input:
+	-hash matrix R
+	-feature
+	-dimensions license plate
+
+output:
+	-(updated) hash matrix R
+
+description:
+	loops through images
+	weakclassifies them
+	updates R
+	returns weakclassifie result
+
+
+R{i}{j}{h}{w}
+
+i   = image id
+j   = integral id (could be var dx image) 
+h,w = dimensions feature block
+

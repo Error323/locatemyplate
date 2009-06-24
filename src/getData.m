@@ -15,6 +15,8 @@
 function [I, P, N, D] = getData(file)
 	text = textread(file, '%s', 'whitespace', '\n\t ');
 	M    = size(text, 1);
+	% TODO remove line bellow after beta testing!
+	M		 = 12;
 
 	I = {}; P = {}; N = {}; D = {};
 
