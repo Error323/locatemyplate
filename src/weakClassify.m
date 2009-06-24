@@ -17,7 +17,7 @@
 %%  - V, the image values after applying the feature
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [C, R, V] = weakClassify(feature, dimensions, images, imageId, integralId, R)
+function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integralId, R)
 	global DEBUG 
 	% obtain dimensions
 	h = dimensions(1);
@@ -95,7 +95,6 @@ function [C, R, V] = weakClassify(feature, dimensions, images, imageId, integral
 			end
 		end
 
-		disp(' size(R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0))));');
 		size(R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0))));
 		% if featureblock is positively signed
 		if feature.blocks{b}.sig == 1
@@ -117,30 +116,18 @@ function [C, R, V] = weakClassify(feature, dimensions, images, imageId, integral
 		V = V + R2{b};
 	end
 
-	if DEBUG
-		V 
-	end
-
 	% horizontal feature
 	if feature.orientation == 0
 		% transpose
 		V = V';
 	end
 
-	if DEBUG
-		V 
-		pause;
-	end
-
-	disp('size Rtot');
-	size(Rtot);
 	% return thresholded image
 	C = (V >= feature.threshold);
 
 	if DEBUG
 		imshow(C);
 	end
-	% imshow(C);
 
 	% VMin = min(min(V));
 	% VMax = max(max(V));

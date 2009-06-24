@@ -25,13 +25,9 @@ function feature = trainWeakClassifier(feature, data)
 	values = []; signs = [];
 	for i=1:length(I)
 		[C_, R, V] = weakClassify(feature, D{i}, I, i, feature.int, R);
-		fprintf('V = %d, %d\tP = %d, %d\n', size(V,1), size(V,2), size(P{i}, 1), size(P{i},2));
 		values = [values V(1:(size(V,1)*size(V,2)))];
 		signs  = [signs P{i}(1:(size(P{i},1)*size(P{i},2)))];
 	end
-
-	size(values)
-	size(signs)
 
 	% Sort the data on the thresholds
 	[values_, IDX] = sort(values);
@@ -43,6 +39,7 @@ function feature = trainWeakClassifier(feature, data)
 	best     = 0;
 	positive = true;
 	for i = 2:length(values)-1
+		fprintf('training feature %0.2f%% complete\n', (i/(length(values)-2)*100));
 		posLeft = length(find( signs(1:i) == 1 ));
 		posRight= l - posLeft;
 		negLeft = length(find( signs(1:i) == 0 ));
