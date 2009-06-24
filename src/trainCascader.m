@@ -11,6 +11,7 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function cascader = trainCascader(f, d, Ftarget)
+	global DEBUG
 	cascader = {};
 
 	[I, P, N, D] = getData('../data/stills/plates-train.idx');

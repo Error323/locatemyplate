@@ -3,26 +3,29 @@
 %%
 %% INPUTS:
 %%  - feature, the current feature being trained
-%%  - data, the dataset holding + and - samples
-%%  - m, number of negative samples
-%%  - l, number of positive samples
+%%  - data, [I, P, N, D]
 %%
 %% OUPUTS:
 %%  - feature, sets the threshold and wether its a positive
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function feature = trainWeakClassifier(feature, data, m, l)
+function feature = trainWeakClassifier(feature, [I, P, N, D])
+	global INTEGRALS DEBUG
+	for i=1:length(I)
+		for j=2:INTEGRALS
+			R{i}{j} = {};
+		end
+	end
+
 	N = m + l;
 
 	% Calculate the threshold for all datapoints using this feature
 	T = zeros(1, N);
 	fprintf('weakClassifying %d datapoints',N);
-	tic;
 	for i = 1:N
 		[c_, v] = weakClassify(feature, data.x{i}, data.intImg{i});
 		T(i)    = v;
 	end
-	toc;
 
 	% Sort the data on the thresholds
 	[T_, I] = sort(T);
