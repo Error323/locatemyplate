@@ -22,49 +22,26 @@ function feature = trainWeakClassifier(feature, data)
 		end
 	end
 
-	values = []; signs = [];
+	values = [];
 	for i=1:length(I)
 		[C_, R, V] = weakClassify(feature, D{i}, I, i, feature.int, R);
-		values = [values V(1:(size(V,1)*size(V,2)))];
-		signs  = [signs P{i}(1:(size(P{i},1)*size(P{i},2)))];
+		[v_, idx]  = find(P{i} == 1);
+		values = [values V(idx)];
 	end
 
-	% Sort the data on the thresholds
-	[values_, IDX] = sort(values);
-	signs          = signs(IDX);
-	l              = length(find(signs == 1));
-	m              = length(signs) - l;
-
-	iStar    = 1;
-	best     = 0;
-	positive = true;
-	for i = 2:length(values)-1
-		fprintf('training feature %0.2f%% complete\n', (i/(length(values)-2)*100));
-		posLeft = length(find( signs(1:i) == 1 ));
-		posRight= l - posLeft;
-		negLeft = length(find( signs(1:i) == 0 ));
-		negRight= m - negLeft;
-
-		% thresholding <
-		if (posLeft/l >= negLeft/m)
-			v = posLeft/l + negRight/m;
-			if (v > best)
-				best     = v;
-				iStar    = i;
-				positive = false;
-			end
-		% thresholding >
-		else
-			v = posRight/l + negLeft/m;
-			if (v > best)
-				best     = v;
-				iStar    = i;
-				positive = true;
-			end
-		end
+	feature.threshold = mean(values);
+	if (length(find(values >= feature.threshold)) >= length(values)/2)
+		feature.positive = true;
+	else
+		feature.positive = false;
 	end
 
-	% Set the threshold
-	feature.threshold = values(iStar);
-	feature.positive  = positive;
+	if (true)
+		discriminant = ones(1,length(values))*feature.threshold;
+		plot(values);
+		hold on;
+		plot(discriminant, 'r');
+		hold off;
+		pause;
+	end
 end

@@ -122,18 +122,22 @@ function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integral
 		V = V';
 	end
 
-	% return thresholded image
-	C = (V >= feature.threshold);
+	% this should help scaling issues
+	V = V ./ (h*w);
 
-	if DEBUG
-		imshow(C);
+	% return thresholded image
+	if (feature.positive)
+		C = (feature.threshold >= V);
+	else
+		C = (feature.threshold < V);
 	end
 
-	% VMin = min(min(V));
-	% VMax = max(max(V));
-	% VRange = VMax-VMin;
-	% VNormalised = (V - VMin)/VRange;
-	% figure(1);
-	% imshow(VNormalised);
-
+	if DEBUG
+		VMin = min(min(V));
+		VMax = max(max(V));
+		VRange = VMax-VMin;
+		VNormalised = (V - VMin)/VRange;
+		figure(1);
+		imshow(VNormalised);
+	end
 end
