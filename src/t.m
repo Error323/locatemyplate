@@ -3,20 +3,19 @@ close all
 globals
 
 % Obtain test data
-if (exist('../cache/testI.mat', 'file'))
+if (exist('../cache/test.mat', 'file'))
 	disp('using cashed data');
-	load('../cache/testI.mat', 'I');
-	load('../cache/testP.mat', 'P');
-	load('../cache/testN.mat', 'N');
-	load('../cache/testD.mat', 'D');
+	load('../cache/test.mat', 'data');
 else
 	disp('loading data');
-	[I, P, N, D] = getData('../data/stills/plates-test.idx');
-	save('../cache/testI.mat', 'I');
-	save('../cache/testP.mat', 'P');
-	save('../cache/testN.mat', 'N');
-	save('../cache/testD.mat', 'D');
+	data = getData('../data/stills/plates-test.idx', 0.5);
+	save('../cache/test.mat', 'data');
 end
+
+I = data.I;
+P = data.P;
+N = data.N;
+D = data.D;
 
 % disp('resizing images');
 % tic;
@@ -64,4 +63,6 @@ imshow(I{imageId}{1});
 % end
 
 alphas = ones(1,length(features));
+pause
+disp('strongclassifying');
 strongClassify({features{1},features{2}}, D{imageId}, I, alphas,1);
