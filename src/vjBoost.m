@@ -42,8 +42,7 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 
 	% Initialize weight matrices
 	for i = 1:length(I)
-		W{i}(find(P{i} == 1)) ./ (2*pos);
-		W{i}(find(N{i} == 1)) ./ (2*neg);
+		W{i} = ( P{i} ./ (2*pos) ) + ( N{i} ./ (2*neg) );
 	end
 
 	% Initialize some vars
@@ -74,12 +73,6 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 			s = 0;
 			for i = 1:length(I)
 				[C, R, V] = weakClassify(features{h}, D{i}, I, i, features{h}.int, R);
-				d = D{i}
-				p = size(P{i})
-				img = size(I{i}{1})
-				c = size(C)
-				figure;imshow(P{i});
-				figure;imshow(I{i}{1});
 				Ep{i}  = xor(C,P{i}); % C xor P gives all errors
 				s      = s + sum(sum(W{i} .* Ep{i}));
 			end
