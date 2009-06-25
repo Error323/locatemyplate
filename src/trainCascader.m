@@ -2,26 +2,26 @@
 %% trainCascader(f, d, Ftarget)
 %%
 %% INPUTS:
-%%  - f, maximum acceptable false positive rate per layer
-%%  - d, minimum acceptable detection rate per layer
-%%  - Ftarget, overall false positive rate
+%%  - f, maximum acceptable false positive rate per layer should be fairly high
+%%  - d, minimum acceptable detection rate per layer should be fairly high
+%%  - Ftarget, overall false positive rate should be low
 %%
 %% OUPUTS:
 %%  - cascader, a cascading classifier
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function cascader = trainCascader(f, d, Ftarget)
-	global DEBUG
+function cascader = trainCascader(f, d, Ftarget, train, test, features)
+	global DEBUG;
 	cascader = {};
 
-	[I, P, N, D] = getData('../data/stills/plates-train.idx');
-	V            = getData('../data/stills/plates-test.idx');
-	features     = featureGeneration(5);
+	I = train.I; % True images
+	P = train.P; % Binary images for positive samples
+	N = train.N; % Binary images for negative samples
+	D = train.D; % Dimension of license plate per image
 
 	Fprev = 1; Dprev = 1; i = 0;
-
 	% Create a cascading classifier made out of strong classifiers
-	while (Fcur > Ftarget)
+	while (Fprev > Ftarget)
 		i = i + 1;
 		ni = 0;
 		Fcur = Fprev;
@@ -29,16 +29,15 @@ function cascader = trainCascader(f, d, Ftarget)
 		% Create the current layer
 		while (Fcur > f*Fprev)
 			ni = ni + 1;
-			[strong, alphas] = vjBoost([I,P,N,D], features, ni);
+			[strong, alphas] = vjBoost(train, features, ni);
 
-			layer.classifier = strong;
-			layer.alphas     = alphas;
-			cascader{i}      = layer;
+			cascader{i}.classifier = strong;
+			cascader{i}.alphas     = alphas;
 
 			% Determine the best threshold for the current layer
 			for t = 0.9:-0.1:0.1
 				cascader{i}.threshold = t;
-				[Fcur, Dcur, N_] = evaluate(cascader, V);
+				[Fcur, Dcur, N_] = evaluate(cascader, test);
 				if (Dcur > d*Dprev)
 					break;
 				end
@@ -47,8 +46,10 @@ function cascader = trainCascader(f, d, Ftarget)
 
 		if (Fcur > Ftarget)
 			% Implicit empty and replace N
-			[Fcur, Dcur, N] = evaluate(cascader, V);
+			[Fcur, Dcur, N] = evaluate(cascader, test);
 		end
+
+		fprintf('layer %d complete, %d features, d = %0.2f, fp = %0.2f\n', i, length(cascader{i}.classifier), Dcur, Fcur);
 
 		Dprev = Dcur;
 		Fprev = Fcur;
@@ -70,10 +71,10 @@ end
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [f, d, N] = evaluate(cascader, validation)
-	I = validation(1); % True images
-	P = validation(2); % Binary images for positive samples
-	N = validation(3); % Binary images for negative samples
-	D = validation(4); % Dimension of license plate per image
+	I = validation.I; % True images
+	P = validation.P; % Binary images for positive samples
+	N = validation.N; % Binary images for negative samples
+	D = validation.D; % Dimension of license plate per image
 
 	fP = 0; tP = 0; fN = 0; tN = 0;
 	for i = 1:length(I)
@@ -94,6 +95,6 @@ function [f, d, N] = evaluate(cascader, validation)
 		% Set the new negative set to the false positives
 		N{i} = FP;
 	end
-	f = fP / (fP + tP);
-	d = tP / (fP + tP);
+	f = fP / (fP + tN);
+	d = tP / (tP + fN);
 end

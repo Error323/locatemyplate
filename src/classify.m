@@ -11,15 +11,20 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function C = classify(cascader, sample, dimensions)
-	C = ones(size(sample) - dimensions);
+	global DEBUG;
+	C = ones(size(sample{1}) - (dimensions-1));
 
 	for i = 1:length(cascader)
 		% Get the strong classifier
 		S = cascader{i};
 
-		[C_, V_] = strongClassify(S.classifier, S.alphas, S.threshold, sample, dimensions);
+		[C_, V_] = strongClassify(S.classifier, dimensions, sample, {}, S.alphas, S.threshold);
 
 		% Cascade
 		C = C&C_;
+		if (DEBUG)
+			figure(i);
+			imshow(C);
+		end
 	end
 end

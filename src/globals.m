@@ -1,5 +1,5 @@
 %%%%% GLOBAL CONSTANTS %%%%%
-global INTEGRALS SEGMENTS DEBUG SCALEFACTOR;
+global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train test features;
 
 % Number of integral images
 INTEGRALS   = 9;
