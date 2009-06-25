@@ -75,6 +75,14 @@ function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integral
 				disp(sprintf('Feature block of h=%d w=%d is now computed',blockH,blockW));
 			end
 			% TODO: could be more optimal to do img(1:2,:) = [] (delete first 2 rows)
+
+			% explanation of the +1
+			% when imgW differs 2 from blockW: the block could be on 2+1 positions
+			% upper left position and 1 pos hifted to the right and 2 pos shifted to the right
+			%      --  = 2
+			% [   ]--
+			% -[   ]-
+			% --[   ]
 			X = img(1:imgH-blockH+1,1:imgW-blockW+1);
 			Y = img(blockH:imgH, blockW:imgW);
 			V = img(blockH:imgH, 1:imgW-blockW+1);
