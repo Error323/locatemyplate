@@ -5,7 +5,7 @@ global INTEGRALS SEGMENTS DEBUG SCALEFACTOR;
 INTEGRALS   = 9;
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 5;
+SEGMENTS    = 3;
 
 % Show debug information
 DEBUG       = false;

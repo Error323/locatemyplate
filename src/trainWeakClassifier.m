@@ -16,15 +16,10 @@ function feature = trainWeakClassifier(feature, data)
 	N = data.N;
 	D = data.D;
 
-	for i=1:length(I)
-		for j=2:INTEGRALS
-			R{i}{j} = {};
-		end
-	end
-
 	values = [];
+	R = {};
 	for i=1:length(I)
-		[C_, R, V] = weakClassify(feature, D{i}, I, i, feature.int, R);
+		[C_, R_, V] = weakClassify(feature, D{i}, I{i}{feature.int}, R);
 		[v_, idx]  = find(P{i} == 1);
 		values = [values V(idx)];
 	end

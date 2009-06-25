@@ -18,12 +18,6 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	N = data.N;
 	D = data.D;
 
-	for i=1:length(I)
-		for j=2:INTEGRALS
-			R{i}{j} = {};
-		end
-	end
-
 	% Initialize matrices
 	pos = 0; neg = 0;
 	W   = {};
@@ -42,14 +36,6 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	% Initialize weight matrices and classifiers
 	for i = 1:length(I)
 		W{i} = ( P{i} ./ (2*pos) ) + ( N{i} ./ (2*neg) );
-	end
-
-	% precalculate features applied to images
-	C = {};
-	for h = 1:H
-		for i = 1:length(I)
-			[C{h}{i}, R_, V] = weakClassify(features{h}, D{i}, I, i, features{h}.int, R);
-		end
 	end
 
 	for t = 1:T
@@ -73,9 +59,11 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 			end
 
 			s = 0;
+			j = features{h}.int;
 			for i = 1:length(I)
-				Ep{i}     = xor(C{h}{i},P{i}); % C xor P gives all errors
-				s         = s + sum(sum(W{i} .* Ep{i}));
+				[C, R_, V] = weakClassify(features{h}, D{i}, I{i}{j}, {});
+				Ep{i} = xor(C,P{i}); % C xor P gives all errors
+				s     = s + sum(sum(W{i} .* Ep{i}));
 			end
 			if (s < Et)
 				Et = s;
@@ -90,12 +78,12 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 		% Update the weights
 		beta = Et / ( 1 - Et );
 		for i = 1:length(I)
-			W{i} = W{i} .* ( beta .^ ( 1 - E{i} ) );
+			W{i} = W{i} .* ( beta .^ ( E{i} ) );
 		end
 
 		% Calculate alpha weight
 		alphas(t) = log(1 / beta);
-		fprintf('learning: %0.2f%% complete\n', t/T*100);
+		fprintf('learning strong classifier: %0.2f%% complete\n', t/T*100);
 	end
 
 	% Output the T best features
