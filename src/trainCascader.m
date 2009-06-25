@@ -38,6 +38,7 @@ function cascader = trainCascader(f, d, Ftarget, train, test, features)
 			for t = 0.9:-0.1:0.1
 				cascader{i}.threshold = t;
 				[Fcur, Dcur, N_] = evaluate(cascader, test);
+				fprintf('d = %0.2f, fp = %0.2f\n', Dcur, Fcur);
 				if (Dcur > d*Dprev)
 					break;
 				end
@@ -53,6 +54,8 @@ function cascader = trainCascader(f, d, Ftarget, train, test, features)
 
 		Dprev = Dcur;
 		Fprev = Fcur;
+		fprintf('Saving current cascader with %d layers\n', i);
+		save('../cache/cascader.mat', 'cascader');
 	end
 end
 

@@ -2,10 +2,10 @@
 global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train test features;
 
 % Number of integral images
-INTEGRALS   = 9;
+INTEGRALS   = 5;
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 3;
+SEGMENTS    = 5;
 
 % Show debug information
 DEBUG       = false;

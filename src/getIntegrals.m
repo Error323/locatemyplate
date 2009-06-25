@@ -11,9 +11,9 @@
 function integrals = getIntegrals(sample)
 	integrals = {};
 
-	integrals{1} = sample;
-
 	sample = single(sample)/256;
+
+	integrals{1} = sample;
 
 	% creating the image filters
 	Fdx = [-1 0 1;-1 0 1;-1 0 1];
@@ -38,18 +38,18 @@ function integrals = getIntegrals(sample)
 	integrals{5} = getIntegral(dy2Abs);
 
 	% precalculate means
-	Fmean = ones(6)/36;
-	dxMean = imfilter(dx, Fmean);
-	dyMean = imfilter(dy, Fmean);
+	%Fmean = ones(6)/36;
+	%dxMean = imfilter(dx, Fmean);
+	%dyMean = imfilter(dy, Fmean);
 
-	% Calculate abs variance of dx
-	integrals{6} = abs(dx - dxMean);
-	integrals{7} = abs(dy - dyMean);
+	%% Calculate abs variance of dx
+	%integrals{6} = abs(dx - dxMean);
+	%integrals{7} = abs(dy - dyMean);
 
-	% Calculate abs variance of abs dx
-	integrals{8} = abs(dx - abs(dxMean));
-	% Calculate abs variance of abs dy
-	integrals{9} = abs(dy - abs(dyMean));
+	%% Calculate abs variance of abs dx
+	%integrals{8} = abs(dx - abs(dxMean));
+	%% Calculate abs variance of abs dy
+	%integrals{9} = abs(dy - abs(dyMean));
 end
 
 
