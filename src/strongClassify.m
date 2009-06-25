@@ -3,53 +3,51 @@
 %%
 %% INPUTS:
 %%  - features, the set of weak classifiers selected by vjBoost
-%%  - alphas, their corresponding alphas
-%%  - sample, the datapoint (image)
 %%  - dimensions, the dimensions of the scanning window
+%%  - integralImgs, all integral images of one picture
+%%  - alphas
+%%  - threshold
 %%
 %% OUPUTS:
 %%  - C, a matrix of the sample in {0,1}, true or false
 %%  - V, the values of the weak classifiers summed
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [C, V] = strongClassify(features, dimensions, Images, alphas, threshold) 
-	globals
+function [C, V] = strongClassify(features, dimensions, integralImgs, Ri, alphas, threshold) 
+	global DEBUG INTEGRALS;
 
-	% initalize hash matrix
-	for i=1:length(Images)
-		for j=2:INTEGRALS
-			R{i}{j} = {};
-		end
+	for j=2:INTEGRALS %skip ori image
+		Ri{j} = {};
 	end
 
-	T         = length(features);
 	%TODO initialise with zeros(..)
-	imageId   = 1;
-	%V         = zeros(size(Images{imageId}{1})-dimensions);
 	V = 0;
-	% size(Images{imageId}{1})
-	% dimensions
-	% disp('size  init V');
-	% size(V)
 
 	% Create the summed value matrix
-	for t = 1:T
-		integralId = features{t}.int
-		[C, R] = weakClassify(features{t}, dimensions, Images, imageId, integralId, R);
-		disp('size V');
-		size(V)
-		disp('size C');
-		size(C)
-		V = V + alphas(t) * C;
+	for t = 1:length(features);
+		feature 		= features{t};
+		integralId 	= features{t}.int;
+		img 				= integralImgs{integralId};
+		Rij 			  = Ri{integralId};
+
+		%showFeature(feature, 2);
+		[C, RijClassified, V] = weakClassify(feature, dimensions, img, Rij);
+		Ri{integralId} = RijClassified;
+		V      = V + alphas(t) * C;
 	end
 
-	VMin = min(min(V));
-	VMax = max(max(V));
-	VRange = VMax-VMin;
-	VNormalised = (V - VMin)/VRange;
-	figure(1);
-	imshow(V);
+	% print normalized probability image
+	if DEBUG
+		VMin = min(min(V));
+		VMax = max(max(V));
+		VRange = VMax-VMin;
+		VNormalised = (V - VMin)/VRange;
+		%figure(1);
+		figure;
+		imshow(V);
+	end
 
-	% Create the binary matrix C
+	% Create the binary matrix C where 1 indicates we founde a license plate
+	% on that position
 	C = ( V >= ( threshold * sum(alphas) ) );
 end
