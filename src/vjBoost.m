@@ -11,12 +11,29 @@
 %%  - alphas, their corresponding weights
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [strongClassifier, alphas] = vjBoost([I,P,N,D], features, T)
+function [strongClassifier, alphas] = vjBoost(data, features, T)
+	global INTEGRALS;
+	I = data.I;
+	P = data.P;
+	N = data.N;
+	D = data.D;
+
+	%for i=1:length(features)
+	%	features{i} = trainWeakClassifier(features{i}, data);
+	%	fprintf('training %0.2f%% complete\n', (i/length(features)*100));
+	%end
+
+	for i=1:length(I)
+		for j=2:INTEGRALS
+			R{i}{j} = {};
+		end
+	end
+
 	% Initialize matrices
 	pos = 0; neg = 0;
-	W   = {1:length(I)};
-	E   = {1:length(I)};
-	Ep  = {1:length(I)};
+	W   = {};
+	E   = {};
+	Ep  = {};
 	for i = 1:length(I)
 		pos  = pos + sum(sum(P{i}));
 		neg  = neg + sum(sum(N{i}));
@@ -25,8 +42,7 @@ function [strongClassifier, alphas] = vjBoost([I,P,N,D], features, T)
 
 	% Initialize weight matrices
 	for i = 1:length(I)
-		W{i}(find(P{i} == 1)) ./ (2*pos);
-		W{i}(find(N{i} == 1)) ./ (2*neg);
+		W{i} = ( P{i} ./ (2*pos) ) + ( N{i} ./ (2*neg) );
 	end
 
 	% Initialize some vars
@@ -56,7 +72,7 @@ function [strongClassifier, alphas] = vjBoost([I,P,N,D], features, T)
 
 			s = 0;
 			for i = 1:length(I)
-				[C, R] = weakClassify(features{h}, D{i}, I, i, feature{h}.int, R);
+				[C, R, V] = weakClassify(features{h}, D{i}, I, i, features{h}.int, R);
 				Ep{i}  = xor(C,P{i}); % C xor P gives all errors
 				s      = s + sum(sum(W{i} .* Ep{i}));
 			end

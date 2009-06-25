@@ -13,6 +13,8 @@ function integrals = getIntegrals(sample)
 
 	integrals{1} = sample;
 
+	sample = single(sample)/256;
+
 	% creating the image filters
 	Fdx = [-1 0 1;-1 0 1;-1 0 1];
 	Fdy = Fdx';

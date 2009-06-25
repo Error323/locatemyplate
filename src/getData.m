@@ -23,7 +23,7 @@ function data = getData(file, factor)
 		fprintf('processing data: %0.2f%% complete\n', i/M*100);
 
 		img     = imread(text{i});
-		imgGray = double(rgb2gray(img))/256;
+		imgGray = rgb2gray(img);
 		imgGray = resizem(imgGray, factor);
 
 		[ySize, xSize] = size(imgGray);

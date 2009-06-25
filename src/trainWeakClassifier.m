@@ -29,14 +29,14 @@ function feature = trainWeakClassifier(feature, data)
 		values = [values V(idx)];
 	end
 
-	feature.threshold = mean(values);
+	feature.threshold = sqrt(mean(values .^ 2));
 	if (length(find(values >= feature.threshold)) >= length(values)/2)
 		feature.positive = true;
 	else
 		feature.positive = false;
 	end
 
-	if DEBUG
+	if (DEBUG)
 		discriminant = ones(1,length(values))*feature.threshold;
 		plot(values);
 		hold on;
