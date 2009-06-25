@@ -5,13 +5,13 @@ global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train test features;
 INTEGRALS   = 5;
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 5;
+SEGMENTS    = 8;
 
 % Show debug information
 DEBUG       = false;
 
 % Scaling factor on train and test data
-SCALEFACTOR = 0.5;
+SCALEFACTOR = 0.8;
 
 % Load train data
 trainfile = sprintf('../cache/train-%0.1f.mat', SCALEFACTOR); 

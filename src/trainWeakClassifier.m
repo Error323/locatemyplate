@@ -22,9 +22,10 @@ function feature = trainWeakClassifier(feature, data)
 		[C_, R_, V] = weakClassify(feature, D{i}, I{i}{feature.int}, R);
 		[v_, idx]   = find(P{i} == 1);
 		pos         = V(idx);
-		neg         = mean((V.*N{i}));
-		neg         = neg(randi(length(neg),1,50)');
-		values      = [values neg pos];
+		[v_, idx]   = find(N{i} == 1);
+		neg         = V(idx);
+		neg         = neg(randi(length(neg), 1, 50));
+		values      = [values neg' pos];
 		signs       = [signs zeros(1,length(neg)) 1];
 	end
 
@@ -69,13 +70,13 @@ function feature = trainWeakClassifier(feature, data)
 
 	if (false)
 		IDX = find(signs == 1);
-		discriminant = ones(1,length(IDX))*feature.threshold;
+		discriminant = ones(1,length(values))*feature.threshold;
 		plot(values(IDX), '*');
 		hold on;
 		plot(discriminant, 'r');
 		IDX = find(signs == 0);
 		plot(values(IDX), '.', 'MarkerEdgeColor', 'g');
 		hold off;
-		pause;
+		pause(5);
 	end
 end

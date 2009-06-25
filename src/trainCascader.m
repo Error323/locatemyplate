@@ -22,8 +22,8 @@ function cascader = trainCascader(f, d, Ftarget, train, test, features)
 	Fprev = 1; Dprev = 1; i = 0;
 	% Create a cascading classifier made out of strong classifiers
 	while (Fprev > Ftarget)
+		ni = i;
 		i = i + 1;
-		ni = 0;
 		Fcur = Fprev;
 
 		% Create the current layer
