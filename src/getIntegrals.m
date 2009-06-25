@@ -51,3 +51,18 @@ function integrals = getIntegrals(sample)
 	% Calculate abs variance of abs dy
 	integrals{9} = abs(dy - abs(dyMean));
 end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% getIntegral(sample)
+%%
+%% INPUTS:
+%%  - sample, the image sample
+%%
+%% OUPUTS:
+%%  - integral, the integral image of the sample
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function integral = getIntegral(sample)
+	integral = cumsum(cumsum(sample,2));
+end
