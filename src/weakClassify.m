@@ -19,10 +19,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integralId, R)
 	global DEBUG 
+
 	% obtain dimensions
-	h = dimensions(1);
-	w = dimensions(2);
-	
+	if feature.orientation == 0 % horizontal feature
+		% flip dimensions
+		h = dimensions(2);
+		w = dimensions(1);
+	else
+		h = dimensions(1);
+		w = dimensions(2);
+	end
 
 	% select proper integral image
 	img = Images{imageId}{integralId};

@@ -8,7 +8,7 @@ if (exist('../cache/test.mat', 'file'))
 	load('../cache/test.mat', 'data');
 else
 	disp('loading data');
-	data = getData('../data/stills/plates-test.idx', 1);
+	data = getData('../data/stills/plates-test.idx', 0.5);
 	save('../cache/test.mat', 'data');
 end
 
