@@ -36,7 +36,7 @@ function feature = trainWeakClassifier(feature, data)
 		feature.positive = false;
 	end
 
-	if (true)
+	if DEBUG
 		discriminant = ones(1,length(values))*feature.threshold;
 		plot(values);
 		hold on;

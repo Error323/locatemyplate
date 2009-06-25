@@ -1,23 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% weakClassify(feature, dimensions, Images, imageId, integralId, R)
+%% weakClassify(feature, dimensions, Images, imageId, integralId, Rij)
 %%
 %% INPUTS:
 %%  - feature, 
 %%  -	dimensions, 1x2 matrix of height and width of license plate
-%%  - Images, all the (integral) Images
-%%  - imageId, image selector
-%%  - integralId, integral image selector
-%%  - R, the rapid hash matrix which stores for every image for every 
+%%  - img, the integral image (prev selected by feature.int) of a picture
+%%  - Rij, the rapid hash matrix which stores for every image for every 
 %% 		integral image the dimensions of a block of a feature and its belongig 
 %% 		value for every position in the original image.
 %%
 %% OUPUTS:
 %%  - C, matrix with {0,1}, true or false
-%%  - R, updated rapid hash matrix
+%%  - Rij, updated rapid hash matrix
 %%  - V, the image values after applying the feature
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integralId, R)
+function [C, Rij, V] = weakClassify(feature, dimensions, img, Rij)
 	global DEBUG 
 
 	% obtain dimensions
@@ -30,9 +28,6 @@ function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integral
 		w = dimensions(2);
 	end
 
-	% select proper integral image
-	img = Images{imageId}{integralId};
-
 	scale = 1;
 	h = h * scale;
 	w = w * scale;
@@ -40,9 +35,6 @@ function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integral
 	% horizontal feature
 	if feature.orientation == 0
 		% transpose
-		if DEBUG == true
-			disp('horizontal feature transposing image..');
-		end
 		img = img';
 	end
 
@@ -72,14 +64,11 @@ function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integral
 		% store calculated coords
 		feature.blocks{b}.coordsScaled = [y0, x0, y1, x1];
 
-		% if R entry is empty or if R entry is not computed yet
+		% if Rij entry is empty or if Rij entry is not computed yet
 		hashString = sprintf('h%dw%d', blockH, blockW);
 		
 		% if featureblock is not calculated previously
-		if( ~isfield(R{imageId}{integralId},hashString) )
-			if DEBUG
-				disp(sprintf('Feature block of h=%d w=%d is now computed',blockH,blockW));
-			end
+		if( ~isfield(Rij,hashString) )
 			% TODO: could be more optimal to do img(1:2,:) = [] (delete first 2 rows)
 
 			% explanation of the +1
@@ -94,34 +83,17 @@ function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integral
 			V = img(blockH:imgH, 1:imgW-blockW+1);
 			W = img(1:imgH-blockH+1, blockW:imgW);
 
-			if DEBUG
-				X,Y,V,W
-			end
-
-			% calculate total of integral and store the hash on de dimensions of the feature block
-			if DEBUG
-				disp(sprintf('Storing R{%d}{%d}(h%dw%d):',imageId,integralId,blockH,blockW));
-			end
-			R{imageId}{integralId}.(hashString) = X+Y-V-W;
-		else
-			if DEBUG
-				disp(sprintf('feature block of h=%d w=%d already computed',blockH,blockW));
-			end
+			Rij.(hashString) = X+Y-V-W;
 		end
 
-		size(R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0))));
+		size(Rij.(hashString)(:,x0:(imgW-(w-x0))));
 		% if featureblock is positively signed
 		if feature.blocks{b}.sig == 1
-			R2{b} = R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0)));
+			R2{b} = Rij.(hashString)(:,x0:(imgW-(w-x0)));
 		else
-			R2{b} = -R{imageId}{integralId}.(hashString)(:,x0:(imgW-(w-x0)));
+			R2{b} = -Rij.(hashString)(:,x0:(imgW-(w-x0)));
 		end
 
-		if DEBUG
-			b
-			R2{b}
-			pause
-		end
 	end	
 
 	% calculate sum off feature blocks
@@ -151,7 +123,8 @@ function [C, R, V] = weakClassify(feature, dimensions, Images, imageId, integral
 		VMax = max(max(V));
 		VRange = VMax-VMin;
 		VNormalised = (V - VMin)/VRange;
-		figure(1);
+		%figure(1);
+		figure;
 		imshow(VNormalised);
 	end
 end
