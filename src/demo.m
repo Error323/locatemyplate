@@ -1,8 +1,10 @@
-if (~exist('test', 'var'))
-	globals;
-	load('../cache/cascader-1.mat');
+function demo(i)
+	if (~exist('test', 'var'))
+		globals;
+		load('../cache/cascader-1.mat');
+	end
+	close all;
+	figure(3);
+	imshow(test.I{i}{1});
+	C = classify(cascader, test.I{i}, test.D{i});
 end
-close all;
-figure(3);
-imshow(test.I{1}{1});
-C = classify(cascader, test.I{1}, test.D{1});
