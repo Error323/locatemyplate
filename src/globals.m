@@ -11,7 +11,7 @@ SEGMENTS    = 8;
 DEBUG       = false;
 
 % Scaling factor on train and test data
-SCALEFACTOR = 0.8;
+SCALEFACTOR = 0.5;
 
 % Load train data
 trainfile = sprintf('../cache/train-%0.1f.mat', SCALEFACTOR); 
