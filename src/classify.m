@@ -22,9 +22,10 @@ function C = classify(cascader, sample, dimensions)
 
 		% Cascade
 		C = C&C_;
-		if (DEBUG)
-			figure(i);
+		if (true)
+			figure(4);
 			imshow(C);
+			pause;
 		end
 	end
 end
