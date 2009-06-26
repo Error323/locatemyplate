@@ -58,22 +58,22 @@ what is a feature..
 	the inverse of another feature the set is pruned.
 
 	\subsection{optimalisation}
-	optimalisation 1
-	the use of matrices 
-
-	optimalisation 2
-	Because lots of featureblocks have the same dimension
-
 	Lots of features share the same featureblock dimensions. Even a feature
 	itself could have more featureblocks of the same dimensions.  Because the
 	feature is used as a scanning window lots of unnecessary redundant
 	calculations are done.
 
 	To optimize this, the featureblocks are individually calculated for every
-	position in the image and stored on its dimensions in a hash table.
+	position (i,j) in the image and stored on its dimensions (h,w) in a hash
+	table R.  For example R(3,4) contains the matrix for featureblock with
+	height=3 and width=4.  R(3,4)(20,4) contains the value of position (20,4) in
+	the image for this featureblock.
 
-	optimalisation 4
-	shift matrices and add together
+	The matrices are alligned depending on the position of the block in the
+	feature and added up. This gives the total value of a feature (again for
+	every position, stored in a matrix).
+
+
 
 
 \section*{Implementation}
