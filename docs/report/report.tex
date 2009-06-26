@@ -26,6 +26,56 @@ plate. The first section describes the implementation of the algorithms
 involved, next we show our results using an american dataset and finally we
 conclude.
 
+
+\section{integral images}
+how is a integral image computed
+
+\section{image descriptors}
+dx, abs ddy, etc.
+pictures
+
+\section{features}
+what is a feature..
+
+	\subsection{feature generation}
+	A feature can be defined as a scanning window contaning a set of ascending
+	segments. The segments which form a group are the feature blocks. Each
+	feature block takes the sum of all pixels the block TODO overlaps TODO (see
+	integral images). Dependend of the sign of the individual featureblocks he
+	is summed up or substracted. 
+
+	Because the segments and featureblocks are vertically TODO gescheiden, the
+	feature is called a vertical feature.  The horizontal features are simply
+	generated using the transpose of this vertical feature.
+
+	\subsection{binary feature generation}
+	A feature can be represented as a binary code. Each element in the binary
+	represents the position and the sign of a segment of a feature.
+	example TODO picture\\
+
+	This representation makes it easy to generate all possible features
+	permutations using the powerset.  Because half of the features are simply
+	the inverse of another feature the set is pruned.
+
+	\subsection{optimalisation}
+	optimalisation 1
+	the use of matrices 
+
+	optimalisation 2
+	Because lots of featureblocks have the same dimension
+
+	Lots of features share the same featureblock dimensions. Even a feature
+	itself could have more featureblocks of the same dimensions.  Because the
+	feature is used as a scanning window lots of unnecessary redundant
+	calculations are done.
+
+	To optimize this, the featureblocks are individually calculated for every
+	position in the image and stored on its dimensions in a hash table.
+
+	optimalisation 4
+	shift matrices and add together
+
+
 \section*{Implementation}
 
 \section*{Results}
