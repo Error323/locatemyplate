@@ -16,27 +16,67 @@ function feature = trainWeakClassifier(feature, data)
 	N = data.N;
 	D = data.D;
 
-	values = [];
+	values = []; signs = [];
 	R = {};
 	for i=1:length(I)
 		[C_, R_, V] = weakClassify(feature, D{i}, I{i}{feature.int}, R);
-		[v_, idx]  = find(P{i} == 1);
-		values = [values V(idx)];
+		[v_, idx]   = find(P{i} == 1);
+		pos         = V(idx);
+		[v_, idx]   = find(N{i} == 1);
+		neg         = V(idx);
+		neg         = neg(randi(length(neg), 1, 50));
+		values      = [values neg' pos];
+		signs       = [signs zeros(1,length(neg)) 1];
 	end
 
-	feature.threshold = sqrt(mean(values .^ 2));
-	if (length(find(values >= feature.threshold)) >= length(values)/2)
-		feature.positive = true;
-	else
-		feature.positive = false;
+	[v_, IDX] = sort(values);
+	signs     = signs(IDX);
+	values    = values(IDX);
+	l         = length(find(signs == 1));
+	m         = length(find(signs == 0));
+
+	iStar    = 1;
+	best     = 0;
+	positive = true;
+
+	for i = 2:length(values)-1
+		posLeft  = length(find(signs(1:i) == 1));
+		posRight = l - posLeft;
+		negLeft  = length(find(signs(1:i) == 0));
+		negRight = m - negLeft;
+
+		% thresholding <
+		if (posLeft/l >= negLeft/m)
+			v = posLeft/l + negRight/m;
+			if (v > best)
+				best     = v;
+				iStar    = i;
+				positive = false;
+			end
+
+		% thresholding >
+		else
+			v = posRight/l + negLeft/m;
+			if (v > best)
+				best     = v;
+				iStar    = i;
+				positive = true;
+			end
+		end
 	end
 
-	if (DEBUG)
+	feature.threshold = values(iStar);
+	feature.positive  = positive;
+
+	if (false)
+		IDX = find(signs == 1);
 		discriminant = ones(1,length(values))*feature.threshold;
-		plot(values);
+		plot(values(IDX), '*');
 		hold on;
 		plot(discriminant, 'r');
+		IDX = find(signs == 0);
+		plot(values(IDX), '.', 'MarkerEdgeColor', 'g');
 		hold off;
-		pause;
+		pause(5);
 	end
 end
