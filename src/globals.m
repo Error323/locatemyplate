@@ -13,17 +13,6 @@ DEBUG       = false;
 % Scaling factor on train and test data
 SCALEFACTOR = 0.5;
 
-% Load train data
-trainfile = sprintf('../cache/train-%0.1f.mat', SCALEFACTOR); 
-if (exist(trainfile))
-	fprintf('\nloading %s from cache\n\n', trainfile);
-	load(trainfile);
-else
-	fprintf('\ngenerating and saving %s\n\n', trainfile);
-	train = getData('../data/stills/plates-train.idx', SCALEFACTOR);
-	save(trainfile, 'train');
-end
-
 % Load test data
 testfile = sprintf('../cache/test-%0.1f.mat', SCALEFACTOR); 
 if (exist(testfile))
