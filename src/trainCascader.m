@@ -17,7 +17,7 @@ function cascader = trainCascader(f, d, Ftarget, train, validate, features)
 	global DEBUG;
 	cascader = {};
 
-	Fprev = 1; Dprev = 1; Dcur = 1;
+	Fprev = 1; Dprev = 1;
  	i = 0;
 	% Create a cascading classifier made out of strong classifiers
 	while (Fprev > Ftarget)
@@ -32,9 +32,9 @@ function cascader = trainCascader(f, d, Ftarget, train, validate, features)
 			% If we entered a new layer
 			if (ni == 1)
 				% Re-train the features using the false positives
-				for i = 1:length(features)
-					features{i} = trainWeakClassifier(features{i}, train);
-					fprintf('training features %0.2f%% complete\n', (i/length(features)*100));
+				for j = 1:length(features)
+					features{j} = trainWeakClassifier(features{j}, train);
+					fprintf('training features %0.2f%% complete\n', (j/length(features)*100));
 				end
 			end
 

@@ -5,7 +5,7 @@ global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train validate features;
 INTEGRALS   = 5;
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 8;
+SEGMENTS    = 2;
 
 % Maximal number of negative samples per image for weaktrainer
 MAXSAMPLES  = 100;

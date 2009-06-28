@@ -28,10 +28,6 @@ function [C, Rij, V] = weakClassify(feature, dimensions, img, Rij)
 		w = dimensions(2);
 	end
 
-	scale = 1;
-	h = h * scale;
-	w = w * scale;
-
 	% horizontal feature
 	if feature.orientation == 0
 		% transpose
@@ -116,14 +112,5 @@ function [C, Rij, V] = weakClassify(feature, dimensions, img, Rij)
 		C = (feature.threshold >= V);
 	else
 		C = (feature.threshold < V);
-	end
-
-	if DEBUG
-		VMin = min(min(V));
-		VMax = max(max(V));
-		VRange = VMax-VMin;
-		VNormalised = (V - VMin)/VRange;
-		figure(3);
-		imshow(VNormalised);
 	end
 end

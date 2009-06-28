@@ -17,6 +17,7 @@ function C = classify(cascader, sample, dimensions)
 	for i = 1:length(cascader)
 		% Get the strong classifier
 		S = cascader{i};
+		cascader{i}
 
 		[C_, V_] = strongClassify(S.classifier, dimensions, sample, {}, S.alphas, S.threshold);
 
