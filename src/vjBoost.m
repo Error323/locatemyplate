@@ -9,24 +9,14 @@
 %% OUPUTS:
 %%  - strongClassifier, the T best features
 %%  - alphas, their corresponding weights
-%%  - features, retrained features
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [strongClassifier, alphas, features] = vjBoost(data, features, T)
+function [strongClassifier, alphas] = vjBoost(data, features, T)
 	global INTEGRALS;
 	I = data.I;
 	P = data.P;
 	N = data.N;
 	D = data.D;
-
-	% If we entered a new layer
-	if (T == 1)
-		% Obtain new thresholds for the remaining false positives
-		for i = 1:length(features)
-			features{i} = trainWeakClassifier(features{i}, data);
-			fprintf('training features %0.2f%% complete\n', (i/length(features)*100));
-		end
-	end
 
 	% Initialize matrices
 	pos = 0; neg = 0;

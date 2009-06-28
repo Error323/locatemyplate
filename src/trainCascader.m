@@ -28,7 +28,17 @@ function cascader = trainCascader(f, d, Ftarget, train, validate, features)
 		% Create the current layer
 		while (Fcur > f*Fprev)
 			ni = ni + 1;
-			[strong, alphas, features] = vjBoost(train, features, ni);
+
+			% If we entered a new layer
+			if (ni == 1)
+				% Re-train the features using the false positives
+				for i = 1:length(features)
+					features{i} = trainWeakClassifier(features{i}, train);
+					fprintf('training features %0.2f%% complete\n', (i/length(features)*100));
+				end
+			end
+
+			[strong, alphas] = vjBoost(train, features, ni);
 
 			cascader{i}.classifier = strong;
 			cascader{i}.alphas     = alphas;
