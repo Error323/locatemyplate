@@ -22,8 +22,10 @@ function data = getData(file, factor)
 	for i = 1:6:M % Assuming 1 license plate per sample
 		fprintf('processing data: %0.2f%% complete\n', i/M*100);
 
-		img     = imread(text{i});
-		imgGray = rgb2gray(img);
+		img    = imread(text{i});
+		imgGray = single(rgb2gray(img))/256;
+		imgGray = imgGray(20:size(imgGray,1),:);
+		imshow(imgGray);
 		imgGray = resizem(imgGray, factor);
 
 		[ySize, xSize] = size(imgGray);
