@@ -24,18 +24,18 @@ function integrals = getIntegrals(sample)
 	dxAbs = abs(dx);
 	integrals{2} = getIntegral(dxAbs);
 
-	% Get the abs y-derivative (1st order)
-	dy = imfilter(sample, Fdy);
-	dyAbs = abs(dy);
-	integrals{3} = getIntegral(dyAbs);
+	% % Get the abs y-derivative (1st order)
+	% dy = imfilter(sample, Fdy);
+	% dyAbs = abs(dy);
+	% integrals{3} = getIntegral(dyAbs);
 
-	% Get the abs x-derivative (2nd order)
-	dx2Abs = abs(imfilter(imfilter(sample, Fdx), Fdx));
-	integrals{4} = getIntegral(dx2Abs);
+	% % Get the abs x-derivative (2nd order)
+	% dx2Abs = abs(imfilter(imfilter(sample, Fdx), Fdx));
+	% integrals{4} = getIntegral(dx2Abs);
 
-	% Get the abs y-derivative (2nd order)
-	dy2Abs = abs(imfilter(imfilter(sample, Fdy), Fdy));
-	integrals{5} = getIntegral(dy2Abs);
+	% % Get the abs y-derivative (2nd order)
+	% dy2Abs = abs(imfilter(imfilter(sample, Fdy), Fdy));
+	% integrals{5} = getIntegral(dy2Abs);
 
 	% precalculate means
 	%Fmean = ones(6)/36;
