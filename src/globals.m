@@ -5,7 +5,7 @@ global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train test features;
 INTEGRALS   = 5;
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 8;
+SEGMENTS    = 2;
 
 % Show debug information
 DEBUG       = false;
