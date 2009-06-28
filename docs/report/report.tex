@@ -9,7 +9,7 @@
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage[english]{babel}
 
-\title{Locate My Plate \\ A License Plate Recognition System}
+\title{Locate My Plate \\ A License Plate Localisation System}
 
 \date{June 24, 2009}
 
@@ -25,16 +25,22 @@ weak classifiers aka features which each describe characteristics of a license
 plate. The first section describes the implementation of the algorithms
 involved, next we show our results using an american dataset and finally we
 conclude.
+TODO lots of references
 
+\section*{Datasets}
 
+\subsection{Features generation}
+TODO/*{{{*/
+\section*{integral images}
+how is a integral image computed, TODO copy from other paper, do not invent the
+wheel :P
 
-
-	\subsection{features}
+	\subsection{introduction}
 	A feature can be defined as a scanning window contaning a set of ascending
 	segments. The segments which form a group are called the feature blocks. Each
-	feature block takes the sum of all pixels the block TODO overlaps TODO (see
-	integral images). Depended of the sign of the individual featureblocks he
-	is summed up or substracted.\\ 
+	feature block takes the sum of all pixels the block. This is done very
+	efficient using integral images.  TODO (reference integral images). Depended
+	of the sign of the individual featureblocks he is summed up or substracted.\\ 
 
 	Because the segments and featureblocks are vertically seperated, the
 	feature is called a vertical feature.  The horizontal features are simply
@@ -64,25 +70,35 @@ conclude.
 	feature and added up. This gives the total value of a feature (again for
 	every position, stored in a matrix).
 
+	\section{image types}
+	The features where applied to the following integral image types.
+	\begin{itemize}
+		\item{1th order derivative in both x and y directions.}
+		\item{2nd order derivative in both x and y directions.}
+		\item{variance in both x and y directions.}
+	\end{itemize}
+	Before applying the feature the above integral image types are passed through an absolute filter./*}}}*/
 
 
-\section{integral images}
-how is a integral image computed, TODO copy from other paper, do not invent the
-wheel :P
+\section{Training}
+	\subsection*{Training strong classifiers}
+	TODO adaboost comes here
 
-\section{image types}
-The features where applied to the following integral image types.
-\begin{itemize}
-	\item{1th order derivative in both x and y directions.}
-	\item{2nd order derivative in both x and y directions.}
-	\item{variance in both x and y directions.}
-\end{itemize}
-Before applying the feature the above integral image types are passed through an absolute filter.
+	\subsection{Cascading classifier}
+
 
 \section*{Implementation}
 
 \section*{Results}
+confusion matrix
+info about datasets, nr examples, train test etc.
+performance cascader displayed in graph (on every layer display the exclusions)
+best features on every layer
+(optional endresult, car with rectangle at license plate)
+(optionoal prob image of a good performing feature)
+
 
 \section*{Conclusions}
 
+TODO ispell
 \end{document}
