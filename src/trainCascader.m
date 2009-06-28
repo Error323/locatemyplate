@@ -1,10 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% trainCascader(f, d, Ftarget)
+%% trainCascader(f, d, Ftarget, train, test, features)
 %%
 %% INPUTS:
 %%  - f, maximum acceptable false positive rate per layer should be fairly high
 %%  - d, minimum acceptable detection rate per layer should be really high
 %%  - Ftarget, overall false positive rate should be really low
+%%  - train, [I, P, N, D] the trainingsset
+%%  - test, [I, P, N, D] the testset
+%%  - features, the untrained generated features
 %%
 %% OUPUTS:
 %%  - cascader, a cascading classifier
@@ -14,7 +17,8 @@ function cascader = trainCascader(f, d, Ftarget, train, test, features)
 	global DEBUG;
 	cascader = {};
 
-	Fprev = 1; Dprev = 1; i = 0;
+	Fprev = 1; Dprev = 1; Dcur = 1;
+ 	i = 0;
 	% Create a cascading classifier made out of strong classifiers
 	while (Fprev > Ftarget)
 		ni = 0;
@@ -22,7 +26,7 @@ function cascader = trainCascader(f, d, Ftarget, train, test, features)
 		Fcur = Fprev;
 
 		% Create the current layer
-		while (Fcur > f*Fprev)
+		while (Fcur > f*Fprev || Dcur < d*Dprev)
 			ni = ni + 1;
 			[strong, alphas] = vjBoost(train, features, ni);
 

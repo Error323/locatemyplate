@@ -5,7 +5,7 @@ global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train test features;
 INTEGRALS   = 5;
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 8;
+SEGMENTS    = 3;
 
 % Show debug information
 DEBUG       = false;
@@ -43,9 +43,5 @@ if (exist(featurefile))
 else
 	fprintf('\ngenerating and saving %s\n\n', featurefile);
 	features = featureGeneration(SEGMENTS);
-	for i = 1:length(features)
-		features{i} = trainWeakClassifier(features{i}, train);
-		fprintf('training features %0.2f%% complete\n', (i/length(features)*100));
-	end
 	save(featurefile, 'features');
 end

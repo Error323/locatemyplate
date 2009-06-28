@@ -18,6 +18,15 @@ function [strongClassifier, alphas] = vjBoost(data, features, T)
 	N = data.N;
 	D = data.D;
 
+	% If we entered a new layer
+	if (T == 1)
+		% Obtain new thresholds for the remaining false positives
+		for i = 1:length(features)
+			features{i} = trainWeakClassifier(features{i}, data);
+			fprintf('training features %0.2f%% complete\n', (i/length(features)*100));
+		end
+	end
+
 	% Initialize matrices
 	pos = 0; neg = 0;
 	W   = {};

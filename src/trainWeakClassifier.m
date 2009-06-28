@@ -24,7 +24,7 @@ function feature = trainWeakClassifier(feature, data)
 		pos         = V(idx);
 		[v_, idx]   = find(N{i} == 1);
 		neg         = V(idx);
-		neg         = neg(randi(length(neg), 1, 50));
+		neg         = neg(randi(length(neg), 1, min(length(neg),50)));
 		values      = [values neg' pos];
 		signs       = [signs zeros(1,length(neg)) 1];
 	end
