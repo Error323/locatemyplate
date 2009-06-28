@@ -1,14 +1,14 @@
 %%%%% GLOBAL CONSTANTS %%%%%
-global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train validate features;
+global INTEGRALS SEGMENTS DEBUG SCALEFACTOR MAXSAMPLES;
 
 % Number of integral images
 INTEGRALS   = 5;
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 2;
+SEGMENTS    = 3;
 
 % Maximal number of negative samples per image for weaktrainer
-MAXSAMPLES  = 100;
+MAXSAMPLES  = 50;
 
 % Show debug information
 DEBUG       = false;

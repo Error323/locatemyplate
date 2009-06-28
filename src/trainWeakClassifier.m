@@ -10,7 +10,7 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function feature = trainWeakClassifier(feature, data)
-	global INTEGRALS MAXSAMPLES DEBUG
+	global INTEGRALS MAXSAMPLES
 	I = data.I;
 	P = data.P;
 	N = data.N;
