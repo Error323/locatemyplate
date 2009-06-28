@@ -1,8 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% data(file)
+%% data(file, factor)
 %%
 %% INPUTS:
 %%  - file, the index file
+%%  - factor, the scaling factor
 %%
 %% OUPUTS:
 %%  - [I, P, N, D]
@@ -24,18 +25,16 @@ function data = getData(file, factor)
 
 		img    = imread(text{i});
 		imgGray = single(rgb2gray(img))/256;
-		imgGray = imgGray(20:size(imgGray,1),:);
-		imshow(imgGray);
 		imgGray = resizem(imgGray, factor);
 
 		[ySize, xSize] = size(imgGray);
 
 		% Get sample coords
 		c = str2num(text{i+1});                 % number of license plates
-		x = floor(str2num(text{i+2}) * factor); % upper left corner x of license plate
-		y = floor(str2num(text{i+3}) * factor); % upper left corner y of license plate
-		w = floor(str2num(text{i+4}) * factor); % license plate width
-		h = floor(str2num(text{i+5}) * factor); % license plate height
+		x = round(str2num(text{i+2}) * factor); % upper left corner x of license plate
+		y = round(str2num(text{i+3}) * factor); % upper left corner y of license plate
+		w = round(str2num(text{i+4}) * factor); % license plate width
+		h = round(str2num(text{i+5}) * factor); % license plate height
 
 		% Fill our fields
 		I{dataidx}      = getIntegrals(imgGray);

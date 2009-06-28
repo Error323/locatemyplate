@@ -1,16 +1,19 @@
 %%%%% GLOBAL CONSTANTS %%%%%
-global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train test features;
+global INTEGRALS SEGMENTS DEBUG SCALEFACTOR train validate features;
 
 % Number of integral images
 INTEGRALS   = 5;
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 3;
+SEGMENTS    = 8;
+
+% Maximal number of negative samples per image for weaktrainer
+MAXSAMPLES  = 100;
 
 % Show debug information
 DEBUG       = false;
 
-% Scaling factor on train and test data
+% Scaling factor on train and validate data
 SCALEFACTOR = 0.5;
 
 % Load train data
@@ -24,15 +27,15 @@ else
 	save(trainfile, 'train');
 end
 
-% Load test data
-testfile = sprintf('../cache/test-%0.1f.mat', SCALEFACTOR); 
-if (exist(testfile))
-	fprintf('\nloading %s from cache\n\n', testfile);
-	load(testfile);
+% Load validate data
+validatefile = sprintf('../cache/validate-%0.1f.mat', SCALEFACTOR); 
+if (exist(validatefile))
+	fprintf('\nloading %s from cache\n\n', validatefile);
+	load(validatefile);
 else
-	fprintf('\ngenerating and saving %s\n\n', testfile);
-	test = getData('../data/stills/plates-test.idx', SCALEFACTOR);
-	save(testfile, 'test');
+	fprintf('\ngenerating and saving %s\n\n', validatefile);
+	validate = getData('../data/stills/plates-validate.idx', SCALEFACTOR);
+	save(validatefile, 'validate');
 end
 
 % Load feature data
