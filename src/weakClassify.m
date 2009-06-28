@@ -123,8 +123,7 @@ function [C, Rij, V] = weakClassify(feature, dimensions, img, Rij)
 		VMax = max(max(V));
 		VRange = VMax-VMin;
 		VNormalised = (V - VMin)/VRange;
-		%figure(1);
-		figure;
+		figure(3);
 		imshow(VNormalised);
 	end
 end

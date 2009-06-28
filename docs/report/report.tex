@@ -9,7 +9,7 @@
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage[english]{babel}
 
-\title{Locate My Plate \\ A License Plate Recognition System}
+\title{Locate My Plate \\ A License Plate Localisation System}
 
 \date{June 24, 2009}
 
@@ -25,30 +25,27 @@ weak classifiers aka features which each describe characteristics of a license
 plate. The first section describes the implementation of the algorithms
 involved, next we show our results using an american dataset and finally we
 conclude.
+TODO lots of references
 
+\section*{Datasets}
 
-\section{integral images}
-how is a integral image computed
+\subsection{Features generation}
+TODO/*{{{*/
+\section*{integral images}
+how is a integral image computed, TODO copy from other paper, do not invent the
+wheel :P
 
-\section{image descriptors}
-dx, abs ddy, etc.
-pictures
-
-\section{features}
-what is a feature..
-
-	\subsection{feature generation}
+	\subsection{introduction}
 	A feature can be defined as a scanning window contaning a set of ascending
-	segments. The segments which form a group are the feature blocks. Each
-	feature block takes the sum of all pixels the block TODO overlaps TODO (see
-	integral images). Dependend of the sign of the individual featureblocks he
-	is summed up or substracted. 
+	segments. The segments which form a group are called the feature blocks. Each
+	feature block takes the sum of all pixels the block. This is done very
+	efficient using integral images.  TODO (reference integral images). Depended
+	of the sign of the individual featureblocks he is summed up or substracted.\\ 
 
-	Because the segments and featureblocks are vertically TODO gescheiden, the
+	Because the segments and featureblocks are vertically seperated, the
 	feature is called a vertical feature.  The horizontal features are simply
-	generated using the transpose of this vertical feature.
+	generated using the transpose of this vertical feature.\\
 
-	\subsection{binary feature generation}
 	A feature can be represented as a binary code. Each element in the binary
 	represents the position and the sign of a segment of a feature.
 	example TODO picture\\
@@ -58,28 +55,50 @@ what is a feature..
 	the inverse of another feature the set is pruned.
 
 	\subsection{optimalisation}
-	optimalisation 1
-	the use of matrices 
-
-	optimalisation 2
-	Because lots of featureblocks have the same dimension
-
 	Lots of features share the same featureblock dimensions. Even a feature
 	itself could have more featureblocks of the same dimensions.  Because the
 	feature is used as a scanning window lots of unnecessary redundant
 	calculations are done.
 
 	To optimize this, the featureblocks are individually calculated for every
-	position in the image and stored on its dimensions in a hash table.
+	position (i,j) in the image and stored on its dimensions (h,w) in a hash
+	table R.  For example R(3,4) contains the matrix for featureblock with
+	height=3 and width=4.  R(3,4)(20,4) contains the value of position (20,4) in
+	the image for this featureblock.
 
-	optimalisation 4
-	shift matrices and add together
+	The matrices are alligned depending on the position of the block in the
+	feature and added up. This gives the total value of a feature (again for
+	every position, stored in a matrix).
+
+	\section{image types}
+	The features where applied to the following integral image types.
+	\begin{itemize}
+		\item{1th order derivative in both x and y directions.}
+		\item{2nd order derivative in both x and y directions.}
+		\item{variance in both x and y directions.}
+	\end{itemize}
+	Before applying the feature the above integral image types are passed through an absolute filter./*}}}*/
+
+
+\section{Training}
+	\subsection*{Training strong classifiers}
+	TODO adaboost comes here
+
+	\subsection{Cascading classifier}
 
 
 \section*{Implementation}
 
 \section*{Results}
+confusion matrix
+info about datasets, nr examples, train test etc.
+performance cascader displayed in graph (on every layer display the exclusions)
+best features on every layer
+(optional endresult, car with rectangle at license plate)
+(optionoal prob image of a good performing feature)
+
 
 \section*{Conclusions}
 
+TODO ispell
 \end{document}

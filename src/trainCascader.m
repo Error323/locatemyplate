@@ -1,20 +1,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% trainCascader(f, d, Ftarget)
+%% trainCascader(f, d, Ftarget, train, validate, features)
 %%
 %% INPUTS:
 %%  - f, maximum acceptable false positive rate per layer should be fairly high
 %%  - d, minimum acceptable detection rate per layer should be really high
 %%  - Ftarget, overall false positive rate should be really low
+%%  - train, [I, P, N, D] the trainingsset
+%%  - validate, [I, P, N, D] the validateset
+%%  - features, the untrained generated features
 %%
 %% OUPUTS:
 %%  - cascader, a cascading classifier
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function cascader = trainCascader(f, d, Ftarget, train, test, features)
+function cascader = trainCascader(f, d, Ftarget, train, validate, features)
 	global DEBUG;
 	cascader = {};
 
-	Fprev = 1; Dprev = 1; i = 0;
+	Fprev = 1; Dprev = 1; Dcur = 1;
+ 	i = 0;
 	% Create a cascading classifier made out of strong classifiers
 	while (Fprev > Ftarget)
 		ni = 0;
@@ -24,15 +28,25 @@ function cascader = trainCascader(f, d, Ftarget, train, test, features)
 		% Create the current layer
 		while (Fcur > f*Fprev)
 			ni = ni + 1;
+
+			% If we entered a new layer
+			if (ni == 1)
+				% Re-train the features using the false positives
+				for i = 1:length(features)
+					features{i} = trainWeakClassifier(features{i}, train);
+					fprintf('training features %0.2f%% complete\n', (i/length(features)*100));
+				end
+			end
+
 			[strong, alphas] = vjBoost(train, features, ni);
 
 			cascader{i}.classifier = strong;
 			cascader{i}.alphas     = alphas;
 
 			% Determine the best threshold for the current layer
-			for t = 0.9:-0.1:0.1
+			for t = 0.9:-0.1:0.0
 				cascader{i}.threshold = t;
-				[Fcur, Dcur, N_] = evaluate(cascader, test);
+				[Fcur, Dcur, N_] = evaluate(cascader, validate);
 				fprintf('d = %0.2f, fp = %0.2f\n', Dcur, Fcur);
 				if (Dcur > d*Dprev)
 					break;
