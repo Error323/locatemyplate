@@ -9,9 +9,10 @@
 %% OUPUTS:
 %%  - strongClassifier, the T best features
 %%  - alphas, their corresponding weights
+%%  - features, retrained features
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [strongClassifier, alphas] = vjBoost(data, features, T)
+function [strongClassifier, alphas, features] = vjBoost(data, features, T)
 	global INTEGRALS;
 	I = data.I;
 	P = data.P;

@@ -28,7 +28,7 @@ function cascader = trainCascader(f, d, Ftarget, train, test, features)
 		% Create the current layer
 		while (Fcur > f*Fprev || Dcur < d*Dprev)
 			ni = ni + 1;
-			[strong, alphas] = vjBoost(train, features, ni);
+			[strong, alphas, features] = vjBoost(train, features, ni);
 
 			cascader{i}.classifier = strong;
 			cascader{i}.alphas     = alphas;
