@@ -118,8 +118,7 @@ function [C, Rij, V] = weakClassify(feature, dimensions, img, Rij)
 		C = (feature.threshold < V);
 	end
 
-	%if DEBUG
-	if true
+	if DEBUG
 		VMin = min(min(V));
 		VMax = max(max(V));
 		VRange = VMax-VMin;
