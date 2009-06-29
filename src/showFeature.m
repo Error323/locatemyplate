@@ -9,8 +9,8 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function showFeature(feature, fig)
-	figure(fig);
-	clf(fig);
+	% figure(fig);
+	% clf(fig);
 	w = 100; h = 33;
 
 	% set title of figure window
