@@ -27,8 +27,8 @@ involved, next the results using an american dataset are shown and finally the
 conclusion.
 
 
-\subsection{Features generation}
-	\subsection{Introduction}
+\subsection*{Features generation}
+	\subsection*{Introduction}
 	A feature can be defined as a scanning window contaning a set of ascending
 	segments. The segments which form a group are called the feature blocks. Each
 	feature block takes the sum of all pixels in that block. This is done very
@@ -45,7 +45,7 @@ conclusion.
 	using the powerset.  Because half of the features are simply the inverse of
 	another feature, the set is pruned.
 
-	\subsection{Optimization}
+	\subsection*{Optimization}
 	Lots of features share the same feature block dimensions. Even a feature
 	itself could have more feature blocks of the same dimensions. Because the
 	feature is used as a scanning window, lots of redundant calculations are done.
@@ -57,7 +57,7 @@ conclusion.
 	feature and added up. This gives the total value of a feature (again for
 	every position, stored in a matrix).
 
-	\section{Image types}
+	\section*{Image types}
 	The features where applied to the following image types.
 	\begin{itemize}
 		\item{1th order derivative in both x and y directions.}
@@ -74,26 +74,51 @@ training of the weak classifiers or features. The second type is a linear
 combination of one or more weak classifiers into a strong classifier using a
 boosting algorithm. Finally the type stage is a cascading classifier with a
 strong classifier on each layer.
-\subsection*{Weak classifier}
-A weak classifier or feature is trained by determining a threshold $t$ which
-seperates positive and negative samples as good as possible.
-\begin{algorithm}
-	\caption{trainWeakClassifier($F$, $P$, $N$): Determines a threshold $t$ which
-	separets positive and negative examples as good as possible.}
-	\begin{algorithmic}[1]
-	\REQUIRE $F$ the feature, $P$ positive samples, $N$ negative samples
-	\medskip
-	\STATE Let $V$ be a table $V = x|x_v|x_s$, where $x \in P \cup N$, $x_v = F(x)$ and $x_s \in {0,1}$.
-	\STATE Sort $V$ on $x_v$
-	\STATE Find index $i$ which seperates $V$ on $x_s$ as good as possible
-	\RETURN $x_v(i)$
-	\end{algorithmic}
-\label{alg:weak}
-\end{algorithm}
-See Algorithm \ref{alg:weak}.
-\subsection*{Strong classifier}
-\subsection*{Cascading classifier}
 
+\subsection*{Weak classifier}
+A weak classifier is a feature with a threshold $t \in \mathbb{R}$ and an
+operator $\circ \in \{<, >\}$ which separates positive and negative samples as
+good as possible according to the trainings set. After training, the weak
+classifier $C$ constructs a binary image $B = t \circ F(x)$, where $x$ is the
+image and $F$ the function of the feature. This binary image $B$ contains
+possible license plates according to the feature.
+
+\subsection*{Strong classifier}
+A strong classifier is constructed according to the boosting algorithm
+described by Viola and Jones \cite{viola}.  By re-weighting the positive and
+negative samples after selecting a weakClassifier, the algorithm selects the
+"best" features with their respective alpha. Classification is performed as
+follows:
+\begin{displaymath}
+C(x) = 
+	\left\{ \begin{array}{ll}
+		1 & \sum^T_{t=1} \alpha_t W_t(x) \ge \frac{1}{2} \sum^T_{t=1}\alpha_t \\
+		0 & \textrm{otherwise}
+	\end{array} \right.
+\end{displaymath}
+where $T$ is the number of weak classifiers and $W_t$ a function which returns
+the binary image as described in the Weak classifier section.
+
+\subsection*{Cascading classifier}
+The cascading classifier is the final classifier. It consists of multiple
+layers where each layer represents a strong classifier. This classifier is
+trained as described by Viola and Jones \cite{viola}. 
+\begin{algorithm}
+	\caption{classify($C$, $x$): Returns the binary image $B$ of $x$}
+	\begin{algorithmic}[1]
+	\REQUIRE $C$ the cascading classifier, $x$ the image
+	\medskip
+	\STATE Let $B$ be an image with the same dimensions as $x$ of ones.
+	\FOR {$c_s \in C$}
+		\STATE $B' \leftarrow c_s(x)$
+		\STATE $B \leftarrow B \land B'$
+	\ENDFOR
+	\RETURN $B$
+	\end{algorithmic}
+\label{alg:casc}
+\end{algorithm}
+Algorithm \ref{alg:casc} shows the classification of an image using a trained
+cascading classifier.
 
 \section*{Dataset}
 The dataset is with permission obtained from \cite{dlagnekov_dataset}. It
