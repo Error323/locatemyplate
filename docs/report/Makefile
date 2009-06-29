@@ -1,9 +1,12 @@
 REPORT = report
 
 all:
-	latex $(REPORT).tex	# Build dvi
-	latex $(REPORT).tex	# Inserts reference indicators at points of citation
-	dvipdf $(REPORT).dvi
+	latex $(REPORT)
+	bibtex $(REPORT)
+	bibtex $(REPORT)
+	latex $(REPORT)
+	latex $(REPORT)
+	dvipdf $(REPORT)
 
 clean:
 	rm -f *.aux *.ps *.dvi *.log *~ *.bak *.bbl *.blg
