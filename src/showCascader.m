@@ -18,8 +18,8 @@ function showCascader(cascader)
 	integralImgs  = train.I{1};
 	dimensions = train.D{1};
 
-	for j=2:INTEGRALS %skip ori image
-		Ri{j} = {};
+	for j=1:length(INTEGRALS) %skip ori image
+		Ri{INTEGRALS(j)} = {};
 	end
 
 	close all

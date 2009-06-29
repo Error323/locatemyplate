@@ -1,11 +1,13 @@
 %%%%% GLOBAL CONSTANTS %%%%%
-global INTEGRALS SEGMENTS DEBUG SCALEFACTOR MAXSAMPLES;
+global INTEGRALS SEGMENTS DEBUG SCALEFACTOR MAXSAMPLES INTLABELS;
 
 % Number of integral images
-INTEGRALS   = 5;
+INTEGRALS   = [2 3 4 5];
+
+INTLABELS   = {'image itself', 'abs dx', 'abs dy', 'abs ddx', 'abs ddy', 'abs var dx', 'abs var dy', 'abs var abs dx', 'abs var abs dy'};
 
 % Number of segments/blocks within a feature
-SEGMENTS    = 3;
+SEGMENTS    = 5;
 
 % Maximal number of negative samples per image for weaktrainer
 MAXSAMPLES  = 50;

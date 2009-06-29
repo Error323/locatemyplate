@@ -9,13 +9,12 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function showFeature(feature, fig)
-	% figure(fig);
-	% clf(fig);
+	global INTLABELS;
+	clf(fig);
 	w = 100; h = 33;
 
 	% set title of figure window
-	intLabels = {'image itself', 'abs dx', 'abs dy', 'abs ddx', 'abs ddy', 'abs var dx', 'abs var dy', 'abs var abs dx', 'abs var abs dy'};
-	title(intLabels{feature.int});
+	title(INTLABELS{feature.int});
 
 	for i = 1:length(feature.blocks)
 		y0 = feature.blocks{i}.coords(1);
