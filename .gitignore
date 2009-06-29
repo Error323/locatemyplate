@@ -1,3 +1,9 @@
 /data
 *~
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.pdf
+*.log
 .*.swp
