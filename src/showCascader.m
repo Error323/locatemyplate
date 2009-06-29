@@ -17,8 +17,8 @@ function showCascader(cascader)
 	integralImgs  = I{imageId};
 	
 	% initialize integral images
-	for j=2:INTEGRALS %skip ori image
-		Ri{j} = {};
+	for j=1:length(INTEGRALS) %skip ori image
+		Ri{INTEGRALS(j)} = {};
 	end
 
 	% initialise strong classifier

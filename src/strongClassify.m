@@ -16,8 +16,8 @@
 function [C, V] = strongClassify(features, dimensions, integralImgs, Ri, alphas, threshold) 
 	global DEBUG INTEGRALS;
 
-	for j=2:INTEGRALS %skip ori image
-		Ri{j} = {};
+	for j=1:length(INTEGRALS) %skip ori image
+		Ri{INTEGRALS(j)} = {};
 	end
 
 	%TODO initialise with zeros(..)
