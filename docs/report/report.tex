@@ -40,20 +40,20 @@ respectively.
 \section*{Features}
 The core of the LPL system consists of features as described by
 \cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters on a
-certain type of image (e.g.  an x-derivative). Formally a feature $f$ is a
+certain type of image (e.g. an x-derivative). Formally a feature $f$ is a
 tuple $\langle i, B, o \rangle$ defined as:
 \begin{itemize}
 	\item[$i$]{an index corresponding to the image type.}
 	\item[$B$]{the set of blocks $b \in B$ where each block contains a sign
-	$b_s \in \{-1,1\}$ which indicate subtraction or addition of that block. And
-	relative positions $p_1,\ldots,p_n$, with $p_i \in [0,1]$ and $n$ as the number
-	of segments. which the determine the location of the block within the feature.}
+	$b_s \in \{-1,1\}$ which indicate subtraction or addition of that block.
+	And relative positions $b_{pa},b_{pb} \in [0,1]$. which the determine the
+	position of the block within the feature.}
 	\item[$o$]{the orientation of the feature blocks: horizontal or vertical.}
 \end{itemize}
 The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \ref{alg:value}.
 \begin{algorithm}
-	\caption{featureValue($f$, $x$, $w$, $h$): Returns the real valued image $V$ of $x$ according to feature $f$}
+	\caption{featureValue($f$, $x$, $w$, $h$): Returns the image $V = f(x)$}
 	\begin{algorithmic}[1]
 	\REQUIRE The feature $f = \langle i, B, o \rangle$, the image $x$, the width $w$ and height $h$ of the feature.
 	\medskip
@@ -65,7 +65,7 @@ The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 	\ENDIF
 	\STATE Let $B'$ be the set of blocks with rescaled coordinates using $w,h$.
 	\FORALL {$b \in B'$}
-		\STATE Let $X$ be the result of applying $b$ to $I$ while respecting the position of $b$ in $f$
+		\STATE Let $X$ be the result of applying $b$ to $I$ while respecting $b_{pa}, b_{pb}$
 		\STATE $V \leftarrow V + b_s \cdot X$
 	\ENDFOR
 	\RETURN $V$
@@ -74,12 +74,13 @@ The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \end{algorithm}
 
 \subsection*{Generation}
-By representing a feature as a binary string, the set $S$ of possible features can be easily calculated:
-$$S = \{b(x) | \forall x \in 1\ldots\Big(\frac{x^s}{2}-1\Big)\}$$
-A feature is represented as a binary string. Each element in the binary string
-the position and the sign of a feature segment. Adjacent segments that share
-the same sign are merged together and are called a feature block. This
-representation makes it easy to generate all possible features.
+By representing a feature as a binary string, the set $S$ of possible features
+can be easily calculated:
+$$S = \{b(x) | \forall x \in \{1\ldots(x^n-2)/2\}\},$$
+where $b(x)$ represents $x$ as a binary string and $n$ is the number of
+segments. Each element in the binary string $s \in S$ represents the position
+and the sign of a feature segment. Adjacent segments that share the same sign
+are merged together and are called a feature block.
 
 \subsection*{Optimization}
 Features often share the same feature block dimensions. Even a feature
@@ -138,11 +139,11 @@ The cascading classifier is the final classifier. It consists of multiple
 layers where each layer holds a strong classifier. This classifier is
 trained as described by \cite{viola}. 
 \begin{algorithm}
-	\caption{cascadingClassify($C$, $x$): Returns the binary image $B$ of $x$}
+	\caption{cascadingClassify($C$, $x$, $w$, $h$): Returns the binary image $B$ of $x$}
 	\begin{algorithmic}[1]
-	\REQUIRE $C$ the cascading classifier, $x$ the image to classify on
+	\REQUIRE $C$ the cascading classifier, $x$ the image, $w,h$ the dimensions of the features
 	\medskip
-	\STATE Let $B$ be an image with the same dimensions as $x$ consisting of ones.
+	\STATE Let $B$ be an image with the dimensions $D(x) - [w,h]$ consisting of ones.
 	\FORALL {$c_s \in C$}
 		\STATE $B' \leftarrow c_s(x)$
 		\STATE $B \leftarrow B \land B'$
@@ -153,7 +154,7 @@ trained as described by \cite{viola}.
 \end{algorithm}
 Algorithm \ref{alg:casc} shows the classification of an image using a trained
 cascading classifier. The strong classifier $c_s \in C$ classifies according to
-the Strong classifier section described above.
+the Strong classifier section.
 
 \section*{Results}
 % TODO: confusion matrix
