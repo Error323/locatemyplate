@@ -18,88 +18,135 @@
 \maketitle
 \section*{Introduction}
 This report describes the implementation of a robust, real-time License Plate
-Localisation System (LPR). Using supervised learning, the system generates a
-cascading classifier which consists of multiple layers that each holds one
-strong classifier. These strong classifiers are a linear function of several
-weak classifiers aka features which each describe characteristics of a license
-plate. The first section describes the implementation of the algorithms
-involved, next the results using an american dataset are shown and finally the
-conclusion.
+Localisation System (LPL). Using supervised learning, the system generates a
+cascading classifier which consists of layers that each holds one strong
+classifier. These strong classifiers are a linear function of several weak
+classifiers. Each weak classifier is a feature which each describe
+characteristics of a license plate. The first section describes the data used
+for our experiments. The second section describes the features: What they are
+and how they are generated.  Next the training and classification of weak,
+strong and cascading classifiers is explained. The results come next and
+finally the conclusions.
+
+\section*{Dataset}
+The dataset used for training, validating and testing the LPL system is obtained
+from \cite{dlagnekov_dataset}. It contains 293 car images with a resolution of
+$640\times480$ which were rescaled by $50\%$ and annotated on location and size of
+the license plate. The dataset is divided in a train-, test- and validation set
+with respectively 199,47 and 47 images.
 
 
-\subsection{Features generation}
-	\subsection{Introduction}
-	A feature can be defined as a scanning window contaning a set of ascending
-	segments. The segments which form a group are called the feature blocks. Each
-	feature block takes the sum of all pixels in that block. This is done very
-	efficient using integral images \cite{viola}. The feature blocks ar summed up
-	or substracted depended on their sign.\\
+\section*{Features}
+The core of the LPL system consists of features. Features are image filters on
+a certain type of image (e.g. an x-derivative). Formally a feature $f$ is a
+tuple $\langle i, B, o \rangle$ defined as:
+\begin{itemize}
+	\item[$i$]{an index corresponding to the integral image type.}
+	\item[$B$]{the set of blocks $b \in B$ where each block contains a sign
+	$b_s$ which indicate subtraction or addition of that block. And relative
+	coordinates $x0,y0,x1,y1$ which the determine the location of the block
+	within the feature.}
+	\item[$o$]{which indicates the orientation: horizontal or vertical.}
+\end{itemize}
+The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
+\ref{alg:value}.
+\begin{algorithm}
+	\caption{featureValue($f$, $x$): Returns the real valued image $V$ of $x$ according to feature $f$}
+	\begin{algorithmic}[1]
+	\REQUIRE The feature $f = \langle i, B, o \rangle$, the image $x$
+	\medskip
+	\STATE Let $V$ be an image with the same dimensions as $x$ consisting of zeros.
+	\STATE Let $I$ be the $i^{th}$ integral image of $x$.
+	\IF {$o$ is horizontal}
+		\STATE Let $I$ be $I'$ ($I$ transposed)
+	\ENDIF
+	\FORALL {$b \in B$}
+		\STATE $V \leftarrow V + b_s \cdot b(I)$
+	\ENDFOR
+	\RETURN $V$
+	\end{algorithmic}
+\label{alg:value}
+\end{algorithm}
 
-	Because the segments and feature blocks are vertically separated, the
-	feature is called a vertical feature.  In addition horizontal features are
-	generated using the transpose of the vertical features.\\
 
-	A feature is represented as a binary code. Each element in the binary
-	represents the position and the sign of a feature segment.  This
-	representation makes it easy to generate all possible features permutations
-	using the powerset.  Because half of the features are simply the inverse of
-	another feature, the set is pruned.
+\subsection*{Generation}
+A feature is represented as a binary string. Each element in the binary string
+the position and the sign of a feature segment. Adjacent segments that share
+the same sign are merged together and are called a feature block. This
+representation makes it easy to generate all possible features.
 
-	\subsection{Optimization}
-	Lots of features share the same feature block dimensions. Even a feature
-	itself could have more feature blocks of the same dimensions. Because the
-	feature is used as a scanning window, lots of redundant calculations are done.
+\subsection*{Optimization}
+Lots of features share the same feature block dimensions. Even a feature
+itself could have more feature blocks of the same dimensions. Because the
+feature is used as a scanning window, lots of redundant calculations are done.
+To optimize this, the feature blocks are individually calculated for every
+position $(i,j)$ in the image and stored on its dimensions $(h,w)$ in a hash
+table $R$.
 
-	To optimize this, the feature blocks are individually calculated for every
-	position (i,j) in the image and stored on its dimensions (h,w) in a hash
-	table R.\\
-	The matrices are alligned depending on the position of the block in the
-	feature and added up. This gives the total value of a feature (again for
-	every position, stored in a matrix).
-
-	\section{Image types}
-	The features where applied to the following image types.
-	\begin{itemize}
-		\item{1th order derivative in both x and y directions.}
-		\item{2nd order derivative in both x and y directions.}
-		\item{variance in both x and y directions.}
-	\end{itemize}
-	Before applying the feature, the above image types are passed through an
-	absolute filter.
+\subsection*{Image types}
+The features where applied to the following image types.
+\begin{itemize}
+	\item{1th order derivative in both x and y directions.}
+	\item{2nd order derivative in both x and y directions.}
+	\item{variance in both x and y directions.}
+\end{itemize}
+Before applying the feature, the above image types are passed through an
+absolute filter.
 
 
 \section*{Training}
-The overall method consists of three types of training. The first type is the
-training of the weak classifiers or features. The second type is a linear
-combination of one or more weak classifiers into a strong classifier using a
-boosting algorithm. Finally the type stage is a cascading classifier with a
-strong classifier on each layer.
+The overall cascading classifier consists of three types of training. The first
+type is the training of the weak classifiers using features. The second type is
+a linear combination of one or more weak classifiers into a strong classifier
+using a boosting algorithm. Finally the third type is a cascading classifier
+with a strong classifier on each layer.
+
 \subsection*{Weak classifier}
-A weak classifier or feature is trained by determining a threshold $t$ which
-seperates positive and negative samples as good as possible.
-\begin{algorithm}
-	\caption{trainWeakClassifier($F$, $P$, $N$): Determines a threshold $t$ which
-	separets positive and negative examples as good as possible.}
-	\begin{algorithmic}[1]
-	\REQUIRE $F$ the feature, $P$ positive samples, $N$ negative samples
-	\medskip
-	\STATE Let $V$ be a table $V = x|x_v|x_s$, where $x \in P \cup N$, $x_v = F(x)$ and $x_s \in {0,1}$.
-	\STATE Sort $V$ on $x_v$
-	\STATE Find index $i$ which seperates $V$ on $x_s$ as good as possible
-	\RETURN $x_v(i)$
-	\end{algorithmic}
-\label{alg:weak}
-\end{algorithm}
-See Algorithm \ref{alg:weak}.
+A weak classifier is a feature with a threshold $t \in \mathbb{R}$ and an
+operator $\circ \in \{<, >\}$ which separates positive and negative samples as
+good as possible according to the trainings set. After training, the weak
+classifier $C$ constructs a binary image $B = t \circ f(x)$, where $x$ is the
+image and $f$ the function of the feature as described in the Features section.
+This binary image $B$ contains possible license plates according to the
+feature.
+
 \subsection*{Strong classifier}
+A strong classifier is constructed according to the boosting algorithm
+described by Viola and Jones \cite{viola}.  By re-weighting the positive and
+negative samples after selecting a weakClassifier, the algorithm selects the
+"best" features with their respective alpha. Classification is performed as
+follows:
+\begin{displaymath}
+C(x) = 
+	\left\{ \begin{array}{ll}
+		1 & \sum^T_{t=1} \alpha_t W_t(x) \ge \frac{1}{2} \sum^T_{t=1}\alpha_t \\
+		0 & \textrm{otherwise}
+	\end{array} \right.
+\end{displaymath}
+where $T$ is the number of weak classifiers and $W_t$ a function which returns
+the binary image as described in the Weak classifier section.
+
 \subsection*{Cascading classifier}
-
-
-\section*{Dataset}
-The dataset is with permission obtained from \cite{dlagnekov_dataset}. It
-contains 293 car images annotated on location and size of the license plate.
-The dataset is divided in a train-, test- and validation set with respectively
-199,47 and 47 images.
+The cascading classifier is the final classifier. It consists of multiple
+layers where each layer represents a strong classifier. This classifier is
+trained as described by Viola and Jones \cite{viola}. 
+\begin{algorithm}
+	\caption{classify($C$, $x$): Returns the binary image $B$ of $x$}
+	\begin{algorithmic}[1]
+	\REQUIRE $C$ the cascading classifier, $x$ the image
+	\medskip
+	\STATE Let $B$ be an image with the same dimensions as $x$ consisting of ones.
+	\FORALL {$c_s \in C$}
+		\STATE $B' \leftarrow c_s(x)$
+		\STATE $B \leftarrow B \land B'$
+	\ENDFOR
+	\RETURN $B$
+	\end{algorithmic}
+\label{alg:casc}
+\end{algorithm}
+Algorithm \ref{alg:casc} shows the classification of an image using a trained
+cascading classifier. The strong classifier $c_s \in C$ classifies according to
+the Strong classifier section described above.
 
 \section*{Results}
 We used segments
@@ -119,4 +166,3 @@ TODO ispell
 \bibliography{references}
 \bibliographystyle{IEEEtran}
 \end{document}
-
