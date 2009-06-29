@@ -24,7 +24,7 @@ strong classifier. These strong classifiers are a linear function of several
 weak classifiers aka features which each describe characteristics of a license
 plate. The first section describes the implementation of the algorithms
 involved, next the results using an american dataset are shown and finally the
-conclusion. \cite{viola}
+conclusion.
 
 
 \subsection{Features generation}
@@ -76,37 +76,32 @@ boosting algorithm. Finally the type stage is a cascading classifier with a
 strong classifier on each layer.
 \subsection*{Weak classifier}
 A weak classifier or feature is trained by determining a threshold $t$ which
-seperates positive and negative samples as good as possible. See Algorithm
-\ref{alg:weak}.
+seperates positive and negative samples as good as possible.
 \begin{algorithm}
-	\caption{trainWeakClassifier($C$, $P$, $N$): Determines a threshold $t$ which
+	\caption{trainWeakClassifier($F$, $P$, $N$): Determines a threshold $t$ which
 	separets positive and negative examples as good as possible.}
 	\begin{algorithmic}[1]
-	\REQUIRE $C$ the weak classifier, $P$ positive samples, $N$ negative samples
+	\REQUIRE $F$ the feature, $P$ positive samples, $N$ negative samples
 	\medskip
-	\STATE Let $V$ be a table $V = x|x_v|x_s$, where $x \in P \cup N$, $x_v = C(x)$ and $x_s \in {0,1}$.
+	\STATE Let $V$ be a table $V = x|x_v|x_s$, where $x \in P \cup N$, $x_v = F(x)$ and $x_s \in {0,1}$.
 	\STATE Sort $V$ on $x_v$
-	\FOR {$i = 2 to |V|-1$}
-		\STATE 
-	\ENDFOR
-	
+	\STATE Find index $i$ which seperates $V$ on $x_s$ as good as possible
+	\RETURN $x_v(i)$
 	\end{algorithmic}
 \label{alg:weak}
 \end{algorithm}
+See Algorithm \ref{alg:weak}.
 \subsection*{Strong classifier}
 \subsection*{Cascading classifier}
 
 
 \section*{Dataset}
-\section*{Results}
-\subsection*{Dataset}
 The dataset is with permission obtained from \cite{dlagnekov_dataset}. It
 contains 293 car images annotated on location and size of the license plate.
-The dataset is divided in a train-, test- and evaluation set with respectively
+The dataset is divided in a train-, test- and validation set with respectively
 199,47 and 47 images.
 
-
-\subsection*{
+\section*{Results}
 confusion matrix
 info about datasets, nr examples, train test etc.
 performance cascader displayed in graph (on every layer display the exclusions)
