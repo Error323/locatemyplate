@@ -18,13 +18,13 @@
 \maketitle
 \section*{Introduction}
 This report describes the implementation of a robust, real-time License Plate
-Recognition System (LPR). Using supervised learning, the system generates a
+Localisation System (LPR). Using supervised learning, the system generates a
 cascading classifier which consists of multiple layers that each holds one
 strong classifier. These strong classifiers are a linear function of several
 weak classifiers aka features which each describe characteristics of a license
 plate. The first section describes the implementation of the algorithms
-involved, next we show our results using an american dataset and finally we
-conclude.
+involved, next the results using an american dataset are shown and finally the
+conclusion. \cite{viola}
 
 
 \subsection{Features generation}
@@ -68,13 +68,36 @@ conclude.
 	absolute filter.
 
 
-\section{Training}
-	\subsection*{Training strong classifiers}
-	TODO adaboost comes here
+\section*{Training}
+The overall method consists of three types of training. The first type is the
+training of the weak classifiers or features. The second type is a linear
+combination of one or more weak classifiers into a strong classifier using a
+boosting algorithm. Finally the type stage is a cascading classifier with a
+strong classifier on each layer.
+\subsection*{Weak classifier}
+A weak classifier or feature is trained by determining a threshold $t$ which
+seperates positive and negative samples as good as possible. See Algorithm
+\ref{alg:weak}.
+\begin{algorithm}
+	\caption{trainWeakClassifier($C$, $P$, $N$): Determines a threshold $t$ which
+	separets positive and negative examples as good as possible.}
+	\begin{algorithmic}[1]
+	\REQUIRE $C$ the weak classifier, $P$ positive samples, $N$ negative samples
+	\medskip
+	\STATE Let $V$ be a table $V = x|x_v|x_s$, where $x \in P \cup N$, $x_v = C(x)$ and $x_s \in {0,1}$.
+	\STATE Sort $V$ on $x_v$
+	\FOR {$i = 2 to |V|-1$}
+		\STATE 
+	\ENDFOR
+	
+	\end{algorithmic}
+\label{alg:weak}
+\end{algorithm}
+\subsection*{Strong classifier}
+\subsection*{Cascading classifier}
 
-	\subsection{Cascading classifier}
 
-
+\section*{Dataset}
 \section*{Results}
 \subsection*{Dataset}
 The dataset is with permission obtained from \cite{dlagnekov_dataset}. It
@@ -99,3 +122,4 @@ TODO ispell
 \bibliography{references}
 \bibliographystyle{IEEEtran}
 \end{document}
+
