@@ -28,53 +28,44 @@ conclude.
 
 
 \subsection{Features generation}
-\section*{integral images}
-how is a integral image computed, TODO copy from other paper, do not invent the
-wheel :P
-
-	\subsection{introduction}
+	\subsection{Introduction}
 	A feature can be defined as a scanning window contaning a set of ascending
 	segments. The segments which form a group are called the feature blocks. Each
-	feature block takes the sum of all pixels the block. This is done very
-	efficient using integral images.  TODO (reference integral images). Depended
-	of the sign of the individual featureblocks he is summed up or substracted.\\ 
+	feature block takes the sum of all pixels in that block. This is done very
+	efficient using integral images \cite{viola}. The feature blocks ar summed up
+	or substracted depended on their sign.\\
 
-	Because the segments and featureblocks are vertically seperated, the
-	feature is called a vertical feature.  The horizontal features are simply
-	generated using the transpose of this vertical feature.\\
+	Because the segments and feature blocks are vertically separated, the
+	feature is called a vertical feature.  In addition horizontal features are
+	generated using the transpose of the vertical features.\\
 
-	A feature can be represented as a binary code. Each element in the binary
-	represents the position and the sign of a segment of a feature.
-	example TODO picture\\
+	A feature is represented as a binary code. Each element in the binary
+	represents the position and the sign of a feature segment.  This
+	representation makes it easy to generate all possible features permutations
+	using the powerset.  Because half of the features are simply the inverse of
+	another feature, the set is pruned.
 
-	This representation makes it easy to generate all possible features
-	permutations using the powerset.  Because half of the features are simply
-	the inverse of another feature the set is pruned.
+	\subsection{Optimization}
+	Lots of features share the same feature block dimensions. Even a feature
+	itself could have more feature blocks of the same dimensions. Because the
+	feature is used as a scanning window, lots of redundant calculations are done.
 
-	\subsection{optimalisation}
-	Lots of features share the same featureblock dimensions. Even a feature
-	itself could have more featureblocks of the same dimensions.  Because the
-	feature is used as a scanning window lots of unnecessary redundant
-	calculations are done.
-
-	To optimize this, the featureblocks are individually calculated for every
+	To optimize this, the feature blocks are individually calculated for every
 	position (i,j) in the image and stored on its dimensions (h,w) in a hash
-	table R.  For example R(3,4) contains the matrix for featureblock with
-	height=3 and width=4.  R(3,4)(20,4) contains the value of position (20,4) in
-	the image for this featureblock.
-
+	table R.\\
 	The matrices are alligned depending on the position of the block in the
 	feature and added up. This gives the total value of a feature (again for
 	every position, stored in a matrix).
 
-	\section{image types}
-	The features where applied to the following integral image types.
+	\section{Image types}
+	The features where applied to the following image types.
 	\begin{itemize}
 		\item{1th order derivative in both x and y directions.}
 		\item{2nd order derivative in both x and y directions.}
 		\item{variance in both x and y directions.}
 	\end{itemize}
-	Before applying the feature the above integral image types are passed through an absolute filter.
+	Before applying the feature, the above image types are passed through an
+	absolute filter.
 
 
 \section{Training}
@@ -86,6 +77,12 @@ wheel :P
 
 \section*{Results}
 \subsection*{Dataset}
+The dataset is with permission obtained from \cite{dlagnekov_dataset}. It
+contains 293 car images annotated on location and size of the license plate.
+The dataset is divided in a train-, test- and evaluation set with respectively
+199,47 and 47 images.
+
+
 \subsection*{
 confusion matrix
 info about datasets, nr examples, train test etc.
