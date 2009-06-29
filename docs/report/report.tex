@@ -18,70 +18,75 @@
 \maketitle
 \section*{Introduction}
 This report describes the implementation of a robust, real-time License Plate
-Localisation System (LPL) \cite{dlagnekov_thesis, zhang}. Using supervised
-learning, the system generates a cascading classifier which consists of layers
-that each holds one strong classifier. These strong classifiers are a linear
-function of several weak classifiers. Each weak classifier is a feature which
-each describe characteristics of a license plate. The first section describes
-the data used for our experiments. The second section describes the features:
-What they are and how they are generated.  Next the training and classification
-of weak-, strong- and cascading classifiers is explained. Then the results are
-explained and finally the conclusions.
+Localisation System (LPL). This system uses techniques discussed in
+\cite{dlagnekov_thesis, zhang}. Using supervised learning, the system generates
+a cascading classifier which consists of layers that each holds one strong
+classifier. These strong classifiers are a linear function of several weak
+classifiers. Each weak classifier is a feature which each describe
+characteristics of a license plate. The first section describes the data used
+for our experiments. The second section describes the features: What they are
+and how they are generated.  Next the training and classification of weak-,
+strong- and cascading classifiers is explained. Then the results are explained
+and finally the conclusions.
 
 \section*{Dataset}
-The dataset used for training, validating and testing the LPL system is obtained
-from \cite{dlagnekov_dataset}. It contains 293 car images with a resolution of
-$640\times480$ which were rescaled by $50\%$ and annotated on location and size of
-the license plate. The dataset is divided in a train-, test- and validation set
-with respectively 199, 47 and 47 images.
+The dataset used is obtained from \cite{dlagnekov_dataset}. It contains $246$ car
+images with a resolution of approximatly $640\times480$ which were rescaled by
+$50\%$ and annotated on location and size of the license plate. The dataset is
+divided in a train-, test- and validation set with $159$, $40$ and $47$ images
+respectively.
 
 
 \section*{Features}
-The core of the LPL system consists of features \cite{dlagnekov_thesis,
-zhang,naturaltext}. Features are image filters on a certain type of image
-(e.g.  an x-derivative). Formally a feature $f$ is a tuple $\langle i, B, o
-\rangle$ defined as:
+The core of the LPL system consists of features as described by
+\cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters on a
+certain type of image (e.g.  an x-derivative). Formally a feature $f$ is a
+tuple $\langle i, B, o \rangle$ defined as:
 \begin{itemize}
 	\item[$i$]{an index corresponding to the image type.}
 	\item[$B$]{the set of blocks $b \in B$ where each block contains a sign
 	$b_s \in \{-1,1\}$ which indicate subtraction or addition of that block. And
-	relative positions $p \in [0,1]$. which the determine the location of the block
-	within the feature.}
-	\item[$o$]{the orientation of the feature blocks: horizontal or vertical}
+	relative positions $p_1,\ldots,p_n$, with $p_i \in [0,1]$ and $n$ as the number
+	of segments. which the determine the location of the block within the feature.}
+	\item[$o$]{the orientation of the feature blocks: horizontal or vertical.}
 \end{itemize}
 The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \ref{alg:value}.
 \begin{algorithm}
-	\caption{featureValue($f$, $x$): Returns the real valued image $V$ of $x$ according to feature $f$}
+	\caption{featureValue($f$, $x$, $w$, $h$): Returns the real valued image $V$ of $x$ according to feature $f$}
 	\begin{algorithmic}[1]
-	\REQUIRE The feature $f = \langle i, B, o \rangle$, the image $x$
+	\REQUIRE The feature $f = \langle i, B, o \rangle$, the image $x$, the width $w$ and height $h$ of the feature.
 	\medskip
-	\STATE Let $V$ be an image with the same dimensions as $x$ consisting of zeros.
+	\STATE Let $V$ be an image with the same dimensions as $D(x)-[w, h]$ consisting of zeros.
 	\STATE Let $I$ be the $i^{th}$ image type of $x$.
 	\IF {$o$ is horizontal}
 		\STATE $I \leftarrow I^\top$
+		\STATE Swap $w$ and $h$
 	\ENDIF
-	\FORALL {$b \in B$}
-		\STATE $V \leftarrow V + b_s \cdot b(I)$
+	\STATE Let $B'$ be the set of blocks with rescaled coordinates using $w,h$.
+	\FORALL {$b \in B'$}
+		\STATE Let $X$ be the result of applying $b$ to $I$ while respecting the position of $b$ in $f$
+		\STATE $V \leftarrow V + b_s \cdot X$
 	\ENDFOR
 	\RETURN $V$
 	\end{algorithmic}
 \label{alg:value}
 \end{algorithm}
 
-
 \subsection*{Generation}
+By representing a feature as a binary string, the set $S$ of possible features can be easily calculated:
+$$S = \{b(x) | \forall x \in 1\ldots\Big(\frac{x^s}{2}-1\Big)\}$$
 A feature is represented as a binary string. Each element in the binary string
 the position and the sign of a feature segment. Adjacent segments that share
 the same sign are merged together and are called a feature block. This
 representation makes it easy to generate all possible features.
 
 \subsection*{Optimization}
-Lots of features share the same feature block dimensions. Even a feature
+Features often share the same feature block dimensions. Even a feature
 itself could have more feature blocks of the same dimensions. Because the
-feature is applied as an image filter, lots of redundant calculations are done.
+feature is applied as an image filter, a.
 To optimize this, the feature blocks are individually calculated for every
-position $(i,j)$ in the image and stored on its dimensions $(h,w)$ in a hash
+position $(i,j)$ in the image and stored on its dimensions $(w,h)$ in a hash
 table $R$.
 
 \subsection*{Image types}
