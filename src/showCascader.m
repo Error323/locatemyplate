@@ -7,64 +7,83 @@
 %% OUPUTS:
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 function showCascader(cascader)
-	% img = imread('elle.jpg');
-	% img = imresize(img,0.5);
-	% imshow(img);
+	% NOTE first run globals.m to get data
 	global DEBUG INTEGRALS train;
+	imageId = 3;
 
-	% get data 
-	integralImgs  = train.I{1};
-	dimensions = train.D{1};
-
+	I = train.I;
+	D = train.D;
+	integralImgs  = I{imageId};
+	
+	% initialize integral images
 	for j=2:INTEGRALS %skip ori image
 		Ri{j} = {};
 	end
 
-	close all
-	figure(1);
-	maximize(1);
+	% initialise strong classifier
+	C = ones(size(I{imageId}) - (D{imageId}-1));
+
+	close all;
 	
-	nrLayers   = size(cascader.cascader,2);
+	nrLayers         = size(cascader.cascader,2);
 
-	nrFeaturesTotal  = 0;
+	% feature, V, C weak, C strong = #4
+	subplotHeight = 5;
+
+	% loop through cascader/layers/strong classifiers
 	for layer=1:nrLayers
-		nrFeaturesTotal = nrFeaturesTotal + size(cascader.cascader{1,layer}.classifier,2);
-	end
+		% retrieve current strong classifier
+		S 					= cascader.cascader{layer};
 
-	subplotWidth = nrFeaturesTotal
-	subplotHeight = 3;
+		% calculate feature total for subplot width
+		nrFeatures 	= size(S.classifier,2);
+		subplotWidth = nrFeatures;
 
-	i = 1;
-	for layer=1:nrLayers
-		nrFeatures = size(cascader.cascader{1,layer}.classifier,2);
-		alphas = cascader.cascader{1,layer}.alphas;
+		%start new figure
+		figure(layer);
+		maximize(layer);
 
+		% plot car in grayscale 
+		%subplot(subplotHeight,subplotWidth, 1); imshow(I{imageId}{1});
+		subplot(subplotHeight, subplotWidth, 1); imshow(I{imageId}{1}*256);
+
+		% loop through features/weak classifiers
 		for f=1:nrFeatures
-
-			feature = cascader.cascader{1,layer}.classifier{1,f};
-			subplot(subplotHeight,subplotWidth, i); showFeature(feature,i)
+			% retrieve feature
+			feature = S.classifier{f};
+			% display feature
+			subplot(subplotHeight, subplotWidth, f+(1*subplotWidth)); showFeature(feature,layer)
 
 			integralId 	= feature.int;
 			img 				= integralImgs{integralId};
 			Rij 			  = Ri{integralId};
-			[C, RijClassified_, V] = weakClassify(feature, dimensions, img, Rij);
+			[C, RijClassified_, V] = weakClassify(feature, D{imageId}, img, Rij);
 			%V      = V + alphas(f) * C;
 			%V      = alphas(f) * C;
 
-			% normalise img
-			VMin = min(min(V));
-			VMax = max(max(V));
-			VRange = VMax-VMin;
-			VNormalised = (V - VMin)/VRange;
+			VNormalised = normaliseImg(V);
 			%plot img
-			magnification = 30;
-			subplot(subplotHeight,subplotWidth, i+subplotWidth); imshow(VNormalised);
-			subplot(subplotHeight,subplotWidth, i+2*subplotWidth); imshow(C);
-
-			i = i + 1;
+			subplot(subplotHeight,subplotWidth, f+(2*subplotWidth)); imshow(VNormalised);
+			subplot(subplotHeight,subplotWidth, f+(3*subplotWidth)); imshow(C);
 		end
+		
+
+		[Cprime, Vprime_] = strongClassify(S.classifier, D{imageId}, I{imageId}, {}, S.alphas, S.threshold);
+		% and with C from prev layer
+		C = C & Cprime;
+
+		subplot(subplotHeight,subplotWidth, f+(4*subplotWidth)); imshow(C);
+		pause;
+
 	end
 	%subplot(subplotHeight,subplotWidth,i)
+end
+
+function VNormalised  = normaliseImg(V)
+	% normalise img
+	VMin = min(min(V));
+	VMax = max(max(V));
+	VRange = VMax-VMin;
+	VNormalised = (V - VMin)/VRange;
 end
