@@ -2,6 +2,7 @@ FILENAME = presentation
 
 all:
 	latex $(FILENAME)
+	latex $(FILENAME)
 	dvipdf $(FILENAME)
 
 clean:
