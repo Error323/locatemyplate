@@ -184,8 +184,26 @@ positives after each iteration.
 For our experiments we trained the cascading classifier using $fp = 0.99, d =
 0.999, fp_{min} = 0.001$ for the false positive rate, detection rate and
 minimal false positive rate respectively. The final cascading classifier
-contains five layers with $1, 5, 14, 7, 10$ features respectively. The
-confusion matrix on the test set can be found in Table \ref{tab:conf}. 
+contains five layers with $1, 5, 14, 7, 10$ features respectively. An example
+of the cascading classifier is displayed in Figure \ref{fig:cascader}. To
+illustrate how a layer is constructed, the strong classifier of layer 2 is
+explained in Figure \ref{fig:strongclassify}\\
+The confusion matrix on the test set can be found in Table \ref{tab:conf}. 
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=18cm]{img/strongClassifier_layer2_img14}
+\caption{Example of a strongclassifier of a layer with 5 features.}
+\label{fig:strongclassify}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=18cm]{img/cascader_img14}
+\caption{Example of a cascading classifier with 5 layers.}
+\label{fig:calcader}
+\end{figure}
+
 \begin{table}[!ht]
 \centering
 \begin{tabular}{|l|l|}
@@ -198,21 +216,19 @@ $3$  & $2399245$ \\
 \caption{The confusion matrix of the test set.}
 \label{tab:conf}
 \end{table}
-Furthermore an overall detection rate of $0.925$ and false positive rate of
+An overall detection rate of $0.925$ and false positive rate of
 $0.0648$ was achieved. Figure \ref{fig:fprate} shows
+the averaged false positive rate per layer in the cascading classifier. Note
+that we experimented with just four image types as described in Section
+\ref{sec:image}, using more advanced image types as described by \cite{naturaltext}
+would decrease the false positive rate even further.
+% TODO: (optional endresult, car with rectangle at license plate)
 \begin{figure}[!ht]
 \centering
 \includegraphics[height=9cm]{img/fprate}
 \caption{The false positive rate per layer, averaged over the test set.}
 \label{fig:fprate}
 \end{figure}
-the averaged false positive rate per layer in the cascading classifier. Note
-that we experimented with just four image types as described in Section
-\ref{sec:image}, using more advanced image types as described by \cite{naturaltext}
-would decrease the false positive rate even further.
-% TODO: performance cascader displayed in graph (on every layer display the exclusions)
-% TODO: (optional endresult, car with rectangle at license plate)
-% TODO: (optionoal prob image of a good performing feature)
 
 \section{Conclusions} \label{sec:conc}
 Given just four types of images, the cascading classifier performs very well.
