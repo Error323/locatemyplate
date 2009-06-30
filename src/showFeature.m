@@ -37,26 +37,27 @@ function showFeature(feature, fig)
 		% in the left bottom. But in the other code the origin of
 		% matrices are used, which are left top.
 
-		% vertical
-		if (feature.orientation == 1)
-			rectangle('Position', [x0, y0, x1-x0, y1-y0], 'FaceColor', c);
-		else % horizontal
-			rectangle('Position', [y0, x0, y1-y0,x1-x0], 'FaceColor', c);
-		end
-		% fix for axis:
+		% % vertical
 		% if (feature.orientation == 1)
-		% 	x = x0;
-		% 	y = y0;
-		% 	w = x1-x0;
-		% 	h = y1-y0;
+		% 	rectangle('Position', [x0, y0, x1-x0, y1-y0], 'FaceColor', c);
 		% else % horizontal
-		% 	x = y0
-		% 	y = x0
-		% 	w = y1-y0
-		% 	h = x1-x0
+		% 	rectangle('Position', [y0, x0, y1-y0,x1-x0], 'FaceColor', c);
 		% end
-		% % draw featureblock
-		% rectangle('Position', [x, y, w, h], 'FaceColor', c);
-		% %axis([x,w,y,h]);
+
+		if (feature.orientation == 1)
+			rx = x0;
+			ry = y0;
+			rw = x1-x0;
+			rh = y1-y0;
+		else % horizontal
+			rx = y0;
+			ry = x0;
+			rw = y1-y0;
+			rh = x1-x0;
+		end
+		% draw featureblock
+		rectangle('Position', [rx,ry,rw,rh], 'FaceColor', c);
 	end
+	%fix for axis:
+	axis([1,h,1,w]);
 end
