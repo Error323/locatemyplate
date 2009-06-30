@@ -39,7 +39,7 @@ $159$, $40$ and $47$ images respectively.
 \section{Features} \label{sec:feat}
 The core of the LPL system consists of features as described by
 \cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters applied
-on a certain type of image (e.g. an x-derivative) see Figure \ref{fig:feature}.
+on a certain type of image (e.g. an $x$-derivative) see Figure \ref{fig:feature}.
 Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
 \begin{itemize}
 	\item{$i$, an index corresponding to the image type.}
@@ -63,12 +63,13 @@ Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
 \includegraphics[height=3.5cm]{img/featureapplied}
 \label{fig:c}
 }
-\caption{A feature (second order derivative of $x$) applied to an image.}
+\caption{A horizontal, second order $x$-derivative feature with binary code
+$01110$ consisting of three blocks applied to an image.}
 \label{fig:feature}
 \end{figure}
 The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \ref{alg:value}.
-\begin{algorithm}
+\begin{algorithm}[!ht]
 	\caption{featureValue($f$, $x$, $w$, $h$): Returns the image $V = f(x)$}
 	\begin{algorithmic}[1]
 	\REQUIRE The feature $f = \langle i, B, o \rangle$, the image $x$, the width $w$ and height $h$ of the feature.
@@ -89,6 +90,7 @@ The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \label{alg:value}
 \end{algorithm}
 
+\newpage
 \subsection{Image Types} \label{sec:image}
 For this report, the following image types were used.
 \begin{itemize}
@@ -181,8 +183,8 @@ positives after each iteration.
 \section{Results} \label{sec:res}
 For our experiments we trained the cascading classifier using $fp = 0.99, d =
 0.999, fp_{min} = 0.001$ for the false positive rate, detection rate and
-minimal false positive rate respectively. A visual interpretation of the
-constructed cascading classifier can be found in Figure \ref{fig:casc}. The
+minimal false positive rate respectively. The final cascading classifier
+contains five layers with $1, 5, 14, 7, 10$ features respectively. The
 confusion matrix on the test set can be found in Table \ref{tab:conf}. 
 \begin{table}[!ht]
 \centering
