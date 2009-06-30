@@ -1,7 +1,7 @@
 \documentclass{beamer}
 %\usepackage{algorithm}
 %\usepackage[noend]{algorithmic}
-\usepackage{graphicx}
+\usepackage{graphicx, subfigure}
 
 \usetheme[compress]{Dresden}
 \setbeamertemplate{navigation symbols}{} 
@@ -36,29 +36,68 @@
   \end{itemize}
 }
 
+\frame
+{
+	\begin{figure}[!ht]
+		\centering
+		\subfigure{
+		\includegraphics[height=3.5cm]{../report/img/original}
+		\label{fig:a}
+		}
+		\subfigure{
+		\includegraphics[height=3.5cm]{../report/img/feature}
+		\label{fig:b}
+		}
+		\subfigure{
+		\includegraphics[height=3.5cm]{../report/img/featureapplied}
+		\label{fig:c}
+		}
+		\caption{A horizontal, second order $x$-derivative feature with binary code
+		$01110$, consisting of three blocks applied to an image.}
+		\label{fig:feature}
+	\end{figure}
+}
+
 \section{Results}
 \frame
 {
-  \frametitle{Results}
 	\begin{figure}[!ht]
 	\centering
-	\includegraphics[width=18cm]{../report/img/cascader_original_image}
-	\caption{test}
-	\label{fig:cascader_original}
+	\includegraphics[width=10cm]{../report/img/strongClassifier_layer2_img14}
+	\label{fig:strongclassify}
 	\end{figure}
 }
 
 
-\section{Results}
+\frame
+{
+	\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=12cm]{../report/img/cascader_img14}
+	\label{fig:cascader}
+	\end{figure}
+}
+
 \frame
 {
   \frametitle{Results}
 	\begin{figure}[!ht]
 	\centering
-	\includegraphics[width=18cm]{../report/img/strongClassifier_layer2_img14}
-	\caption{Example of a strongclassifier of a layer with 5 features.}
-	\label{fig:strongclassify}
+
+		\subfigure{
+			\includegraphics[width=5cm]{../report/img/cascader_original}
+		}
+		\subfigure{
+			\includegraphics[width=5cm]{../report/img/cascader_result}
+		}
+
 	\end{figure}
+}
+
+
+\frame
+{
+  \frametitle{Results}
 }
 
 \AtBeginSection[]
