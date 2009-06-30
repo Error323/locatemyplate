@@ -14,7 +14,7 @@ function showFeature(feature, fig)
 	w = 100; h = 33;
 
 	% set title of figure window
-	title(INTLABELS{feature.int});
+	title(['Feature to be aplied on ',INTLABELS{feature.int}]);
 
 	for i = 1:length(feature.blocks)
 		y0 = feature.blocks{i}.coords(1);
