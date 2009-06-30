@@ -1,5 +1,6 @@
 \documentclass{beamer}
 \usepackage{graphicx, subfigure}
+\usepackage{algorithm, algorithmic}
 
 \usetheme[compress]{Dresden}
 \setbeamertemplate{navigation symbols}{} 
@@ -99,7 +100,21 @@
   \frametitle{Stage II: Strong}
 	
   \begin{itemize}
-  \item <+-| alert@+> xxx
+  \item <+-| alert@+> Linear combination of weak classifiers
+  \item <+-| alert@+> Training
+  \begin{itemize}
+  	\item Boosting algorithm
+  	\item Alphas
+  	\item Weighted samples
+  \end{itemize}
+  \item <+-| alert@+> Classification
+	\begin{displaymath}
+	C(x) = 
+		\left\{ \begin{array}{ll}
+			1 & \sum^N_{i=1} \alpha_i \big(t_i \circ_i f_i(x)\big) \ge \tau \sum^N_{i=1}\alpha_i \\
+			0 & \textrm{otherwise}
+		\end{array} \right.
+	\end{displaymath}
   \end{itemize}
 }
 
@@ -118,8 +133,35 @@
   \frametitle{Stage III: Cascading}
 	
   \begin{itemize}
-  \item <+-| alert@+> xxx
+  \item <+-| alert@+> A sequence of strong classifiers
+  \item <+-| alert@+> Training
+  \begin{itemize}
+  	\item False positive rate per layer
+  	\item Detection rate per layer
+  	\item Desired false positive rate
+  	\item Update Negatives using validation set
   \end{itemize}
+  \item <+-| alert@+> Classification next slide
+  \end{itemize}
+}
+
+\frame
+{
+  \frametitle{Stage III: Cascading}
+  \begin{algorithm}[H]
+  	\caption{cascadingClassify($C$, $x$, $w$, $h$): Returns the binary image $B$ of $x$}
+  	\begin{algorithmic}[1]
+  	\REQUIRE $C$ the cascading classifier, $x$ the image, $w,h$ the dimensions of the features
+  	\medskip
+  	\STATE Initialize $B$ as an image with dimensions $D(x) - [w,h]$ consisting of ones.
+  	\FORALL {$c_s \in C$}
+  		\STATE $B' \leftarrow c_s(x)$
+  		\STATE $B \leftarrow B \land B'$
+  	\ENDFOR
+  	\RETURN $B$
+  	\end{algorithmic}
+  \label{alg:casc}
+  \end{algorithm}
 }
 
 \frame
@@ -137,8 +179,33 @@
   \frametitle{Results}
 	
   \begin{itemize}
-  \item <+-| alert@+> xxx
+  \item <+-| alert@+> 4 Image Types
+  \item <+-| alert@+> Test Set (47 images)
+  \item <+-| alert@+> Detection rate $0.925$
+  \item <+-| alert@+> False positive rate $0.065$
+  \item <+-| alert@+> Confusion Matrix
+  \begin{table}[!ht]
+  \centering
+  \begin{tabular}{|l|l|}
+  \hline
+  $37$ & $166186$ \\
+  \hline
+  $3$  & $2399245$ \\
+  \hline
+  \end{tabular}
+  \caption{Confusion Matrix}
+  \label{tab:conf}
+  \end{table}
   \end{itemize}
+}
+
+\frame
+{
+  \frametitle{Results}
+  \begin{figure}[!ht]
+  \centering
+  \includegraphics[width=10cm]{../report/img/fprate}
+  \end{figure}
 }
 
 \frame
@@ -163,7 +230,9 @@
   \frametitle{Conclusions}
 	
   \begin{itemize}
-  \item <+-| alert@+> xxx
+  \item <+-| alert@+> Good results considering 4 image types!
+  \item <+-| alert@+> Practical when filtering rest with OCR
+  \item <+-| alert@+> Very fast (even in matlab)
   \end{itemize}
 }
 \end{document}
