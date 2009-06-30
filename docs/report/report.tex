@@ -19,35 +19,35 @@
 \section{Introduction}
 This report describes the implementation of a robust, real-time License Plate
 Localisation system (LPL). This system uses techniques discussed in
-\cite{dlagnekov_thesis, zhang}. Using supervised learning, the system generates
-a cascading classifier which consists of layers that each hold one strong
-classifier. These strong classifiers are a linear function of several weak
-classifiers. Each weak classifier is a feature which describes characteristics
-of a license plate. The first Section describes the data used for our
-experiments. The second Section describes the features and how they are
-generated.  Next the training and classification of weak-, strong- and
-cascading classifiers is explained. Finally the results and conclusions are
-described.
+\cite{dlagnekov_thesis, zhang, naturaltext, viola}. Using supervised learning,
+the system generates a cascading classifier which consists of layers that each
+hold one strong classifier. A strong classifier is a linear function of several
+weak classifiers obtained by boosting. Each weak classifier is a feature which
+describes characteristics of a license plate. Section \ref{sec:data} describes
+the data used for our experiments. Section \ref{sec:feat} describes the
+features and how they are generated. Next the training and classification of
+weak-, strong- and cascading classifiers are both explained. Finally the
+results are shown and we come to the conclusions.
 
-\section{Dataset}
-The dataset used is obtained from \cite{dlagnekov_dataset}. It contains $246$ car
-images with a resolution of approximately $640\times480$ which were rescaled by
-$50\%$ and annotated on location and size of the license plate. The dataset is
-divided in a train-, test- and validation set with $159$, $40$ and $47$ images
-respectively.
+\section{Dataset} \label{sec:data}
+The dataset used is obtained from \cite{dlagnekov_dataset}. It contains $246$
+car images with a resolution of approximately $640\times480$. The images are
+annotated on location and size of the license plate and were rescaled by
+$50\%$. The dataset is divided in a train-, test- and validation set with
+$159$, $40$ and $47$ images respectively.
 
 
 \section{Features} \label{sec:feat}
 The core of the LPL system consists of features as described by
-\cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters on a
-certain type of image (e.g. an x-derivative). Formally a feature $f$ is a
+\cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters applied
+on a certain type of image (e.g. an x-derivative). Formally a feature $f$ is a
 tuple $\langle i, B, o \rangle$ defined as:
 \begin{itemize}
 	\item{$i$, an index corresponding to the image type.}
-	\item{$B$, the set of blocks $b \in B$ where each block contains a sign
-	$b_s \in \{-1,1\}$ which indicate subtraction or addition of that block.
-	And positions $b_{pa},b_{pb} \in [0,1]$, determine the relative
-	position of the block within the feature.}
+	\item{$B$, the set of blocks where each block $b \in B$ contains a sign
+	$b_s \in \{-1,1\}$ indicating subtraction or addition of that block and
+	positions $b_{pa},b_{pb} \in [0,1]$, determine the relative block position
+	within the feature.}
 	\item{$o$, the orientation of the feature blocks: horizontal or vertical.}
 \end{itemize}
 The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
@@ -57,7 +57,7 @@ The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 	\begin{algorithmic}[1]
 	\REQUIRE The feature $f = \langle i, B, o \rangle$, the image $x$, the width $w$ and height $h$ of the feature.
 	\medskip
-	\STATE Let $V$ be an image with the same dimensions as $D(x)-[w, h]$ consisting of zeros.
+	\STATE Initialize $V$ as an image with dimensions $D(x)-[w, h]$ consisting of zeros.
 	\STATE Let $I$ be the $i^{th}$ image type of $x$.
 	\IF {$o$ is horizontal}
 		\STATE $I \leftarrow I^\top$
@@ -65,7 +65,7 @@ The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 	\ENDIF
 	\STATE Let $B'$ be the set of blocks with rescaled coordinates using $w,h$.
 	\FORALL {$b \in B'$}
-		\STATE Let $X$ be the result of applying $b$ to $I$ while respecting $b_{pa}, b_{pb}$
+		\STATE Let $X$ be the result of applying $b$ to $I$ while respecting $b_{pa}, b_{pb}$ alignment.
 		\STATE $V \leftarrow V + b_s \cdot X$
 	\ENDFOR
 	\RETURN $V$
@@ -73,32 +73,34 @@ The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \label{alg:value}
 \end{algorithm}
 
+\subsection{Image Types} \label{sec:image}
+For this report, the following image types were used.
+\begin{itemize}
+	\item{1st order derivative in both $x$ and $y$ directions.}
+	\item{2nd order derivative in both $x$ and $y$ directions.}
+\end{itemize}
+Before applying the feature, the above image types are passed through an
+absolute filter. By calculating an integral image per image type, the
+featureblocks can be calculated very efficiently as each block calculation
+requires four array access instructions \cite{viola}.
+
 \subsection{Generation} \label{sec:gen}
 By representing a feature as a binary string, the set $S$ of possible features
 can be easily calculated:
 $$S = \{b(x,n) | \forall x \in \{1\ldots(x^n-2)/2\}\},$$
 where $b(x,n)$ represents $x$ as a binary string of length $n$ as the number of
-segments. Each element in the binary string $s \in S$ represents the position
-and the sign of a feature segment. Adjacent segments that share the same sign
-are merged together and are called a feature block.
+segments. Note that binary strings $0_1,\ldots,0_n$, $1_1,\ldots,1_n$ and the
+inverse binary strings are ignored. Each element in the binary string $s \in S$
+represents the position and the sign of a feature segment. Adjacent segments
+that share the same sign are merged together and are called a feature block.
+This set of features is duplicated for each image type.
 
-\subsection{Optimization} \label{sec:opt}
-Features often share the same feature block dimensions. Even a feature
-itself could have more feature blocks of the same dimensions. Because the
-feature is applied as an image filter, a.
-To optimize this, the feature blocks are individually calculated for every
-position $(i,j)$, in the image and stored on its dimensions $(w,h)$ in a hash
-table $R$.
-
-\subsection{Image Types} \label{sec:image}
-The features were applied to the following image types:
-\begin{itemize}
-	\item{1st order derivative in both x and y directions.}
-	\item{2nd order derivative in both x and y directions.}
-\end{itemize}
-Before applying the feature, the above image types are passed through an
-absolute filter. By using an integral image \cite{viola} per image type, the
-featureblocks can be calculated very efficiently.
+% \subsection{Optimization} \label{sec:opt}
+% Features often share the same feature block dimensions. A feature can have
+% multiple feature blocks of the same dimensions, because the feature is applied
+% as an image filter.  To optimize this, the feature blocks are individually
+% calculated for every position $(x,y)$, in the image $i$ and stored on its
+% dimensions $(w_i,h_i)$ in a hash table $R_i$.
 
 
 \section{Training} \label{sec:train}
@@ -121,7 +123,7 @@ possible license plates.
 A strong classifier is constructed according to the boosting algorithm
 described by \cite{viola}. By re-weighting the positive and negative samples
 after greedy selection of a weak classifier, the algorithm selects the next
-`best' features with their respective weight or $\alpha$. Classification is
+`best' features with their respective weight, $\alpha$. Classification is
 performed as follows:
 \begin{displaymath}
 C(x) = 
@@ -131,20 +133,21 @@ C(x) =
 	\end{array} \right.
 \end{displaymath}
 where $N$ is the number of weak classifiers as selected by the boosting
-algorithm and $\tau \in [0,1]$ a threshold.
+algorithm and $\tau \in [0,1]$ a threshold which allows for changing the false
+positive- and detection rate.
 
 \subsection{Cascading Classifier} \label{sec:casc}
-The cascading classifier is the final classifier. It consists of multiple
-layers where each layer hold a strong classifier. This classifier is trained as
-described by \cite{viola}. By specifying a false positive rate per layer, a
+The cascading classifier is the final classifier. This classifier is trained as
+described in \cite{viola}. By specifying a false positive rate per layer, a
 detection rate per layer and a false positive rate goal, the algorithm
-constructs a cascading classifier.
+constructs a cascade of strong classifiers using the training- and validation
+set.
 \begin{algorithm}
 	\caption{cascadingClassify($C$, $x$, $w$, $h$): Returns the binary image $B$ of $x$}
 	\begin{algorithmic}[1]
 	\REQUIRE $C$ the cascading classifier, $x$ the image, $w,h$ the dimensions of the features
 	\medskip
-	\STATE Let $B$ be an image with the dimensions $D(x) - [w,h]$ consisting of ones.
+	\STATE Initialize $B$ as an image with dimensions $D(x) - [w,h]$ consisting of ones.
 	\FORALL {$c_s \in C$}
 		\STATE $B' \leftarrow c_s(x)$
 		\STATE $B \leftarrow B \land B'$
@@ -155,20 +158,53 @@ constructs a cascading classifier.
 \end{algorithm}
 Algorithm \ref{alg:casc} shows the classification of an image using a trained
 cascading classifier. The strong classifier $c_s \in C$ classifies according to
-Section \ref{sec:strong}.
+Section \ref{sec:strong}. This results in a binary image $B'$ which is
+logically `anded' with the previous binary image $B$ resulting in less false
+positives after each iteration.
 
 \section{Results} \label{sec:res}
-% TODO: confusion matrix
-% TODO: info about datasets, nr examples, train test etc.
+For our experiments we trained the cascading classifier using $fp = 0.99, d =
+0.999, fp_{min} = 0.001$ for the false positive rate, detection rate and
+minimal false positive rate respectively. A visual interpretation of the
+constructed cascading classifier can be found in Figure \ref{fig:casc}. The
+confusion matrix on the test set can be found in Table \ref{tab:conf}. 
+\begin{table}[!ht]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+$37$ & $166186$ \\
+\hline
+$3$  & $2399245$ \\
+\hline
+\end{tabular}
+\caption{The confusion matrix of the test set.}
+\label{tab:conf}
+\end{table}
+Furthermore an overall detection rate of $0.925$ and false positive rate of
+$0.0648$ was achieved. Figure \ref{fig:fprate} shows
+\begin{figure}[!ht]
+\centering
+\includegraphics[height=9cm]{img/fprate}
+\caption{The false positive rate per layer, averaged over the test set.}
+\label{fig:fprate}
+\end{figure}
+the averaged false positive rate per layer in the cascading classifier. Note
+that we experimented with just four image types as described in Section
+\ref{sec:image}, using more advanced image types as described by \cite{naturaltext}
+would decrease the false positive rate even further.
 % TODO: performance cascader displayed in graph (on every layer display the exclusions)
-% TODO: best features on every layer
 % TODO: (optional endresult, car with rectangle at license plate)
 % TODO: (optionoal prob image of a good performing feature)
-% TODO: 
 
 \section{Conclusions} \label{sec:conc}
-%TODO ispell
-
+Given just four types of images, the cascading classifier performs very well.
+With a detection rate of $0.925$ and false positive rate of $0.0625$ we can
+conclude that License Plate Localisation can be effectively achieved using this
+method. Even when no more sophisticated image types are used, the cascader
+could be used by a License Plate Recognition system as the remaining false
+positives can be filtered out by optical character recognition and the
+characteristics of a license plate.
+\newpage
 \renewcommand\bibname{References}
 \bibliography{references}
 \bibliographystyle{IEEEtran}
