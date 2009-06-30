@@ -6,7 +6,7 @@
 
 \title{Locate My Plate \\ A License Plate Localisation System}
 \subtitle{presented by: Tjerk Kostelijk, Folkert Huizinga}
-\date{June 30, 2009}
+\date{July 1, 2009}
 
 \begin{document}
 
@@ -51,6 +51,28 @@
   \end{itemize}
 }
 
+\frame
+{
+	\begin{figure}[!ht]
+		\centering
+		\subfigure{
+		\includegraphics[height=3.5cm]{../report/img/original}
+		\label{fig:a}
+		}
+		\subfigure{
+		\includegraphics[height=3.5cm]{../report/img/feature}
+		\label{fig:b}
+		}
+		\subfigure{
+		\includegraphics[height=3.5cm]{../report/img/featureapplied}
+		\label{fig:c}
+		}
+		\caption{A horizontal, second order $x$-derivative feature with binary code
+		$01110$, consisting of three blocks applied to an image.}
+		\label{fig:feature}
+	\end{figure}
+}
+
 \section{Stage I: Weak}
 \frame
 {
@@ -79,6 +101,42 @@
   \begin{itemize}
   \item <+-| alert@+> xxx
   \end{itemize}
+}
+
+\section{Results}
+\frame
+{
+	\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=10cm]{../report/img/strongClassifier_layer2_img14}
+	\label{fig:strongclassify}
+	\end{figure}
+}
+
+
+\frame
+{
+	\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=12cm]{../report/img/cascader_img14}
+	\label{fig:cascader}
+	\end{figure}
+}
+
+\frame
+{
+  \frametitle{Results}
+	\begin{figure}[!ht]
+	\centering
+
+		\subfigure{
+			\includegraphics[width=5cm]{../report/img/cascader_original}
+		}
+		\subfigure{
+			\includegraphics[width=5cm]{../report/img/cascader_result}
+		}
+
+	\end{figure}
 }
 
 \AtBeginSection[]
