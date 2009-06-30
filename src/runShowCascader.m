@@ -12,6 +12,6 @@ else
 	save(trainfile, 'test');
 end
 
-cascader = load('../cache/cascader.mat');
+load('../cache/cascader.mat');
 
-showCascader(cascader.cascader, test,0 ,0);
+showCascader(cascader, test, 18);

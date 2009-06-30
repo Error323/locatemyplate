@@ -183,7 +183,7 @@ false positives after each iteration.
 For our experiments we trained the cascading classifier using $fp = 0.99, d =
 0.999, fp_{min} = 0.001$ for the false positive rate, detection rate and
 minimal false positive rate respectively. The final cascading classifier
-contains five layers with $1, 5, 14, 7, 10$ features respectively. An example
+contains five layers with $1, 4, 14, 7, 10$ features respectively. An example
 of the cascading classifier is displayed in Figure \ref{fig:cascader}. To
 illustrate how a layer is constructed, the strong classifier of layer 2 is
 explained in Figure \ref{fig:strongclassify}\\
@@ -191,16 +191,16 @@ The confusion matrix on the test set can be found in Table \ref{tab:conf}.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=18cm]{img/strongClassifier_layer2_img14}
-\caption{Example of a strongclassifier of a layer with 5 features.}
+\includegraphics[width=16cm]{img/strongClassifier_layer2_img14}
+\caption{Example of the strongclassifier in layer 2 with 4 features.}
 \label{fig:strongclassify}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=18cm]{img/cascader_img14}
-\caption{Example of a cascading classifier with 5 layers.}
-\label{fig:calcader}
+\includegraphics[width=16cm]{img/cascader_img14}
+\caption{Example of the resulting cascading classifier with 5 layers.}
+\label{fig:cascader}
 \end{figure}
 
 \begin{table}[!ht]
