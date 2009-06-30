@@ -24,6 +24,16 @@
 
 \setcounter{tocdepth}{2}
 
+\AtBeginSection[]
+{
+ \begin{frame}
+  \frametitle{Outline}
+  \small
+  \tableofcontents[currentsection,hideothersubsections]
+  \normalsize
+ \end{frame}
+}
+
 \section{Introduction}
 \frame
 {
@@ -156,15 +166,4 @@
   \item <+-| alert@+> xxx
   \end{itemize}
 }
-
-\AtBeginSection[]
-{
- \begin{frame}
-  \frametitle{Outline}
-  \small
-  \tableofcontents[currentsection,hideothersubsections]
-  \normalsize
- \end{frame}
-}
-
 \end{document}
