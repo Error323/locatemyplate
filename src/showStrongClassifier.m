@@ -47,7 +47,7 @@ function showStrongClassifier(cascader, data, imageId, layers)
 		nrLayers         = length(cascader);
 
 		% feature, V, C weak, C strong = #4
-		subplotHeight = 5;
+		subplotHeight = 4;
 
 		% determine layer range
 		if (layers > 0)
@@ -66,7 +66,8 @@ function showStrongClassifier(cascader, data, imageId, layers)
 
 			% calculate feature total for subplot width
 			nrFeatures 	= size(S.classifier,2);
-			subplotWidth = nrFeatures;
+			%subplotWidth = nrFeatures;
+			subplotWidth = nrFeatures-1;
 
 			%start new figure
 			figure(layer);
@@ -75,15 +76,17 @@ function showStrongClassifier(cascader, data, imageId, layers)
 			maximize(layer);
 
 			% plot car in grayscale 
-			subplot(subplotHeight,subplotWidth, 1); imshow(I{imageId}{1}); title('Original image');
+			% subplot(subplotHeight,subplotWidth, 1); imshow(I{imageId}{1}); title('Original image');
 
 
 			% loop through features/weak classifiers
+			f2 = 1;
 			for f=1:nrFeatures
+				if (f == 2) continue; end;
 				% retrieve feature
 				feature = S.classifier{f};
 				% display feature
-				subplot(subplotHeight, subplotWidth, f+(1*subplotWidth)); showFeature(feature,layer)
+				subplot(subplotHeight, subplotWidth, f2+(0*subplotWidth)); showFeature(feature,layer); axis off;
 
 				integralId 	= feature.int;
 				img 				= integralImgs{integralId};
@@ -97,11 +100,12 @@ function showStrongClassifier(cascader, data, imageId, layers)
 				plainImgs = plainImgs{feature.int};
 
 				% plot image type (dx, ddx etc)
-				subplot(subplotHeight,subplotWidth, f+(2*subplotWidth)); imshow(plainImgs); title(sprintf('Image type:%s',INTLABELS{feature.int}));
+				subplot(subplotHeight,subplotWidth, f2+(1*subplotWidth)); imshow(plainImgs); title(sprintf('Image type:%s',INTLABELS{feature.int}));
 				% plot applied feature
-				subplot(subplotHeight,subplotWidth, f+(3*subplotWidth)); imshow(VNormalised); title('Feature applied');
+				subplot(subplotHeight,subplotWidth, f2+(2*subplotWidth)); imshow(VNormalised); title('Feature applied');
 				% plot treshold applied
-				subplot(subplotHeight,subplotWidth, f+(4*subplotWidth)); imshow(C); title('Threshold applied');
+				subplot(subplotHeight,subplotWidth, f2+(3*subplotWidth)); imshow(C); title('Threshold applied');
+				f2 = f2 + 1;
 			end
 			
 
@@ -118,7 +122,7 @@ function showStrongClassifier(cascader, data, imageId, layers)
 
 			%subplot(subplotHeight,subplotWidth, f+(4*subplotWidth)); imshow(C);
 			if subplotWidth>1
-				subplot(subplotHeight,subplotWidth, 2); imshow(Vnormalised); title('Result of strong classifier')
+				% subplot(subplotHeight,subplotWidth, 2); imshow(Vnormalised); title('Result of strong classifier')
 			end
 			pause;
 

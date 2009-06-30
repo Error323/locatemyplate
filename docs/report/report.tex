@@ -17,7 +17,7 @@
 \maketitle
 \section{Introduction}
 This report describes the implementation of a robust, real-time License Plate
-Localisation system (LPL) \cite{dlagnekov_thesis, zhang}. We analize which
+Localisation system (LPL) \cite{dlagnekov_thesis, zhang}. We analyze which
 characteristic features are important for license plate localisation. Using
 supervised learning, the system generates a cascading classifier which consists
 of layers that each hold one strong classifier. A strong classifier is a linear
@@ -64,12 +64,12 @@ Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
 \label{fig:c}
 }
 \caption{A horizontal, second order $x$-derivative feature with binary code
-$01110$ consisting of three blocks applied to an image.}
+$01110$, consisting of three blocks applied to an image.}
 \label{fig:feature}
 \end{figure}
 The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \ref{alg:value}.
-\begin{algorithm}[!ht]
+\begin{algorithm}[!htb]
 	\caption{featureValue($f$, $x$, $w$, $h$): Returns the image $V = f(x)$}
 	\begin{algorithmic}[1]
 	\REQUIRE The feature $f = \langle i, B, o \rangle$, the image $x$, the width $w$ and height $h$ of the feature.
@@ -159,8 +159,12 @@ The cascading classifier is the final classifier. This classifier is trained as
 described in \cite{viola}. By specifying a false positive rate per layer, a
 detection rate per layer and a false positive rate goal, the algorithm
 constructs a cascade of strong classifiers using the training- and validation
-set.
-\begin{algorithm}
+set.  Algorithm \ref{alg:casc} shows the classification of an image using a
+trained cascading classifier. The strong classifier $c_s \in C$ classifies
+according to Section \ref{sec:strong}. This results in a binary image $B'$
+which is logically `anded' with the previous binary image $B$ resulting in less
+false positives after each iteration.
+\begin{algorithm}[!htb]
 	\caption{cascadingClassify($C$, $x$, $w$, $h$): Returns the binary image $B$ of $x$}
 	\begin{algorithmic}[1]
 	\REQUIRE $C$ the cascading classifier, $x$ the image, $w,h$ the dimensions of the features
@@ -174,17 +178,12 @@ set.
 	\end{algorithmic}
 \label{alg:casc}
 \end{algorithm}
-Algorithm \ref{alg:casc} shows the classification of an image using a trained
-cascading classifier. The strong classifier $c_s \in C$ classifies according to
-Section \ref{sec:strong}. This results in a binary image $B'$ which is
-logically `anded' with the previous binary image $B$ resulting in less false
-positives after each iteration.
 
 \section{Results} \label{sec:res}
 For our experiments we trained the cascading classifier using $fp = 0.99, d =
 0.999, fp_{min} = 0.001$ for the false positive rate, detection rate and
 minimal false positive rate respectively. The final cascading classifier
-contains five layers with $1, 5, 14, 7, 10$ features respectively. An example
+contains five layers with $1, 4, 14, 7, 10$ features respectively. An example
 of the cascading classifier is displayed in Figure \ref{fig:cascader}. To
 illustrate how a layer is constructed, the strong classifier of layer 2 is
 explained in Figure \ref{fig:strongclassify}\\
@@ -192,16 +191,16 @@ The confusion matrix on the test set can be found in Table \ref{tab:conf}.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=18cm]{img/strongClassifier_layer2_img14}
-\caption{Example of a strongclassifier of a layer with 5 features.}
+\includegraphics[width=16cm]{img/strongClassifier_layer2_img14}
+\caption{Example of the strongclassifier in layer 2 with 4 features.}
 \label{fig:strongclassify}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=18cm]{img/cascader_img14}
-\caption{Example of a cascading classifier with 5 layers.}
-\label{fig:calcader}
+\includegraphics[width=16cm]{img/cascader_img14}
+\caption{Example of the resulting cascading classifier with 5 layers.}
+\label{fig:cascader}
 \end{figure}
 
 \begin{table}[!ht]

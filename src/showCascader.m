@@ -48,7 +48,7 @@ function showCascader(cascader, data, imageId)
 		nrLayers         = length(cascader);
 
 		% feature, V, C weak, C strong = #4
-		subplotHeight = 4;
+		subplotHeight = 3;
 
 		% determine layer range
 		fromLayer=1;
@@ -56,7 +56,7 @@ function showCascader(cascader, data, imageId)
 		subplotWidth = nrLayers;
 
 		% plot car in grayscale 
-		subplot(subplotHeight,subplotWidth, 1); imshow(I{imageId}{1}); title('Original image');
+		% subplot(subplotHeight,subplotWidth, 1); imshow(I{imageId}{1}); title('Original image');
 
 		% loop through cascader/layers/strong classifiers
 		for layer=fromLayer:tillLayer
@@ -79,9 +79,9 @@ function showCascader(cascader, data, imageId)
 			SVnormalised = normaliseImg(SV);
 
 			%subplot(subplotHeight,subplotWidth, f+(4*subplotWidth)); imshow(C);
-			subplot(subplotHeight,subplotWidth, layer+(1*subplotWidth)); imshow(SVprime); title(sprintf('Value strong classifier layer %d', layer))
-			subplot(subplotHeight,subplotWidth, layer+(2*subplotWidth)); imshow(SCprime); title(sprintf('Thresholded value strong classifier layer %d', layer))
-			subplot(subplotHeight,subplotWidth, layer+(3*subplotWidth)); imshow(SVnormalised); title(sprintf('Strong classifiers of layer 1..%d combined', layer))
+			subplot(subplotHeight,subplotWidth, layer+(0*subplotWidth)); imshow(SVprime); title(sprintf('Value layer %d', layer))
+			subplot(subplotHeight,subplotWidth, layer+(1*subplotWidth)); imshow(SCprime); title(sprintf('Thresholded value layer %d', layer))
+			subplot(subplotHeight,subplotWidth, layer+(2*subplotWidth)); imshow(SVnormalised); title(sprintf('Layer(s) 1..%d combined', layer))
 
 		end
 	pause;
