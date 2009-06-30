@@ -40,7 +40,16 @@ $159$, $40$ and $47$ images respectively.
 The core of the LPL system consists of features as described by
 \cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters applied
 on a certain type of image (e.g. an x-derivative) see Figure \ref{fig:feature}.
-\begin{figure}
+Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
+\begin{itemize}
+	\item{$i$, an index corresponding to the image type.}
+	\item{$B$, the set of blocks where each block $b \in B$ contains a sign
+	$b_s \in \{-1,1\}$ indicating subtraction or addition of that block and
+	positions $b_{pa},b_{pb} \in [0,1]$, determine the relative block position
+	within the feature.}
+	\item{$o$, the orientation of the feature blocks: horizontal or vertical.}
+\end{itemize}
+\begin{figure}[!ht]
 \centering
 \subfigure[The original image.]{
 \includegraphics[height=3.5cm]{img/original}
@@ -57,15 +66,6 @@ on a certain type of image (e.g. an x-derivative) see Figure \ref{fig:feature}.
 \caption{A feature (second order derivative of $x$) applied to an image.}
 \label{fig:feature}
 \end{figure}
-Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
-\begin{itemize}
-	\item{$i$, an index corresponding to the image type.}
-	\item{$B$, the set of blocks where each block $b \in B$ contains a sign
-	$b_s \in \{-1,1\}$ indicating subtraction or addition of that block and
-	positions $b_{pa},b_{pb} \in [0,1]$, determine the relative block position
-	within the feature.}
-	\item{$o$, the orientation of the feature blocks: horizontal or vertical.}
-\end{itemize}
 The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \ref{alg:value}.
 \begin{algorithm}
