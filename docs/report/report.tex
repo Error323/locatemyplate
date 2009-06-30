@@ -215,18 +215,32 @@ $3$  & $2399245$ \\
 \caption{The confusion matrix of the test set.}
 \label{tab:conf}
 \end{table}
-An overall detection rate of $0.925$ and false positive rate of
-$0.0648$ was achieved. Figure \ref{fig:fprate} shows
-the averaged false positive rate per layer in the cascading classifier. Note
-that we experimented with just four image types as described in Section
-\ref{sec:image}, using more advanced image types as described by \cite{naturaltext}
-would decrease the false positive rate even further.
+An overall detection rate of $0.925$ and false positive rate of $0.0648$ was
+achieved. Figure \ref{fig:fprate} shows the averaged false positive rate per
+layer in the cascading classifier. Note that we experimented with just four
+image types as described in Section \ref{sec:image}, using more advanced image
+types as described by \cite{naturaltext} would decrease the false positive rate
+even further. A final result of the applied cascader can be found in Figure
+\ref{fig:cascader}.
 % TODO: (optional endresult, car with rectangle at license plate)
 \begin{figure}[!ht]
 \centering
-\includegraphics[height=9cm]{img/fprate}
+\includegraphics[height=7cm]{img/fprate}
 \caption{The false positive rate per layer, averaged over the test set.}
 \label{fig:fprate}
+\end{figure}
+\begin{figure}[!ht]
+\centering
+\subfigure[The original image]{
+\includegraphics[height=5cm]{img/cascader_original}
+\label{fig:x}
+}
+\subfigure[The cascader applied]{
+\includegraphics[height=5cm]{img/cascader_result}
+\label{fig:y}
+}
+\caption{An original image of a car and the resulting binary image after cascading.}
+\label{fig:cascader}
 \end{figure}
 
 \section{Conclusions} \label{sec:conc}
