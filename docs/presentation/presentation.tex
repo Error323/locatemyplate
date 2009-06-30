@@ -34,6 +34,7 @@
  \end{frame}
 }
 
+% TODO introduction
 \section{Introduction}
 \frame
 {
@@ -51,13 +52,22 @@
 \section{Features}
 \frame
 {
-  \frametitle{Features}
+  \frametitle{What is a feature}
 	
+	% TODO vertical feature
   \begin{itemize}
-  \item <+-| alert@+> Image Filter
-  \item <+-| alert@+> Image Type
-  \item <+-| alert@+> Horizontal or Vertical
-  \item <+-| alert@+> Generation using powerset
+	% maybe you rember from computer vision class image filter
+  \item <+-| alert@+> Image Filter/scanning window
+  \item <+-| alert@+> Properties
+		\begin{itemize}
+			\item <+-| alert@+> Blocks with sign 
+			\item <+-| alert@+> Orientation: Horizontal or Vertical
+			\item <+-| alert@+> Image type: 1st/2nd order derivative in x/y direction
+			% TODO derrivative images
+		\end{itemize}
+  \item <+-| alert@+> Feature value
+	%Pixels under featureblock are added up/substracted 
+  %Gives feature a value for every position in the image
   \end{itemize}
 }
 
@@ -77,22 +87,53 @@
 		\includegraphics[height=3.5cm]{../report/img/featureapplied}
 		\label{fig:c}
 		}
-		\caption{A horizontal, second order $x$-derivative feature with binary code
-		$01110$, consisting of three blocks applied to an image.}
 		\label{fig:feature}
 	\end{figure}
 }
 
-\section{Stage I: Weak}
 \frame
 {
-  \frametitle{Stage I: Weak}
-	
-  \begin{itemize}
-  \item <+-| alert@+> xxx
-  \end{itemize}
+  \frametitle{Feature generation}
+	% TODO feature
+	\begin{itemize}
+		\item <+-| alert@+> Feature as binary string
+		% position is featureblock, sign is addition/substraction
+		\item <+-| alert@+> Generate all possible permutations
+		\item <+-| alert@+> Remove inverse one's (101 = 010)
+	\end{itemize}
+	% TODO table 0001 00010 000011
 }
 
+\section{Stage I: Weak}
+
+\frame
+{
+  \frametitle{What is a weak classifier}
+	%Classifies for every point in a image if it contains a license plate
+	\begin{itemize}
+		\item <+-| alert@+> Properties
+			\begin{itemize}
+				\item <+-| alert@+> Feature
+				\item <+-| alert@+> Threshold
+				\item <+-| alert@+> Operator $<$ or $>$
+			\end{itemize}
+		\item <+-| alert@+> Returns a binary image
+	\end{itemize}
+	 %The locations of the ones in B correspond to the location of possible license plates.
+}
+\frame
+{
+  \frametitle{Training the weak classifier}
+	\begin{itemize}
+		\item <+-| alert@+> How to learn the threshold and operator $<$ or $>$
+		\item <+-| alert@+> Sort on value
+		\item <+-| alert@+> Find optimal separation (threshold)
+		\item <+-| alert@+> 00001000011111110111111
+		\item <+-| alert@+> 000010000-11111110111111
+	\end{itemize}
+}
+
+% TODO dataset
 \section{Stage II: Strong}
 \frame
 {
