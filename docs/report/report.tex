@@ -91,11 +91,10 @@ position $(i,j)$, in the image and stored on its dimensions $(w,h)$ in a hash
 table $R$.
 
 \subsection{Image Types} \label{sec:image}
-The features were applied to the following image types.
+The features were applied to the following image types:
 \begin{itemize}
 	\item{1st order derivative in both x and y directions.}
 	\item{2nd order derivative in both x and y directions.}
-	\item{variance in both x and y directions.}
 \end{itemize}
 Before applying the feature, the above image types are passed through an
 absolute filter. By using an integral image \cite{viola} per image type, the
@@ -131,8 +130,8 @@ C(x) =
 		0 & \textrm{otherwise}
 	\end{array} \right.
 \end{displaymath}
-where $N$ is the number of weak classifiers as selected by Adaboost and $\tau
-\in [0,1]$ a threshold.
+where $N$ is the number of weak classifiers as selected by the boosting
+algorithm and $\tau \in [0,1]$ a threshold.
 
 \subsection{Cascading Classifier} \label{sec:casc}
 The cascading classifier is the final classifier. It consists of multiple
