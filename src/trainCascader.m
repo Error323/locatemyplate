@@ -87,7 +87,7 @@ function [f, d, N] = evaluate(cascader, validation)
 
 	fP = 0; tP = 0; fN = 0; tN = 0;
 	for i = 1:length(I)
-		Ci = classify(cascader, I{i}, D{i});
+		[Ci, Vi_] = classify(cascader, I{i}, D{i});
 		Pi = P{i};
 		Ni = N{i};
 

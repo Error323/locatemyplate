@@ -46,7 +46,7 @@ tuple $\langle i, B, o \rangle$ defined as:
 	\item{$i$, an index corresponding to the image type.}
 	\item{$B$, the set of blocks $b \in B$ where each block contains a sign
 	$b_s \in \{-1,1\}$ which indicate subtraction or addition of that block.
-	And relative positions $b_{pa},b_{pb} \in [0,1]$, determine the
+	And positions $b_{pa},b_{pb} \in [0,1]$, determine the relative
 	position of the block within the feature.}
 	\item{$o$, the orientation of the feature blocks: horizontal or vertical.}
 \end{itemize}
@@ -136,8 +136,10 @@ where $N$ is the number of weak classifiers as selected by Adaboost and $\tau
 
 \subsection{Cascading Classifier} \label{sec:casc}
 The cascading classifier is the final classifier. It consists of multiple
-layers where each layer hold a strong classifier. This classifier is
-trained as described by \cite{viola}. 
+layers where each layer hold a strong classifier. This classifier is trained as
+described by \cite{viola}. By specifying a false positive rate per layer, a
+detection rate per layer and a false positive rate goal, the algorithm
+constructs a cascading classifier.
 \begin{algorithm}
 	\caption{cascadingClassify($C$, $x$, $w$, $h$): Returns the binary image $B$ of $x$}
 	\begin{algorithmic}[1]

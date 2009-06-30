@@ -17,4 +17,3 @@ DEBUG       = false;
 
 % Scaling factor on train and validate data
 SCALEFACTOR = 0.5;
-

@@ -7,13 +7,13 @@
 %% OUPUTS:
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function showCascader(cascader)
+function showCascader(cascader, data)
 	% NOTE first run globals.m to get data
-	global DEBUG INTEGRALS train;
+	global DEBUG INTEGRALS;
 	imageId = 3;
 
-	I = train.I;
-	D = train.D;
+	I = data.I;
+	D = data.D;
 	integralImgs  = I{imageId};
 	
 	% initialize integral images
@@ -26,7 +26,7 @@ function showCascader(cascader)
 
 	close all;
 	
-	nrLayers         = size(cascader.cascader,2);
+	nrLayers         = length(cascader);
 
 	% feature, V, C weak, C strong = #4
 	subplotHeight = 5;
@@ -34,7 +34,7 @@ function showCascader(cascader)
 	% loop through cascader/layers/strong classifiers
 	for layer=1:nrLayers
 		% retrieve current strong classifier
-		S 					= cascader.cascader{layer};
+		S 					= cascader{layer};
 
 		% calculate feature total for subplot width
 		nrFeatures 	= size(S.classifier,2);
