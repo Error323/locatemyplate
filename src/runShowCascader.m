@@ -14,4 +14,4 @@ end
 
 load('../cache/cascader.mat');
 
-showCascader(cascader, test, 18);
+showCascader(cascader, test, 14);
