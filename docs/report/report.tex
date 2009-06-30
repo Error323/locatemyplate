@@ -16,39 +16,39 @@
 \begin{document}
 
 \maketitle
-\section*{Introduction}
+\section{Introduction}
 This report describes the implementation of a robust, real-time License Plate
-Localisation System (LPL). This system uses techniques discussed in
+Localisation system (LPL). This system uses techniques discussed in
 \cite{dlagnekov_thesis, zhang}. Using supervised learning, the system generates
-a cascading classifier which consists of layers that each holds one strong
+a cascading classifier which consists of layers that each hold one strong
 classifier. These strong classifiers are a linear function of several weak
-classifiers. Each weak classifier is a feature which each describe
-characteristics of a license plate. The first section describes the data used
-for our experiments. The second section describes the features: What they are
-and how they are generated.  Next the training and classification of weak-,
-strong- and cascading classifiers is explained. Then the results are explained
-and finally the conclusions.
+classifiers. Each weak classifier is a feature which describes characteristics
+of a license plate. The first Section describes the data used for our
+experiments. The second Section describes the features and how they are
+generated.  Next the training and classification of weak-, strong- and
+cascading classifiers is explained. Finally the results and conclusions are
+described.
 
-\section*{Dataset}
+\section{Dataset}
 The dataset used is obtained from \cite{dlagnekov_dataset}. It contains $246$ car
-images with a resolution of approximatly $640\times480$ which were rescaled by
+images with a resolution of approximately $640\times480$ which were rescaled by
 $50\%$ and annotated on location and size of the license plate. The dataset is
 divided in a train-, test- and validation set with $159$, $40$ and $47$ images
 respectively.
 
 
-\section*{Features}
+\section{Features} \label{sec:feat}
 The core of the LPL system consists of features as described by
 \cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters on a
 certain type of image (e.g. an x-derivative). Formally a feature $f$ is a
 tuple $\langle i, B, o \rangle$ defined as:
 \begin{itemize}
-	\item[$i$]{an index corresponding to the image type.}
-	\item[$B$]{the set of blocks $b \in B$ where each block contains a sign
+	\item{$i$, an index corresponding to the image type.}
+	\item{$B$, the set of blocks $b \in B$ where each block contains a sign
 	$b_s \in \{-1,1\}$ which indicate subtraction or addition of that block.
-	And relative positions $b_{pa},b_{pb} \in [0,1]$. which the determine the
+	And relative positions $b_{pa},b_{pb} \in [0,1]$, determine the
 	position of the block within the feature.}
-	\item[$o$]{the orientation of the feature blocks: horizontal or vertical.}
+	\item{$o$, the orientation of the feature blocks: horizontal or vertical.}
 \end{itemize}
 The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \ref{alg:value}.
@@ -73,27 +73,27 @@ The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
 \label{alg:value}
 \end{algorithm}
 
-\subsection*{Generation}
+\subsection{Generation} \label{sec:gen}
 By representing a feature as a binary string, the set $S$ of possible features
 can be easily calculated:
-$$S = \{b(x) | \forall x \in \{1\ldots(x^n-2)/2\}\},$$
-where $b(x)$ represents $x$ as a binary string and $n$ is the number of
+$$S = \{b(x,n) | \forall x \in \{1\ldots(x^n-2)/2\}\},$$
+where $b(x,n)$ represents $x$ as a binary string of length $n$ as the number of
 segments. Each element in the binary string $s \in S$ represents the position
 and the sign of a feature segment. Adjacent segments that share the same sign
 are merged together and are called a feature block.
 
-\subsection*{Optimization}
+\subsection{Optimization} \label{sec:opt}
 Features often share the same feature block dimensions. Even a feature
 itself could have more feature blocks of the same dimensions. Because the
 feature is applied as an image filter, a.
 To optimize this, the feature blocks are individually calculated for every
-position $(i,j)$ in the image and stored on its dimensions $(w,h)$ in a hash
+position $(i,j)$, in the image and stored on its dimensions $(w,h)$ in a hash
 table $R$.
 
-\subsection*{Image types}
-The features where applied to the following image types.
+\subsection{Image Types} \label{sec:image}
+The features were applied to the following image types.
 \begin{itemize}
-	\item{1th order derivative in both x and y directions.}
+	\item{1st order derivative in both x and y directions.}
 	\item{2nd order derivative in both x and y directions.}
 	\item{variance in both x and y directions.}
 \end{itemize}
@@ -102,41 +102,41 @@ absolute filter. By using an integral image \cite{viola} per image type, the
 featureblocks can be calculated very efficiently.
 
 
-\section*{Training}
+\section{Training} \label{sec:train}
 The overall cascading classifier consists of three types of training. The first
 type is the training of the weak classifiers using features. The second type is
 a linear combination of one or more weak classifiers into a strong classifier
 using a boosting algorithm. The third type is a cascading classifier
 with a strong classifier on each layer.
 
-\subsection*{Weak classifier}
+\subsection{Weak Classifier} \label{sec:weak}
 A weak classifier consists of a feature, a threshold $t \in \mathbb{R}$ and an
-operator $\circ \in \{<, >\}$ which separates positive and negative samples as
-good as possible according to the trainings set. After training, the weak
-classifier $C$ constructs a binary image $B = t \circ f(x)$, where $x$ is the
-image and $f$ the function that returns the value of the feature as described
-in the Features section. The locations of the ones in $B$ correspond to the
-location of possible license plates.
+operator $\circ \in \{<, >\}$ which separates positive and negative samples
+according to the trainings set. After training, the weak classifier $C$
+constructs a binary image $B = t \circ f(x)$, where $x$ is the image and $f$
+the function that returns the value of the feature as described in 
+Section \ref{sec:feat}. The locations of the ones in $B$ correspond to the location of
+possible license plates.
 
-\subsection*{Strong classifier}
+\subsection{Strong Classifier} \label{sec:strong}
 A strong classifier is constructed according to the boosting algorithm
-described by \cite{viola}.  By re-weighting the positive and
-negative samples after selecting a weak classifier, the algorithm selects the
-"best" features with their respective weight or $\alpha$. Classification is
+described by \cite{viola}. By re-weighting the positive and negative samples
+after greedy selection of a weak classifier, the algorithm selects the next
+`best' features with their respective weight or $\alpha$. Classification is
 performed as follows:
 \begin{displaymath}
 C(x) = 
 	\left\{ \begin{array}{ll}
-		1 & \sum^T_{t=1} \alpha_t W_t(x) \ge \frac{1}{2} \sum^T_{t=1}\alpha_t \\
+		1 & \sum^N_{i=1} \alpha_i \big(t_i \circ_i f_i(x)\big) \ge \tau \sum^N_{i=1}\alpha_i \\
 		0 & \textrm{otherwise}
 	\end{array} \right.
 \end{displaymath}
-where $T$ is the number of weak classifiers and $W_t$ a function which returns
-the binary image as described in the Weak classifier section.
+where $N$ is the number of weak classifiers as selected by Adaboost and $\tau
+\in [0,1]$ a threshold.
 
-\subsection*{Cascading classifier}
+\subsection{Cascading Classifier} \label{sec:casc}
 The cascading classifier is the final classifier. It consists of multiple
-layers where each layer holds a strong classifier. This classifier is
+layers where each layer hold a strong classifier. This classifier is
 trained as described by \cite{viola}. 
 \begin{algorithm}
 	\caption{cascadingClassify($C$, $x$, $w$, $h$): Returns the binary image $B$ of $x$}
@@ -154,9 +154,9 @@ trained as described by \cite{viola}.
 \end{algorithm}
 Algorithm \ref{alg:casc} shows the classification of an image using a trained
 cascading classifier. The strong classifier $c_s \in C$ classifies according to
-the Strong classifier section.
+Section \ref{sec:strong}.
 
-\section*{Results}
+\section{Results} \label{sec:res}
 % TODO: confusion matrix
 % TODO: info about datasets, nr examples, train test etc.
 % TODO: performance cascader displayed in graph (on every layer display the exclusions)
@@ -165,7 +165,7 @@ the Strong classifier section.
 % TODO: (optionoal prob image of a good performing feature)
 % TODO: 
 
-\section*{Conclusions}
+\section{Conclusions} \label{sec:conc}
 %TODO ispell
 
 \renewcommand\bibname{References}
