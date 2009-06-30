@@ -2,10 +2,9 @@
 \documentclass[a4paper,11pt]{article}
 
 \usepackage{homework}
-\usepackage{graphicx}
+\usepackage{graphicx, subfigure}
 \usepackage{verbatim}
-\usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage{algorithm, algorithmic}
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage[english]{babel}
 
@@ -18,16 +17,16 @@
 \maketitle
 \section{Introduction}
 This report describes the implementation of a robust, real-time License Plate
-Localisation system (LPL). This system uses techniques discussed in
-\cite{dlagnekov_thesis, zhang, naturaltext, viola}. Using supervised learning,
-the system generates a cascading classifier which consists of layers that each
-hold one strong classifier. A strong classifier is a linear function of several
-weak classifiers obtained by boosting. Each weak classifier is a feature which
-describes characteristics of a license plate. Section \ref{sec:data} describes
-the data used for our experiments. Section \ref{sec:feat} describes the
-features and how they are generated. Next the training and classification of
-weak-, strong- and cascading classifiers are both explained. Finally the
-results are shown and we come to the conclusions.
+Localisation system (LPL) \cite{dlagnekov_thesis, zhang}. We analize which
+characteristic features are important for license plate localisation. Using
+supervised learning, the system generates a cascading classifier which consists
+of layers that each hold one strong classifier. A strong classifier is a linear
+function of several weak classifiers obtained by boosting. Each weak classifier
+is a feature which describes characteristics of a license plate. Section
+\ref{sec:data} describes the data used for our experiments. Section
+\ref{sec:feat} describes the features and how they are generated. Next the
+training and classification of weak-, strong- and cascading classifiers are
+both explained. Finally the results are shown and we come to the conclusions.
 
 \section{Dataset} \label{sec:data}
 The dataset used is obtained from \cite{dlagnekov_dataset}. It contains $246$
@@ -40,8 +39,25 @@ $159$, $40$ and $47$ images respectively.
 \section{Features} \label{sec:feat}
 The core of the LPL system consists of features as described by
 \cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters applied
-on a certain type of image (e.g. an x-derivative). Formally a feature $f$ is a
-tuple $\langle i, B, o \rangle$ defined as:
+on a certain type of image (e.g. an x-derivative) see Figure \ref{fig:feature}.
+\begin{figure}
+\centering
+\subfigure[The original image.]{
+\includegraphics[height=3.5cm]{img/original}
+\label{fig:a}
+}
+\subfigure[The feature.]{
+\includegraphics[height=3.5cm]{img/feature}
+\label{fig:b}
+}
+\subfigure[The feature applied.]{
+\includegraphics[height=3.5cm]{img/featureapplied}
+\label{fig:c}
+}
+\caption{A feature (second order derivative of $x$) applied to an image.}
+\label{fig:feature}
+\end{figure}
+Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
 \begin{itemize}
 	\item{$i$, an index corresponding to the image type.}
 	\item{$B$, the set of blocks where each block $b \in B$ contains a sign
