@@ -1,0 +1,51 @@
+\documentclass{beamer}
+%\usepackage{algorithm}
+%\usepackage[noend]{algorithmic}
+\usepackage{graphicx}
+
+\usetheme[compress]{Dresden}
+\setbeamertemplate{navigation symbols}{} 
+
+\title{Locate My Plate \\ A License Plate Localisation System}
+\subtitle{presented by: Tjerk Kostelijk, Folkert Huizinga}
+\date{}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\setcounter{tocdepth}{1}
+
+\frame
+{
+  \frametitle{Outline}
+  \small
+  \tableofcontents
+  \normalsize
+}
+
+\setcounter{tocdepth}{2}
+
+\section{Introduction}
+\frame
+{
+  \frametitle{Introduction}
+	
+  \begin{itemize}
+  \item <+-| alert@+> blah blah 
+  \end{itemize}
+}
+
+
+\AtBeginSection[]
+{
+ \begin{frame}
+  \frametitle{Outline}
+  \small
+  \tableofcontents[currentsection,hideothersubsections]
+  \normalsize
+ \end{frame}
+}
+
+
+\end{document}

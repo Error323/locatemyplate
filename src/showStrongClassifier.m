@@ -14,7 +14,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function showStrongClassifier(cascader, data, imageId, layers)
 	% NOTE first run globals.m to get data
-	global DEBUG INTEGRALS;
+	global DEBUG INTEGRALS INTLABELS;
 	I = data.I;
 	D = data.D;
 	
@@ -47,7 +47,7 @@ function showStrongClassifier(cascader, data, imageId, layers)
 		nrLayers         = length(cascader);
 
 		% feature, V, C weak, C strong = #4
-		subplotHeight = 4;
+		subplotHeight = 5;
 
 		% determine layer range
 		if (layers > 0)
@@ -93,9 +93,15 @@ function showStrongClassifier(cascader, data, imageId, layers)
 				%V      = alphas(f) * C;
 
 				VNormalised = normaliseImg(V);
-				%plot img
-				subplot(subplotHeight,subplotWidth, f+(2*subplotWidth)); imshow(VNormalised); title('Feature applied');
-				subplot(subplotHeight,subplotWidth, f+(3*subplotWidth)); imshow(C); title('Threshold applied');
+				plainImgs = getIntegralsPlain(I{imageId}{1});
+				plainImgs = plainImgs{feature.int};
+
+				% plot image type (dx, ddx etc)
+				subplot(subplotHeight,subplotWidth, f+(2*subplotWidth)); imshow(plainImgs); title(sprintf('Image type:%s',INTLABELS{feature.int}));
+				% plot applied feature
+				subplot(subplotHeight,subplotWidth, f+(3*subplotWidth)); imshow(VNormalised); title('Feature applied');
+				% plot treshold applied
+				subplot(subplotHeight,subplotWidth, f+(4*subplotWidth)); imshow(C); title('Threshold applied');
 			end
 			
 
