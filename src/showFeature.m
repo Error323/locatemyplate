@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function showFeature(feature, fig)
 	global INTLABELS;
-	clf(fig);
+	% clf(fig);
 	w = 100; h = 33;
 
 	% set title of figure window
@@ -43,5 +43,20 @@ function showFeature(feature, fig)
 		else % horizontal
 			rectangle('Position', [y0, x0, y1-y0,x1-x0], 'FaceColor', c);
 		end
+		% fix for axis:
+		% if (feature.orientation == 1)
+		% 	x = x0;
+		% 	y = y0;
+		% 	w = x1-x0;
+		% 	h = y1-y0;
+		% else % horizontal
+		% 	x = y0
+		% 	y = x0
+		% 	w = y1-y0
+		% 	h = x1-x0
+		% end
+		% % draw featureblock
+		% rectangle('Position', [x, y, w, h], 'FaceColor', c);
+		% %axis([x,w,y,h]);
 	end
 end

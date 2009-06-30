@@ -21,15 +21,20 @@ function [C, V] = classify(cascader, sample, dimensions)
 
 		[Cprime, Vprime] = strongClassify(S.classifier, dimensions, sample, {}, S.alphas, S.threshold);
 		% Cascade
+		figure;
+		imshow(C);
+		pause;
 		C = C & Cprime;
-		V = (V + Vprime);
-		Vmin = min(min(V));
-		V = (V - Vmin) / (max(max(V)) - Vmin);
-		if (true)
+
+		V = V + Vprime;
+
+		if DEBUG 
 			figure(1);
 			imshow(C);
 			figure(2);
-			imshow(V);
+			% normalise img
+			Vnormalised = normaliseImg(V);
+			imshow(Vnormalised);
 			pause;
 		end
 	end
