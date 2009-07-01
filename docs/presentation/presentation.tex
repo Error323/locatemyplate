@@ -122,11 +122,14 @@
 	\begin{itemize}
 		\item <+-| alert@+> Properties
 			\begin{itemize}
-				\item <+-| alert@+> Feature
-				\item <+-| alert@+> Threshold
-				\item <+-| alert@+> Operator $<$ or $>$
+				\item <+-| alert@+> Feature,  
+				\item <+-| alert@+> Threshold, $t$
+				\item <+-| alert@+> Operator, $\circ \in \{<, >\}$
 			\end{itemize}
 		\item <+-| alert@+> Returns a binary image
+		\begin{displaymath}
+		B = t \circ f(x)
+		\end{displaymath}
 	\end{itemize}
 	 %The locations of the ones in B correspond to the location of possible license plates.
 }
@@ -135,10 +138,10 @@
   \frametitle{Training the weak classifier}
 	\begin{itemize}
 		\item <+-| alert@+> How to learn the threshold and operator $<$ or $>$
-		\item <+-| alert@+> Sort on value, store (supervised) classification value
+		\item <+-| alert@+> Sort on value, store (supervised) classification value (+/-)
 		\item <+-| alert@+> Find optimal separation (threshold)
-		\item <+-| alert@+> 00001000011111110111111
-		\item <+-| alert@+> 000010000-11111110111111
+		\item <+-| alert@+> $----+----+++++++-++++++$
+		\item <+-| alert@+> $----+----|+++++++-++++++$
 	\end{itemize}
 }
 
@@ -228,8 +231,9 @@
   \frametitle{Results}
 	
   \begin{itemize}
-  \item <+-| alert@+> 4 Image Types (derivates)
-  \item <+-| alert@+> Test Set (47 images)
+  \item <+-| alert@+> 4 Image types (dx,ddx,dy,ddy)
+  \item <+-| alert@+> Train Set (150 images)
+  \item <+-| alert@+> Test Set (47 images), pos/neg
   \item <+-| alert@+> Detection rate $0.925$
   \item <+-| alert@+> False positive rate $0.065$
   \item <+-| alert@+> Confusion Matrix
@@ -280,8 +284,18 @@
 	
   \begin{itemize}
   \item <+-| alert@+> Good results considering 4 image types!
-  \item <+-| alert@+> Practical when filtering rest with OCR
   \item <+-| alert@+> Very fast (even in matlab)
+  \item <+-| alert@+> Practical when filtering rest with OCR
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{Conclusions}
+	
+  \begin{itemize}
+  \item Good results considering 4 image types!
+  \item Very fast (even in matlab)
+  \item Practical when filtering rest with OCR
   \end{itemize}
 }
 \end{document}
