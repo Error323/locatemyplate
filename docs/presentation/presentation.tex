@@ -71,7 +71,7 @@
 		\begin{itemize}
 			\item <+-| alert@+> Blocks with sign 
 			\item <+-| alert@+> Orientation: Horizontal or Vertical
-			\item <+-| alert@+> Image type: 1st/2nd order derivative in x/y direction
+			\item <+-| alert@+> Image type: 1st/2nd order derivative in $x/y$ direction
 			% TODO derrivative images
 		\end{itemize}
   \item <+-| alert@+> Feature value
@@ -122,7 +122,7 @@
 	\begin{itemize}
 		\item <+-| alert@+> Properties
 			\begin{itemize}
-				\item <+-| alert@+> Feature,  
+				\item <+-| alert@+> Feature, $f$
 				\item <+-| alert@+> Threshold, $t$
 				\item <+-| alert@+> Operator, $\circ \in \{<, >\}$
 			\end{itemize}
@@ -199,25 +199,6 @@
   \end{itemize}
   \item <+-| alert@+> Classification Algorithm
   \end{itemize}
-}
-
-\frame
-{
-  \frametitle{Stage III: Cascading}
-  \begin{algorithm}[H]
-  	\caption{cascadingClassify($C$, $x$, $w$, $h$): Returns the binary image $B$ of $x$}
-  	\begin{algorithmic}[1]
-  	\REQUIRE $C$ the cascading classifier, $x$ the image, $w,h$ the dimensions of the features
-  	\medskip
-  	\STATE Initialize $B$ as an image with dimensions $D(x) - [w,h]$ consisting of ones.
-  	\FORALL {$c_s \in C$}
-  		\STATE $B' \leftarrow c_s(x)$
-  		\STATE $B \leftarrow B \land B'$
-  	\ENDFOR
-  	\RETURN $B$
-  	\end{algorithmic}
-  \label{alg:casc}
-  \end{algorithm}
 }
 
 \frame
