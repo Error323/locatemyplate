@@ -187,9 +187,12 @@
   \begin{itemize}
   	\item False positive rate per layer
   	\item Detection rate per layer
-  	\item Desired false positive rate
-  	\item Update Negatives using validation set
-  	\item Re-train weak classifiers with remaining negatives
+  	\item False positive rate
+	\begin{itemize}
+		\item <+| alert@+> Train weak classifiers
+		\item <+| alert@+> Create strong classifier
+		\item <+| alert@+> Validate cascader so far (update false negatives)
+	\end{itemize}
   \end{itemize}
   \item <+-| alert@+> Classification Algorithm
   \end{itemize}
