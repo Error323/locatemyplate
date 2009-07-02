@@ -1,3 +1,10 @@
+%TODO
+% spellcheck, b.v. ispell op de uva
+% zoeken op TODO punten
+
+
+
+
 %% vi: set tabstop=2, set textwidth=80
 \documentclass[a4paper,11pt]{article}
 
@@ -55,7 +62,7 @@ Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
 \includegraphics[height=3.5cm]{img/original}
 \label{fig:a}
 }
-\subfigure[The feature.]{
+\subfigure[The feature, internally represented as binary 01110.]{
 \includegraphics[height=3.5cm]{img/feature}
 \label{fig:b}
 }
@@ -110,8 +117,15 @@ where $b(x,n)$ represents $x$ as a binary string of length $n$ as the number of
 segments. Note that binary strings $0_1,\ldots,0_n$, $1_1,\ldots,1_n$ and the
 inverse binary strings are ignored. Each element in the binary string $s \in S$
 represents the position and the sign of a feature segment. Adjacent segments
-that share the same sign are merged together and are called a feature block.
-This set of features is duplicated for each image type.
+that share the same sign are merged together and are called a feature block.\\
+
+This set of features is duplicated for each image type. The horizontal features
+are generated using the transpose of the vertical features and by swapping the
+dimensions.\\
+The height and width of the feature are normalised, i.e. set to 1 so it can be
+generaly rescaled to different license plate sizes.  An assumption of the
+size of the license plate is made and the normalised feature is rescaled to
+this. For this project only one scale is used, more on this in future work.\\
 
 % \subsection{Optimization} \label{sec:opt}
 % Features often share the same feature block dimensions. A feature can have
@@ -139,10 +153,14 @@ possible license plates.
 
 \subsection{Strong Classifier} \label{sec:strong}
 A strong classifier is constructed according to the boosting algorithm
-described by \cite{viola}. By re-weighting the positive and negative samples
-after greedy selection of a weak classifier, the algorithm selects the next
-`best' features with their respective weight, $\alpha$. Classification is
-performed as follows:
+described by \cite{viola}. There is no time and space to elaborate on the
+techniques used in this paper, but it is the core of the project. Understanding
+thinks one a more deep level would consider reading \cite{viola}.\\
+
+In short the algorithm selects the next `best' features with their respective
+weight, $\alpha$,  by re-weighting the positive and negative samples after
+greedy selection of the weak classifier.
+Classification is performed as follows:
 \begin{displaymath}
 C(x) = 
 	\left\{ \begin{array}{ll}
@@ -191,7 +209,7 @@ The confusion matrix on the test set can be found in Table \ref{tab:conf}.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=16cm]{img/strongClassifier_layer2_img14}
+\includegraphics[width=17cm]{img/strongClassifier_layer2_img14}
 \caption{Example of the strongclassifier in layer 2 with 4 features.}
 \label{fig:strongclassify}
 \end{figure}
@@ -235,7 +253,7 @@ even further. A final result of the applied cascader can be found in Figure
 \includegraphics[height=5cm]{img/cascader_original}
 \label{fig:x}
 }
-\subfigure[The cascader applied]{
+\subfigure[The cascader applied, every white pixel is the upper left prediction of the license plate]{
 \includegraphics[height=5cm]{img/cascader_result}
 \label{fig:y}
 }
@@ -251,6 +269,45 @@ method. Even when no more sophisticated image types are used, the cascader
 could be used by a License Plate Recognition system as the remaining false
 positives can be filtered out by optical character recognition and the
 characteristics of a license plate.
+
+\section{Future work} \label{sec:conc}
+\subsection{Image types and layer optimalization} 
+Because of lack of time and computational resources the features where only
+applied to four image types. The results would increase if more sophisticated
+image types where used. Some images which would TODO PRESTEREN good are
+\begin{itemize}
+	\item{The variance in $x$ and $y$ direction}
+	\item{Images that display color variance explicit, for example blue-yellow for dutch license plates}
+	\item{TODO jij had iets bedacht met gaussians ??, weet je er verder nog meer??}
+\end{itemize}
+
+The layers in front of the cascade needs to evaluate lots of locations in the
+image.  It would be efficient to use computational cheap image types, like the
+derivative images, in the first layers of the cascade.  The image types that
+are more computational expensive could be used in layers that are near the end.
+
+\subsection{Multiple scales} 
+An assumption of the license plate dimensions is made. In a real world system
+the license plate size could be anything. A solution for this would be the
+multiscale approach. Use different scales of the license plate and start with
+the biggest. Next compare the values to the learned thresholds and optionally
+look for a smaller scale.
+
+
+\subsection{What's next} 
+Our program comes with an image with multiple license plate location
+predictions. This needs to be transfered to the number of license plates
+present in the image, in our examples 1. An idea to do this is to fit a
+rectangle to the found locations and use the upper left pixel.\\
+When the exact location is found the license plate needs to be transfered, this
+could be done using existing techniques like Optical Character Recognition.
+
+\subsection{Future research questions} 
+What todo with an image with multiple license plates? This would conflict with
+the multiscale approach, e.g. if 3 license plates are found the total value
+will be so high that a wrong scale could be picked.
+
+
 \newpage
 \renewcommand\bibname{References}
 \bibliography{references}
