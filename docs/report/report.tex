@@ -105,9 +105,9 @@ For this report, the following image types were used.
 	\item{2nd order derivative in both $x$ and $y$ directions.}
 \end{itemize}
 Before applying the feature, the above image types are passed through an
-absolute filter. By calculating an integral image per image type, the
-featureblocks can be calculated very efficiently as each block calculation
-requires four array access instructions \cite{viola}.
+absolute filter. By calculating an integral image \cite{viola} per image type,
+the featureblocks can be calculated very efficiently as each block calculation
+requires only four array access instructions.
 
 \subsection{Generation} \label{sec:gen}
 By representing a feature as a binary string, the set $S$ of possible features
@@ -117,23 +117,11 @@ where $b(x,n)$ represents $x$ as a binary string of length $n$ as the number of
 segments. Note that binary strings $0_1,\ldots,0_n$, $1_1,\ldots,1_n$ and the
 inverse binary strings are ignored. Each element in the binary string $s \in S$
 represents the position and the sign of a feature segment. Adjacent segments
-that share the same sign are merged together and are called a feature block.\\
-
-This set of features is duplicated for each image type. The horizontal features
-are generated using the transpose of the vertical features and by swapping the
-dimensions.\\
-The height and width of the feature are normalised, i.e. set to 1 so it can be
-generaly rescaled to different license plate sizes.  An assumption of the
-size of the license plate is made and the normalised feature is rescaled to
-this. For this project only one scale is used, more on this in future work.\\
-
-% \subsection{Optimization} \label{sec:opt}
-% Features often share the same feature block dimensions. A feature can have
-% multiple feature blocks of the same dimensions, because the feature is applied
-% as an image filter.  To optimize this, the feature blocks are individually
-% calculated for every position $(x,y)$, in the image $i$ and stored on its
-% dimensions $(w_i,h_i)$ in a hash table $R_i$.
-
+that share the same sign are merged together and are called a feature block.\\\\
+The horizontal features are generated using the transpose of the vertical
+features and by swapping the dimensions. The width and height of the feature
+are normalised, i.e. set to 1 so they can be generaly rescaled to different
+license plate dimensions.
 
 \section{Training} \label{sec:train}
 The overall cascading classifier consists of three types of training. The first
@@ -155,9 +143,9 @@ possible license plates.
 By combining weak classifiers, a strong classifier can be formed. This is the
 principle of boosting.  A strong classifier is constructed according to the
 boosting algorithm adaboost, described by \cite{viola}. Adaboost is adaptive
-with respect to the weak classifiers it selects. By keeping two sets of
-weights, those on the weak classifiers ($\alpha$) and those on the training
-samples. Classification is performed as follows:
+(hence the name) with respect to the weak classifiers it selects. By updating
+two sets of weights, those on the weak classifiers ($\alpha$) and those on the
+training samples. Classification is performed as follows:
 \begin{displaymath}
 C(x) = 
 	\left\{ \begin{array}{ll}
@@ -221,9 +209,9 @@ thresholds.}
 \centering
 \includegraphics[width=16cm]{img/cascader_img14}
 \caption{Example of the resulting cascading classifier with 5 layers. The first
-row shows the values of the individual strong classifiers, the second row shows
-the thresholded individual strong classifiers. The bottom row shows the actual
-cascading result, each increasing layer more false positives are removed.}
+row shows the values of the strong classifiers, the second row shows the
+thresholds of the strong classifiers. The bottom row shows the actual cascading
+result, where each increasing layer more false positives are removed.}
 \label{fig:cascader}
 \end{figure}
 
@@ -259,7 +247,7 @@ even further. A final result of the applied cascader can be found in Figure
 \includegraphics[height=5cm]{img/cascader_original}
 \label{fig:x}
 }
-\subfigure[The cascader applied, every white pixel is the upper left prediction of the license plate]{
+\subfigure[The cascader applied, every white pixel is the upper left prediction of a license plate]{
 \includegraphics[height=5cm]{img/cascader_result}
 \label{fig:y}
 }
@@ -276,45 +264,16 @@ could be used by a License Plate Recognition system as the remaining false
 positives can be filtered out by optical character recognition and the
 characteristics of a license plate.
 
-\section{Future work} \label{sec:conc}
-\subsection{Image types and layer optimalization} 
-Because of lack of time and computational resources the features where only
-applied to four image types. The results would increase if more sophisticated
-image types where used. Some images which would TODO PRESTEREN good are
-\begin{itemize}
-	\item{The variance in $x$ and $y$ direction}
-	\item{Images that display color variance explicit, for example blue-yellow for dutch license plates}
-	\item{TODO jij had iets bedacht met gaussians ??, weet je er verder nog meer??}
-\end{itemize}
+\section{Future work} \label{sec:fut}
+On our experiments only four image types were used. Better results could be
+achieved when applying the features on more image types (e.g. variance,
+gaussian, colorchannels). Some of these new image types may be more expensive
+to compute and should therefore be used in the layers near the end. \\\\
+The dataset provided contains tagged images, thus the license plate dimensions
+are known. In a real world system these dimensions could be anything. A
+solution for this would be the multiscale approach. Apply different scales to
+the cascading classifier, starting with the biggest.
 
-The layers in front of the cascade needs to evaluate lots of locations in the
-image.  It would be efficient to use computational cheap image types, like the
-derivative images, in the first layers of the cascade.  The image types that
-are more computational expensive could be used in layers that are near the end.
-
-\subsection{Multiple scales} 
-An assumption of the license plate dimensions is made. In a real world system
-the license plate size could be anything. A solution for this would be the
-multiscale approach. Use different scales of the license plate and start with
-the biggest. Next compare the values to the learned thresholds and optionally
-look for a smaller scale.
-
-
-\subsection{What's next} 
-Our program comes with an image with multiple license plate location
-predictions. This needs to be transfered to the number of license plates
-present in the image, in our examples 1. An idea to do this is to fit a
-rectangle to the found locations and use the upper left pixel.\\
-When the exact location is found the license plate needs to be transfered, this
-could be done using existing techniques like Optical Character Recognition.
-
-\subsection{Future research questions} 
-What todo with an image with multiple license plates? This would conflict with
-the multiscale approach, e.g. if 3 license plates are found the total value
-will be so high that a wrong scale could be picked.
-
-
-\newpage
 \renewcommand\bibname{References}
 \bibliography{references}
 \bibliographystyle{IEEEtran}
