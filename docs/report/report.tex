@@ -129,20 +129,21 @@ using a boosting algorithm. The third type is a cascading classifier
 with a strong classifier on each layer.
 
 \subsection{Weak Classifier} \label{sec:weak}
-A weak classifier consists of a feature, a threshold $t \in \mathbb{R}$ and an
-operator $\circ \in \{<, >\}$ which separates positive and negative samples
+A weak classifier consists of a feature $f$, a threshold $t \in \mathbb{R}$ and
+an operator $\circ \in \{<, >\}$ which separates positive and negative samples
 according to the trainings set. After training, the weak classifier $C$
 constructs a binary image $B = t \circ f(x)$, where $x$ is the image and $f$
-the function that returns the value of the feature as described in 
-Section \ref{sec:feat}. The locations of the ones in $B$ correspond to the location of
+the function that returns the value of the feature as described in Section
+\ref{sec:feat}. The locations of the ones in $B$ correspond to the location of
 possible license plates.
 
 \subsection{Strong Classifier} \label{sec:strong}
-A strong classifier is constructed according to the boosting algorithm
-described by \cite{viola}. By re-weighting the positive and negative samples
-after greedy selection of a weak classifier, the algorithm selects the next
-`best' features with their respective weight, $\alpha$. Classification is
-performed as follows:
+By combining weak classifiers, a strong classifier can be formed. This is the
+principle of boosting.  A strong classifier is constructed according to the
+boosting algorithm adaboost, described by \cite{viola}. Adaboost is adaptive
+with respect to the weak classifiers it selects. By keeping two sets of
+weights, those on the weak classifiers ($\alpha$) and those on the training
+samples. Classification is performed as follows:
 \begin{displaymath}
 C(x) = 
 	\left\{ \begin{array}{ll}
@@ -161,9 +162,10 @@ detection rate per layer and a false positive rate goal, the algorithm
 constructs a cascade of strong classifiers using the training- and validation
 set.  Algorithm \ref{alg:casc} shows the classification of an image using a
 trained cascading classifier. The strong classifier $c_s \in C$ classifies
-according to Section \ref{sec:strong}. This results in a binary image $B'$
-which is logically `anded' with the previous binary image $B$ resulting in less
-false positives after each iteration.
+according to Section \ref{sec:strong}, while respecting the previous false
+positives and true positives only. This results in a binary image $B'$ which is
+logically `anded' with the previous binary image $B$ resulting in less false
+positives after each iteration.
 \begin{algorithm}[!htb]
 	\caption{cascadingClassify($C$, $x$, $w$, $h$): Returns the binary image $B$ of $x$}
 	\begin{algorithmic}[1]
@@ -182,24 +184,32 @@ false positives after each iteration.
 \section{Results} \label{sec:res}
 For our experiments we trained the cascading classifier using $fp = 0.99, d =
 0.999, fp_{min} = 0.001$ for the false positive rate, detection rate and
-minimal false positive rate respectively. The final cascading classifier
+minimal false positive rate respectively. Furthermore we generated features
+consisting of $5$ segments. The total number of features generated was
+$\frac{(2^5-2)}{2}\cdot 2 \cdot 4 = 120$. The final cascading classifier
 contains five layers with $1, 4, 14, 7, 10$ features respectively. An example
 of the cascading classifier is displayed in Figure \ref{fig:cascader}. To
 illustrate how a layer is constructed, the strong classifier of layer 2 is
-explained in Figure \ref{fig:strongclassify}\\
-The confusion matrix on the test set can be found in Table \ref{tab:conf}. 
+shown in Figure \ref{fig:strongclassify}. The confusion matrix on the test set
+can be found in Table \ref{tab:conf}. 
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=16cm]{img/strongClassifier_layer2_img14}
-\caption{Example of the strongclassifier in layer 2 with 4 features.}
+\caption{Example of the strongclassifier in layer 2 with 4 features. The first
+row shows the features, the second the image types, the third shows the
+features applied to the image types and finally the bottom row shows the
+thresholds.}
 \label{fig:strongclassify}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=16cm]{img/cascader_img14}
-\caption{Example of the resulting cascading classifier with 5 layers.}
+\caption{Example of the resulting cascading classifier with 5 layers. The first
+row shows the values of the individual strong classifiers, the second row shows
+the thresholded individual strong classifiers. The bottom row shows the actual
+cascading result, each increasing layer more false positives are removed.}
 \label{fig:cascader}
 \end{figure}
 
