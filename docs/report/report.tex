@@ -25,7 +25,7 @@
 \section{Introduction}
 This report describes the implementation of a robust, real-time License Plate
 Localisation system (LPL) \cite{dlagnekov_thesis, zhang}. We analyze which
-characteristic features are important for license plate localisation. Using
+characteristic features are important for license plate localization. Using
 supervised learning, the system generates a cascading classifier which consists
 of layers that each hold one strong classifier. A strong classifier is a linear
 function of several weak classifiers obtained by boosting. Each weak classifier
@@ -282,7 +282,7 @@ Another issue occurs when multiple license plates are found. Each plate
 represented as a blob, where each pixel indicates the upperleft corner. The
 extraction of a single plate could be achieved by locating the max value of the
 cascader per blob.\\\\
-The final step of localisation would be the application of Optical Character
+The final step of localization would be the application of Optical Character
 Recognition (OCR). As this would be the most expensive operation, it should be
 performed on as little false positives as possible.
 
