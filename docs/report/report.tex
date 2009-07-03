@@ -46,7 +46,10 @@ $159$, $40$ and $47$ images respectively.
 \section{Features} \label{sec:feat}
 The core of the LPL system consists of features as described by
 \cite{dlagnekov_thesis, zhang,naturaltext}. Features are image filters applied
-on a certain type of image (e.g. an $x$-derivative) see Figure \ref{fig:feature}.
+on a certain type of image (e.g. the image's $x$-derivative) see Figure
+\ref{fig:feature}. The intuition behind it, is that license plates consist of
+dense amount of vertical lines in the form of alphanumeric characters. These lines
+can be found using derivatives of the image, on which the features are applied.
 Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
 \begin{itemize}
 	\item{$i$, an index corresponding to the image type.}
@@ -70,8 +73,8 @@ Formally a feature $f$ is a tuple $\langle i, B, o \rangle$ defined as:
 \includegraphics[height=3.5cm]{img/featureapplied}
 \label{fig:c}
 }
-\caption{A horizontal, second order $x$-derivative feature with binary code
-$01110$, consisting of three blocks applied to an image.}
+\caption{A horizontal feature (with binary code $01110$) targeted at 2nd order
+$x$-derivative images}
 \label{fig:feature}
 \end{figure}
 The feature value $f:x\mapsto\mathbb{R}$ of an image $x$ is shown in Algorithm
@@ -113,15 +116,15 @@ requires only four array access instructions.
 By representing a feature as a binary string, the set $S$ of possible features
 can be easily calculated:
 $$S = \{b(x,n) | \forall x \in \{1,\ldots,(2^n-2)/2\}\},$$
-where $b(x,n)$ represents $x$ as a binary string of length $n$ as the number of
-segments. Note that binary strings $0_1,\ldots,0_n$, $1_1,\ldots,1_n$ and the
-inverse binary strings are ignored. Each element in the binary string $s \in S$
-represents the position and the sign of a feature segment. Adjacent segments
-that share the same sign are merged together and are called a feature block.\\\\
-The horizontal features are generated using the transpose of the vertical
-features and by swapping the dimensions. The width and height of the feature
-are normalised, i.e. set to 1 so they can be generaly rescaled to different
-license plate dimensions.
+where $b(x,n)$ represents $x$ as a binary string of length $n$ (known as
+zero-padding) as the number of segments. Note that binary strings
+$0_1,\ldots,0_n$, $1_1,\ldots,1_n$ and the inverse binary strings are ignored.
+Each element in the binary string $s \in S$ represents the position and the
+sign of a feature segment. Adjacent segments that share the same sign are
+merged together and are called a feature block.\\\\ The horizontal features are
+generated using the transpose of the vertical features and by swapping the
+dimensions. The width and height of the feature are normalised, i.e. set to 1
+so they can be generaly rescaled to different license plate dimensions.
 
 \section{Training} \label{sec:train}
 The overall cascading classifier consists of three types of training. The first
@@ -145,7 +148,8 @@ principle of boosting.  A strong classifier is constructed according to the
 boosting algorithm adaboost, described by \cite{viola}. Adaboost is adaptive
 (hence the name) with respect to the weak classifiers it selects. By updating
 two sets of weights, those on the weak classifiers ($\alpha$) and those on the
-training samples. Classification is performed as follows:
+training samples, the system is able to select an optimal combination of $N$
+weak classifiers. Classification is performed as follows:
 \begin{displaymath}
 C(x) = 
 	\left\{ \begin{array}{ll}
@@ -259,7 +263,8 @@ even further. A final result of the applied cascader can be found in Figure
 Given just four types of images, the cascading classifier performs very well.
 With a detection rate of $0.925$ and false positive rate of $0.0625$ we can
 conclude that License Plate Localisation can be effectively achieved using this
-method. Even when no more sophisticated image types are used, the cascader
+method.\\
+Even when no more sophisticated image types are used, the cascader
 could be used by a License Plate Recognition system as the remaining false
 positives can be filtered out by optical character recognition and the
 characteristics of a license plate.
