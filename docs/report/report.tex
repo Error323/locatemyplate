@@ -263,13 +263,13 @@ even further. A final result of the applied cascader can be found in Figure
 Given just four types of images, the cascading classifier performs very well.
 With a detection rate of $0.925$ and false positive rate of $0.0625$ we can
 conclude that License Plate Localisation can be effectively achieved using this
-method.\\
+method.\\\\
 Even when no more sophisticated image types are used, the cascader
 could be used by a License Plate Recognition system as the remaining false
 positives can be filtered out by optical character recognition and the
 characteristics of a license plate.
 
-\section{Future work} \label{sec:fut}
+\section{Future Work} \label{sec:fut}
 On our experiments only four image types were used. Better results could be
 achieved when applying the features on more image types (e.g. variance,
 gaussian, colorchannels). Some of these new image types may be more expensive
@@ -277,7 +277,11 @@ to compute and should therefore be used in the layers near the end. \\\\
 The dataset provided contains tagged images, thus the license plate dimensions
 are known. In a real world system these dimensions could be anything. A
 solution for this would be the multiscale approach. Apply different scales to
-the cascading classifier, starting with the biggest.\\\\
+the cascading classifier.\\\\
+Another issue occurs when multiple license plates are found. Each plate
+represented as a blob, where each pixel indicates the upperleft corner. The
+extraction of a single plate could be achieved by locating the max value of the
+cascader per blob.\\\\
 The final step of localisation would be the application of Optical Character
 Recognition (OCR). As this would be the most expensive operation, it should be
 performed on as little false positives as possible.
