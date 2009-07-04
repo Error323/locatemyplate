@@ -16,22 +16,16 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [C, Rij, V] = weakClassify(feature, dimensions, img, Rij)
-	global DEBUG 
-
 	% obtain dimensions
-	if feature.orientation == 0 % horizontal feature
-		% flip dimensions
-		h = dimensions(2);
-		w = dimensions(1);
-	else
-		h = dimensions(1);
-		w = dimensions(2);
-	end
+	h = dimensions(1);
+	w = dimensions(2);
 
 	% horizontal feature
 	if feature.orientation == 0
 		% transpose
 		img = img';
+		h = dimensions(2);
+		w = dimensions(1);
 	end
 
 	% obtain dimensions

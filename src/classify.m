@@ -11,7 +11,6 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [C, V] = classify(cascader, sample, dimensions)
-	global DEBUG;
 	C = ones(size(sample{1}) - (dimensions-1));
 	V = zeros(size(sample{1}) - (dimensions-1));
 
@@ -20,22 +19,10 @@ function [C, V] = classify(cascader, sample, dimensions)
 		S = cascader{i};
 
 		[Cprime, Vprime] = strongClassify(S.classifier, dimensions, sample, {}, S.alphas, S.threshold);
+
 		% Cascade
-		figure;
-		imshow(C);
-		pause;
 		C = C & Cprime;
-
 		V = V + Vprime;
-
-		if DEBUG 
-			figure(1);
-			imshow(C);
-			figure(2);
-			% normalise img
-			Vnormalised = normaliseImg(V);
-			imshow(Vnormalised);
-			pause;
-		end
 	end
+	V = V .* C;
 end

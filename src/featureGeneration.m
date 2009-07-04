@@ -9,7 +9,7 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function features = featureGeneration(segments)
-	global INTEGRALS DEBUG
+	global INTEGRALS;
 
 	unsignedFeatures = {};
 	powerset = 2^segments;
@@ -58,11 +58,6 @@ function features = featureGeneration(segments)
 			feature.threshold = 0;
 
 			features{(i-1)*length(unsignedFeatures)+j} = feature;
-			if (DEBUG && i == 0)
-				showFeature(feature, 1);
-				pause;
-			end
 		end
 	end
-	if (DEBUG) close; end
 end

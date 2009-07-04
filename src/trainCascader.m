@@ -14,7 +14,6 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function cascader = trainCascader(f, d, Ftarget, train, validate, features)
-	global DEBUG;
 	cascader = {};
 
 	Fprev = 1; Dprev = 1; Dcur = 1;
